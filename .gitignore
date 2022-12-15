@@ -3,8 +3,10 @@ __pycache__
 *temp.*
 temp.*
 *.log*
-*.log*
 *.zip
 venv
 .env
 debug.*
+settings.py
+db.*
+*.sqlite3
