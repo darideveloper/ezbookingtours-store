@@ -26,6 +26,7 @@ class Tour (models.Model):
     def Meta (self):
         verbose_name_plural = "Tours"
         verbose_name = "Tour"
+        app_label = 'Toures'
 
 class Hotel (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)

@@ -55,8 +55,8 @@ class PickUpAdmin (admin.ModelAdmin):
     list_filter = ('hotel_id', PickUpATourFilter)
     ordering = ['hotel_id', 'tour_time_id']
 
-@admin.register (models.Sale)
-class SalesAdmin (admin.ModelAdmin):
-    list_display = ('id', 'id_pick_up', 'first_name', 'last_name', 'email', 'adults_num', 'childs_num', 'total', 'is_paid', 'tour_date', 'buy_date')
-    list_filter = ('email', 'is_paid', 'tour_date', 'buy_date')
-    ordering = ['id_pick_up', 'email', 'total', 'is_paid', 'tour_date', 'buy_date']
+# @admin.register (models.Sale)
+# class SalesAdmin (admin.ModelAdmin):
+#     list_display = ('id', 'id_pick_up', 'first_name', 'last_name', 'email', 'adults_num', 'childs_num', 'total', 'is_paid', 'tour_date', 'buy_date')
+#     list_filter = ('email', 'is_paid', 'tour_date', 'buy_date')
+#     ordering = ['id_pick_up', 'email', 'total', 'is_paid', 'tour_date', 'buy_date']
