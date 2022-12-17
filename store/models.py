@@ -20,14 +20,20 @@ class Tour (models.Model):
     saturnday = models.BooleanField(default=True, verbose_name='Sabado', help_text='Si el tour se realiza los sabados')
     sunday = models.BooleanField(default=True, verbose_name='Domingo', help_text='Si el tour se realiza los domingos')
     
+    
     def __str__(self):
         return f"{self.name} - {self.location}"
     
-    def Meta (self):
+    class Meta:
         verbose_name_plural = "Tours"
         verbose_name = "Tour"
-        app_label = 'Toures'
-        unique_together = (name, location)
+
+        constraints = [
+            models.UniqueConstraint (
+                name='unique_tour',
+                fields=['name', 'location',],
+            )
+        ]
 
 class Hotel (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
@@ -37,9 +43,16 @@ class Hotel (models.Model):
     def __str__(self):
         return f"{self.name}"
     
-    def Meta (self):
+    class Meta:
         verbose_name_plural = "Hoteles"
         verbose_name = "Hotel"
+        
+        constraints = [
+            models.UniqueConstraint (
+                name='unique_hotel',
+                fields=['name', 'address',],
+            )
+        ]
         
 class TourTime (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
@@ -51,9 +64,16 @@ class TourTime (models.Model):
         tour_location = Tour.objects.get(id=self.tour_id.id).location
         return f"{tour_name} - {tour_location} - Hora de inicio: {self.time_start}"
     
-    def Meta (self):
+    class Meta:
         verbose_name_plural = "Tiempo de tours"
         verbose_name = "Tiempo de tour"
+        
+        constraints = [
+            models.UniqueConstraint (
+                name='unique_tour_time',
+                fields=['tour_id', 'time_start',],
+            )
+        ]
         
 class PickUp (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
@@ -68,9 +88,16 @@ class PickUp (models.Model):
         
         return f"Hotel: {hotel_name} - Tour: {tour_name} - Hora: {tour_time}"
     
-    def Meta (self):
+    class Meta:
         verbose_name_plural = "Pick ups en hoteles"
-        verbose_name = "Pick up en hotele"
+        verbose_name = "Pick up en hotel"
+        
+        constraints = [
+            models.UniqueConstraint (
+                name='unique_pick_up',
+                fields=['hotel_id', 'tour_time_id', 'time'],
+            )
+        ]
         
 class Sale (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
@@ -91,7 +118,7 @@ class Sale (models.Model):
         tour_time = self.id_pick_up.tour_time_id.time_start
         return f"{self.first_name} {self.last_name} - Tour: {tour_name} - Hotel {hotel_name}, Hora {tour_time} - Total: {self.total} - Pagado: {self.is_paid}"
     
-    def Meta (self):
+    class Meta:
         verbose_name_plural = "Ventas"
         verbose_name = "Venta"
     
