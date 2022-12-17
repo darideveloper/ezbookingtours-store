@@ -1,7 +1,13 @@
 from . import views
 from django.urls import path
+from django.contrib import admin
 
-app_name = "store"
+admin.site.site_header = "Ezbookingtours Store"
+admin.site.site_title = 'Ezbookingtours Store'
+admin.site.site_url = 'https://ezbookingtours.com'
+admin.site.index_title = "Admin"
+
+
 urlpatterns = [
     path ('', views.index, name="index"),
     # path ('keagan/', views.keagan_home, name="keagan_home"),
