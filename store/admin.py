@@ -3,7 +3,7 @@ from . import models
 
 @admin.register (models.Tour)
 class TourAdmin (admin.ModelAdmin):
-    list_display = ('name', 'location', 'duration', 'is_active', "date_start", "date_end")
+    list_display = ('id', 'name', 'location', 'duration', 'is_active', "date_start", "date_end")
     list_filter = ('min_people', 'location', 'duration', 'is_active', "date_start", "date_end")
     ordering = ['name', 'location', 'duration', 'is_active', "date_start"]
     search_fields = ['name', 'location']
