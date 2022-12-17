@@ -45,7 +45,7 @@ class TimeTourFilter (admin.SimpleListFilter):
 @admin.register (models.TourTime)
 class TourTimeAdmin (admin.ModelAdmin):
     list_display = ('tour_id', 'time_start')
-    list_filter = ('tour_id', 'time_start', TimeTourFilter)
+    list_filter = ('time_start', TimeTourFilter)
     ordering = ['tour_id', 'time_start']
     
 class PickUpTourFilter (admin.SimpleListFilter):
@@ -82,6 +82,6 @@ class PickUpAdmin (admin.ModelAdmin):
 
 @admin.register (models.Sale)
 class SalesAdmin (admin.ModelAdmin):
-    list_display = ('id', 'id_pick_up', 'first_name', 'last_name', 'email', 'adults_num', 'childs_num', 'total', 'is_paid', 'tour_date', 'buy_date')
+    list_display = ('id_pick_up', 'first_name', 'last_name', 'email', 'adults_num', 'childs_num', 'total', 'is_paid', 'tour_date', 'buy_date')
     list_filter = ('email', 'is_paid', 'tour_date', 'buy_date')
     ordering = ['id_pick_up', 'email', 'total', 'is_paid', 'tour_date', 'buy_date']
