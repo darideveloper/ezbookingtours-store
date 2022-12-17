@@ -27,6 +27,7 @@ class Tour (models.Model):
         verbose_name_plural = "Tours"
         verbose_name = "Tour"
         app_label = 'Toures'
+        unique_together = (name, location)
 
 class Hotel (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
@@ -44,7 +45,6 @@ class TourTime (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
     tour_id = models.ForeignKey(Tour, on_delete=models.CASCADE, verbose_name='Tour', help_text='Tour al que pertenece el horario')
     time_start = models.TimeField(default=timezone.now, verbose_name='Hora de inicio', help_text='Hora de inicio del tour')
-    duration = models.IntegerField(default=1, verbose_name='Duración', help_text='Duración del tour en horas')
     
     def __str__(self):
         tour_name = Tour.objects.get(id=self.tour_id.id).name
