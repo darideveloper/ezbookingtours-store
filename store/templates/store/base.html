@@ -35,7 +35,30 @@
       color: #4a5568 !important;
     }
 
-    
+    .button {
+      background-color: #fab330;
+      color: #fff;      
+      transition: all 0.3s ease;
+      font-weight: bold;
+      border: none;
+    }
+
+    .button:hover {
+      background-color: #da9921 !important
+    }
+
+    .button:active {
+      color: black;
+    }
+
+    .button.button-seconday {
+      width: 40px;
+      height: 40px;
+    }
+
+    input.num {
+      width: calc(100% - 130px);
+    }
   </style>
 </head>
 
@@ -44,5 +67,7 @@
     {% block content %}{% endblock %}
   </div>
 </body>
+
+{% block js %}{% endblock %}
 
 </html>

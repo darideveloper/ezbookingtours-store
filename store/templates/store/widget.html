@@ -1,5 +1,72 @@
 {% extends "store/base.html" %}
 
 {% block content %}
-<h1>404</h1>
+<form action="/" method="POST">
+  <h1 class="price text-primary fw-bold mb-0">
+    $
+    <span>
+      {{ adults_price }}
+    </span>
+    USD
+  </h1>
+  <hr>
+  <h2 class="fs-5">Duración</h2>
+  <p class="fs-5 mb-0">{{ duration }} hrs</p>
+
+  <label class="d-block mt-4" for="adults">
+    <h2 class="fs-5">Adultos</h2>
+  </label>
+  <div class="num-input d-flex align-items-center justify-content-between">
+    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
+    <input class="py-1 px-3 num text-center border-0" type="number" name="adults" id="adults" min="1" max="10" value="1">
+    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
+  </div>
+
+  <label class="d-block mt-4" for="children">
+    <h2 class="fs-5">Niños</h2>
+  </label>
+  <div class="num-input d-flex align-items-center justify-content-between">
+    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
+    <input class="py-1 px-3 num text-center border-0" type="number" name="children" id="children" min="0" max="10" value="0">
+    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
+  </div>
+
+  <label class="d-block mt-4" for="date">
+    <h2 class="fs-5">Fecha</h2>
+  </label>
+  <input class="py-1 px-3 w-100" type="date" name="date" id="date" min="{{ date_start }}" max="{{ date_end }}">
+
+  <label class="d-block mt-4" for="time">
+    <h2 class="fs-5">Hora</h2>
+  </label>
+  <select class="py-1 px-3 w-100" name="time" id="time">
+    {% for time in times %}
+    <option value="{{ time }}">{{ time }}</option>
+    {% endfor %}
+  </select>
+
+  <label class="d-block mt-4" for="hotel">
+    <h2 class="fs-5">Hora</h2>
+  </label>
+  <select class="py-1 px-3 w-100" name="hotel" id="hotel">
+    {% for hotel in hotels %}
+    <option value="{{ hotel.hotel }}">{{ hotel.hotel }}</option>
+    {% endfor %}
+  </select>
+  <p class="pick-up-time fs-6 mt-1">
+    Pick up: <span>10:40 hrs</span>
+  </p>
+
+  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill">Agendar</button>
+</form>
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+</script>
 {% endblock %}
