@@ -7,7 +7,7 @@
   <h1 class="price text-primary fw-bold mb-0">
     $
     <span>
-      {{ adults_price }}
+      0
     </span>
     USD
   </h1>
@@ -18,18 +18,18 @@
   <label class="d-block mt-4" for="adults">
     <h2 class="fs-5">Adultos</h2>
   </label>
-  <div class="num-input d-flex align-items-center justify-content-between">
+  <div class="num-input adults-wrapper d-flex align-items-center justify-content-between">
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
-    <input class="py-1 px-3 num text-center border-0" type="number" name="adults" id="adults" min="1" max="10" value="1">
+    <input class="py-1 px-3 num text-center border-0" type="number" name="adults" id="adults" min="1" max="20" value="1" readonly>
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
   </div>
 
-  <label class="d-block mt-4" for="children">
+  <label class="d-block mt-4" for="childs">
     <h2 class="fs-5">Niños</h2>
   </label>
-  <div class="num-input d-flex align-items-center justify-content-between">
+  <div class="num-input childs-wrapper d-flex align-items-center justify-content-between">
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
-    <input class="py-1 px-3 num text-center border-0" type="number" name="children" id="children" min="0" max="10" value="0">
+    <input class="py-1 px-3 num text-center border-0" type="number" name="childs" id="childs" min="0" max="20" value="0" readonly>
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
   </div>
 
@@ -81,6 +81,9 @@
     Saturday: "{{ saturday }}",
     Sunday: "{{ sunday }}",
   };
+  const adults_price = {{adults_price}}
+  const childs_price = {{childs_price}}
+  let price = 0
 </script>
 
 <!-- Js imports  -->
