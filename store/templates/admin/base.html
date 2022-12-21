@@ -1,4 +1,5 @@
 {% extends 'admin/base.html' %}
+{% load static %}
 
 {% block extrastyle %}{{ block.super }}
 <style>
@@ -10,4 +11,8 @@
   --accent: #F3EFE0;
 }
 </style>
+{% endblock %}
+
+{% block extrahead %}
+    <link rel="shortcut icon" href="{% static 'store/imgs/favicon.png' %}" type="image/x-icon">
 {% endblock %}
