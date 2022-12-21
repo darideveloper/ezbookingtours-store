@@ -17,8 +17,11 @@ def widget (request, location, tour):
         "status": "running",
     }
     
+    # get tours
     tours = models.Tour.objects.filter (location=location, name=tour, is_active=True)
-    if not tour:
+    
+    # Show error page if tour not exist
+    if tours.count() == 0:
         return render(request, 'store/404.html')
     
     # Get tour data
