@@ -64,9 +64,11 @@ def widget (request, location, tour):
         hotel = pick_up.hotel_id
         hotel_text = hotel.name if not hotel.address else hotel.name + " - " + hotel.address
         
-        hotels.append ({"hotel": hotel_text, "pick_up": pick_up_time, "tour_time": tour_time})
-        
-    # Calculate 
+        hotels.append ({"id": pick_up_id, "hotel": hotel_text, "pick_up": pick_up_time, "tour_time": tour_time})
+      
+    print(hotels)
+     
+    # Render and submit data
         
     return render(request, 'store/widget.html', {
         "adults_price": adults_price,

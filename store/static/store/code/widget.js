@@ -1,17 +1,20 @@
-// Get global inputs
+// Nodes
+const input_adults = document.querySelector('.adults-wrapper input')
+const decress_adults = document.querySelector('.adults-wrapper button:first-child')
+const incress_adults = document.querySelector('.adults-wrapper button:last-child')
+const input_childs = document.querySelector('.childs-wrapper input')
+const decress_childs = document.querySelector('.childs-wrapper button:first-child')
+const incress_childs = document.querySelector('.childs-wrapper button:last-child')
+
+const input_date = document.getElementById('date')
+const input_date_error = document.querySelector ('#date + p')
+
+const input_time = document.getElementById('time')
+const input_hotel = document.getElementById('hotel')
+
 const submit_button = document.querySelector('button[type="submit"]')
 
-// Constrol variables for activate or deactivate submit button
-let week_day_available = false
-
-function validate_form () {
-  // Validate form with inputs
-  if (week_day_available && price > 0) {
-    submit_button.disabled = false
-  } else {
-    submit_button.disabled = true
-  }
-}
+// Update functions
 
 function update_price () {
   // Update price of the tour (after changes in inputs for adults and childs)
@@ -19,12 +22,38 @@ function update_price () {
   document.querySelector('.price span').innerHTML = price
 }
 
+function update_hotels () {
+  // Get time
+  time = input_time.value
+
+  // get hootel options
+  const available_hotels = hotels.filter ((hotel) => hotel.tour_time == time)
+  input_hotel.innerHTML = ''
+
+  // Set hotel options
+  available_hotels.forEach(hotel => {
+    const option = document.createElement('option')
+    option.value = hotel.id
+    option.innerHTML = hotel.hotel
+    input_hotel.appendChild(option)
+  })  
+}
+
+function update_pick_up () {
+  // Get hotel data
+  const hotel_id = input_hotel.value
+  const hotel = hotels.find ((hotel) => hotel.id == hotel_id)
+  
+  // Update pick up time
+  document.querySelector('.pick-up span').innerHTML = hotel.pick_up
+}
+
+
+// DATES
 
 // Validate date of the week when change date
 const week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const week_days_spanish = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-const input_date = document.getElementById('date')
-const input_date_error = document.querySelector ('#date + p')
 input_date.addEventListener('change', function(e) {
 
   // Get date of the week
@@ -32,7 +61,7 @@ input_date.addEventListener('change', function(e) {
   const week_day_num = selected_date.getDay()
   const week_day = week_days[week_day_num]
   const week_day_spanish = week_days_spanish[week_day_num]
-  week_day_available = days_available[week_day] == "True"
+  const week_day_available = days_available[week_day] == "True"
 
   // Show error message if date is not available
   if (week_day_available) {
@@ -41,19 +70,11 @@ input_date.addEventListener('change', function(e) {
     input_date_error.classList.remove('d-none')
     input_date_error.querySelector ("span").innerHTML = week_day_spanish
   }
-
-  // Validate form after changes
-  validate_form ()
-
 })
 
+// PRICE
+
 // Detect event who change price
-const input_adults = document.querySelector('.adults-wrapper input')
-const decress_adults = document.querySelector('.adults-wrapper button:first-child')
-const incress_adults = document.querySelector('.adults-wrapper button:last-child')
-const input_childs = document.querySelector('.childs-wrapper input')
-const decress_childs = document.querySelector('.childs-wrapper button:first-child')
-const incress_childs = document.querySelector('.childs-wrapper button:last-child')
 let adults = 1
 let childs = 0
 
@@ -63,7 +84,6 @@ decress_adults.addEventListener('click', function(e) {
     adults -= 1
     input_adults.value = adults
     update_price ()
-    validate_form ()
   }
 })
 
@@ -72,7 +92,6 @@ incress_adults.addEventListener('click', function(e) {
   adults += 1
   input_adults.value = adults
   update_price ()
-  validate_form ()
 })
 
 decress_childs.addEventListener('click', function(e) {
@@ -81,7 +100,6 @@ decress_childs.addEventListener('click', function(e) {
     childs -= 1
     input_childs.value = childs
     update_price ()
-    validate_form ()
   }
 })
 
@@ -90,11 +108,30 @@ incress_childs.addEventListener('click', function(e) {
   childs += 1
   input_childs.value = childs
   update_price ()
-  validate_form ()
 })
 
-// Validate form when page load
-validate_form ()
+// HOTELS
+
+// Update hotels (and pick ups) options after change the time
+input_time.addEventListener('change', function(e) {
+  update_hotels ()  
+  update_pick_up ()
+})
+
+// PICK UP
+
+// Update pick up time after change the hotel
+input_hotel.addEventListener('change', function(e) {
+  update_pick_up ()
+})
+
+// ON LOAD  
 
 // Update price when page load
 update_price ()
+
+// Update hotels options when page load
+update_hotels ()  
+
+// Update pick up when page load
+update_pick_up ()

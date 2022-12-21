@@ -52,7 +52,7 @@
     <h2 class="fs-5">Fecha</h2>
   </label>
   <input class="py-2 px-4 w-100" type="date" name="date" id="date" min="{{ date_start }}" max="{{ date_end }}">
-  <p class="fs-6 text-danger d-none" required>
+  <p class="fs-6 text-danger d-none ms-4" required>
     Este tour no está disponible los días 
     <span>dia</span>
   </p>
@@ -70,15 +70,15 @@
     <h2 class="fs-5">Hotel</h2>
   </label>
   <select class="py-2 px-4 w-100" name="hotel" id="hotel" required>
-    {% for hotel in hotels %}
+    <!-- {% for hotel in hotels %}
     <option value="{{ hotel.hotel }}">{{ hotel.hotel }}</option>
-    {% endfor %}
+    {% endfor %} -->
   </select>
-  <p class="pick-up-time fs-6 mt-1">
+  <p class="pick-up fs-6 mt-1 ms-4">
     Pick up: <span>10:40 hrs</span>
   </p>
 
-  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill" disabled>Agendar</button>
+  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill">Agendar</button>
 </form>
 {% endblock %}
 
@@ -99,6 +99,10 @@
   const adults_price = {{adults_price}}
   const childs_price = {{childs_price}}
   let price = 0
+  const hotels = Array.from({{ hotels|safe }})
+  const times =Array.from({{times|safe}})
+  let time = times[0]
+  let pick_up 
 </script>
 
 <!-- Js imports  -->
