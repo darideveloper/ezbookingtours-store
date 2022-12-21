@@ -7,6 +7,8 @@ temp.*
 venv
 .env
 debug.*
-settings.py
 db.*
+*.sql
+*.pyc
+staticfiles
 *.sqlite3
