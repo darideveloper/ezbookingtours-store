@@ -17,7 +17,7 @@ class Tour (models.Model):
     wednesday = models.BooleanField(default=True, verbose_name='Miercoles', help_text='Si el tour se realiza los miercoles')
     thursday = models.BooleanField(default=True, verbose_name='Jueves', help_text='Si el tour se realiza los jueves')
     friday = models.BooleanField(default=True, verbose_name='Viernes', help_text='Si el tour se realiza los viernes')
-    saturnday = models.BooleanField(default=True, verbose_name='Sabado', help_text='Si el tour se realiza los sabados')
+    saturday = models.BooleanField(default=True, verbose_name='Sabado', help_text='Si el tour se realiza los sabados')
     sunday = models.BooleanField(default=True, verbose_name='Domingo', help_text='Si el tour se realiza los domingos')
     
     

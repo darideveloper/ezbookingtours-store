@@ -43,7 +43,11 @@
       border: none;
     }
 
-    .button:hover {
+    .button:disabled {
+      opacity: 0.5;
+    }
+
+    .button:hover:not(:disabled) {
       background-color: #da9921 !important
     }
 

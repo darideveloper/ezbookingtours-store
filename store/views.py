@@ -27,15 +27,19 @@ def widget (request, location, tour):
     childs_price = tours[0].childs_price
     min_people = tours[0].min_people
     duration = tours[0].duration    
-    date_start = tours[0].date_start.strftime("%Y-%m-%d")
-    date_end = tours[0].date_end.strftime("%Y-%m-%d")
+    date_start = tours[0].date_start
+    date_end = tours[0].date_end
     monday = tours[0].monday
     tuesday = tours[0].tuesday
     wednesday = tours[0].wednesday
     thursday = tours[0].thursday
     friday = tours[0].friday
-    saturnday = tours[0].saturnday
+    saturday = tours[0].saturday
     sunday = tours[0].sunday
+    
+    # Fix start date
+    if  date_start < datetime.now().date():
+        date_start = datetime.now()    
     
     # # TODO: Validate availability of the tour by dates
     
@@ -69,14 +73,14 @@ def widget (request, location, tour):
         "childs_price": childs_price,
         "min_people": min_people,
         "duration": duration,
-        "date_start": date_start,
-        "date_end": date_end,
+        "date_start": date_start.strftime("%Y-%m-%d"),
+        "date_end": date_end.strftime("%Y-%m-%d"),
         "monday": monday,
         "tuesday": tuesday,
         "wednesday": wednesday,
         "thursday": thursday,
         "friday": friday,
-        "saturnday": saturnday,
+        "saturday": saturday,
         "sunday": sunday,
         "times": times,
         "hotels": hotels,        
