@@ -158,3 +158,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+# Allow iframing from other websites
+X_FRAME_OPTIONS = 'ALLOWALL'

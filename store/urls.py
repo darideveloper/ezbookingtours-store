@@ -7,10 +7,11 @@ admin.site.site_title = 'Ezbookingtours Store'
 admin.site.site_url = 'https://ezbookingtours.com'
 admin.site.index_title = "Admin"
 
+app_name = "store"
 
 urlpatterns = [
     path ('', views.index, name="index"),
-    path ('widget/<str:location>/<str:tour>/', views.widget, name='widget')
+    path ('widget/<str:location>/<str:tour>/', views.widget, name='widget'),
 ]
     
     

@@ -48,7 +48,6 @@ function update_pick_up () {
   document.querySelector('.pick-up span').innerHTML = hotel.pick_up
 }
 
-
 // DATES
 
 // Validate date of the week when change date
@@ -114,8 +113,10 @@ incress_childs.addEventListener('click', function(e) {
 
 // Update hotels (and pick ups) options after change the time
 input_time.addEventListener('change', function(e) {
-  update_hotels ()  
-  update_pick_up ()
+  if (input_hotel) {
+    update_hotels ()
+    update_pick_up ()
+  }
 })
 
 // PICK UP

@@ -1,7 +1,16 @@
+import os
+import requests
 from . import models
 from datetime import datetime
+from dotenv import load_dotenv
+from django.urls import reverse
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+# Get enviroment variables
+load_dotenv()
+HOST = os.getenv('HOST')
 
 # Create your views here.
 def index (request):
@@ -11,9 +20,10 @@ def index (request):
     }
     return JsonResponse(response)
 
+@csrf_exempt
 def widget (request, location, tour):
     """ Redirect to store admin page """
-    
+        
     # Get tours
     tours = models.Tour.objects.filter (location=location, name=tour, is_active=True)
     
@@ -92,24 +102,30 @@ def widget (request, location, tour):
             "hotels": hotels,        
         })
 
-    # Get and save form data in post
+    # Process form in post
     elif request.method == 'POST':
-        # Get form varuables
-        id_pick_up = request.POST.get('hotel')
-        first_name = request.POST.get('first-name')
-        last_name = request.POST.get('last-name')
-        email = request.POST.get('email')
-        adults_num = request.POST.get('adults')
-        childs_num = request.POST.get('childs')
-        tour_date = request.POST.get('date')
-        tour_time = request.POST.get('time')
         
+        # Get form varuables
+        id_pick_up = request.POST.get('hotel', "")
+        first_name = request.POST.get('first-name', ""),
+        last_name = request.POST.get('last-name', ""),
+        email = request.POST.get('email', ""),
+        adults_num = int(request.POST.get('adults', 0))
+        childs_num = int(request.POST.get('childs', 0))
+        tour_date = request.POST.get('date', "")
+        tour_time = request.POST.get('time', "")
+    
+        # Get pick object if exists
+        pick_up = None
+        if id_pick_up: 
+            pick_up = models.PickUp.objects.get(id=id_pick_up)
+    
         # Calculate total price
-        total = (int(adults_num) * adults_price) + (int(childs_num) * childs_price)
+        total = (adults_num * adults_price) + (childs_num * childs_price)
         
         # Save new sale
         new_sale = models.Sale (
-            id_pick_up = id_pick_up,
+            id_pick_up = pick_up,
             first_name = first_name,
             last_name = last_name,
             email = email,
@@ -120,7 +136,54 @@ def widget (request, location, tour):
             tour_time = tour_time,            
         )
         new_sale.save ()
-        return HttpResponse("Saved")
+
+        # Create stripe description
+        stripe_link = "https://www.facebook.com/"
+        stripe_description = f"Tour de ezbookingtours.com, en la fecha {tour_date} y hora {tour_time}. "
+        if id_pick_up:
+            pickup = models.PickUp.objects.get(id=id_pick_up)
+            pickup_time = pickup.time.strftime("%H:%M")
+            hotel = pickup.hotel_id.name
+            stripe_description += f"Pick up en hotel {hotel} a las {pickup_time}"
+            
+        # Generate data for stripe api
+        products = {}
+        if adults_num > 0: 
+            products[f"{tour} {location}, adulto"] = {
+                "amount": adults_num,
+                "image_url": "https://ezbookingtours.com/wp-content/uploads/2022/04/EZ-Booking-Tours-Logo.png",
+                # "price": float(1),
+                "price": float(adults_price),
+                "description": stripe_description
+            }
+            
+        if childs_num > 0:
+            products[f"{tour} {location}, niño"] = {
+                "amount": childs_num,
+                "image_url": "https://ezbookingtours.com/wp-content/uploads/2022/04/EZ-Booking-Tours-Logo.png",
+                "price": float(childs_price),
+                "description": stripe_description
+            }
+            
+        request_json = {
+            "user": "cancunconcier",
+            "url": f"{HOST}/store/success/{new_sale.id}",
+            "products": products 
+        }
         
-        
-        
+        # Get buy url from stripe api
+        res = requests.post("http://daridev2.pythonanywhere.com/", json=request_json)
+        res_data = res.json()
+        print (res_data)
+        if not "error" in res_data:
+            stripe_link = res_data["stripe_url"]
+
+            # Return payment page who redirect to stripe 
+            return render(request, 'store/payment.html', {"stripe_link": stripe_link})
+        else: 
+            # Return error page
+            return render(request, 'store/404.html')
+
+
+def success (request):
+    return HttpResponse("success payment")
