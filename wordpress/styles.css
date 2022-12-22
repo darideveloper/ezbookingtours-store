@@ -1,0 +1,4 @@
+/* Hide user buttons */
+.fila-menu-superior .et_pb_column--with-menu {
+	display: none !important;
+}
