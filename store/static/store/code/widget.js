@@ -120,18 +120,28 @@ input_time.addEventListener('change', function(e) {
 
 // PICK UP
 
-// Update pick up time after change the hotel
-input_hotel.addEventListener('change', function(e) {
-  update_pick_up ()
-})
+// Update pick up time after change the hotel, if hotel input exist
+if (input_hotel) { 
+  input_hotel.addEventListener('change', function(e) {
+    update_pick_up ()
+  })
+}
 
 // ON LOAD  
 
 // Update price when page load
 update_price ()
 
-// Update hotels options when page load
-update_hotels ()  
+// Validate if hotel input exist
+if (input_hotel) {
+  // Update hotels options when page load
+  update_hotels ()  
+  
+  // Update pick up when page load
+  update_pick_up ()
 
-// Update pick up when page load
-update_pick_up ()
+} else {
+  // Delete pick up date if hotel input not exist
+  document.querySelector('.pick-up').classList.add("d-none")
+  document.querySelector('label[for="hotel"]').classList.add('d-none')
+}

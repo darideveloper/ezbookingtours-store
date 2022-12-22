@@ -69,16 +69,15 @@
   <label class="d-block mt-4" for="hotel">
     <h2 class="fs-5">Hotel</h2>
   </label>
+  {% if hotels %}
   <select class="py-2 px-4 w-100" name="hotel" id="hotel" required>
-    <!-- {% for hotel in hotels %}
-    <option value="{{ hotel.hotel }}">{{ hotel.hotel }}</option>
-    {% endfor %} -->
   </select>
-  <p class="pick-up fs-6 mt-1 ms-4">
+  {% endif %}
+  <p class="pick-up fs-6 mt-1 ms-4 mb-0">
     Pick up: <span>10:40 hrs</span>
   </p>
 
-  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill">Agendar</button>
+  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill mt-5">Agendar</button>
 </form>
 {% endblock %}
 
