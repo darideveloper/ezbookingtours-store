@@ -128,6 +128,11 @@ if (input_hotel) {
   })
 }
 
+// Show spinner when submit form
+document.querySelector('form').addEventListener('submit', function(e) {
+  document.querySelector('.wrapper-spinner').classList.remove('d-none')
+})
+
 // ON LOAD  
 
 // Update price when page load
