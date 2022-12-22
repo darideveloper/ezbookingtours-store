@@ -20,7 +20,6 @@ class Tour (models.Model):
     saturday = models.BooleanField(default=True, verbose_name='Sabado', help_text='Si el tour se realiza los sabados')
     sunday = models.BooleanField(default=True, verbose_name='Domingo', help_text='Si el tour se realiza los domingos')
     
-    
     def __str__(self):
         return f"{self.name} - {self.location}"
     
@@ -101,7 +100,7 @@ class PickUp (models.Model):
         
 class Sale (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
-    id_pick_up = models.ForeignKey(PickUp, on_delete=models.CASCADE, verbose_name='Tour Pick Up', help_text='Tour seleccionado con horario, hotel y pick up', )
+    id_pick_up = models.ForeignKey(PickUp, on_delete=models.CASCADE, verbose_name='Tour Pick Up', help_text='Tour seleccionado con horario, hotel y pick up', null=True, blank=True)
     first_name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre del cliente')
     last_name = models.CharField(max_length=150, verbose_name='Apellido', db_index=True, help_text='Apellido del cliente')
     email = models.EmailField(max_length=150, verbose_name='Email', db_index=True, help_text='Email del cliente')
@@ -110,6 +109,7 @@ class Sale (models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total', help_text='Total de la venta')
     is_paid = models.BooleanField(default=False, verbose_name='Pagado', help_text='Si el tour esta pagado o no')
     tour_date = models.DateTimeField(default=timezone.now, verbose_name='Fecha tour', help_text='Fecha del tour')
+    tour_time = models.TimeField(default=timezone.now, verbose_name='Hora tour', help_text='Hora del tour')
     buy_date = models.DateTimeField(default=timezone.now, verbose_name='Fecha venta', help_text='Fecha de venta')
     
     def __str__(self):

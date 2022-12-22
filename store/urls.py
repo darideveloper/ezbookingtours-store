@@ -10,7 +10,7 @@ admin.site.index_title = "Admin"
 
 urlpatterns = [
     path ('', views.index, name="index"),
-    path ('widget/<str:location>/<str:tour>', views.widget, name='widget')
+    path ('widget/<str:location>/<str:tour>/', views.widget, name='widget')
 ]
     
     
