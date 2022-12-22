@@ -37,6 +37,7 @@ def widget (request, location, tour):
     childs_price = tours[0].childs_price
     min_people = tours[0].min_people
     duration = tours[0].duration    
+    is_active = tours[0].is_active
     date_start = tours[0].date_start
     date_end = tours[0].date_end
     monday = tours[0].monday
@@ -50,11 +51,17 @@ def widget (request, location, tour):
     # Render form in get
     if request.method == 'GET':
         
+        # Validate end date
+        if date_end < datetime.now().date():
+            return render(request, 'store/404.html') 
+        
+        # Validate active status
+        if not is_active:
+            return render(request, 'store/404.html') 
+        
         # Fix start date
         if  date_start < datetime.now().date():
-            date_start = datetime.now()    
-        
-        # # TODO: Validate availability of the tour by dates
+            date_start = datetime.now()
         
         # Get tour times
         tour_times = models.TourTime.objects.filter (tour_id=id)
