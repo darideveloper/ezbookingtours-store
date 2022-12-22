@@ -14,25 +14,25 @@
   </h1>
   <hr>
   <h2 class="fs-5">Duración</h2>
-  <p class="fs-5 mb-0">{{ duration }} hrs</p>
+  <p class="fs-6 mb-0">{{ duration }} hrs</p>
 
   <label class="d-block mt-4" for="email">
-    <h2 class="fs-5">Email</h2>
+    <h2 class="fs-6">Email</h2>
   </label>
   <input class="py-2 px-4 w-100" type="email" name="email" id="email" placeholder="sample@gmail.com" required>
 
   <label class="d-block mt-4" for="first-name">
-    <h2 class="fs-5">Nombre(s)</h2>
+    <h2 class="fs-6">Nombre(s)</h2>
   </label>
   <input class="py-2 px-4 w-100" type="text" name="first-name" id="first-name" placeholder="Omar" required>
 
   <label class="d-block mt-4" for="last-name">
-    <h2 class="fs-5">Apellidos</h2>
+    <h2 class="fs-6">Apellidos</h2>
   </label>
   <input class="py-2 px-4 w-100" type="text" name="last-name" id="last-name" placeholder="Guzman"  required>
 
   <label class="d-block mt-4" for="adults">
-    <h2 class="fs-5">Adultos</h2>
+    <h2 class="fs-6">Adultos</h2>
   </label>
   <div class="num-input adults-wrapper d-flex align-items-center justify-content-between">
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
@@ -41,7 +41,7 @@
   </div>
 
   <label class="d-block mt-4" for="childs">
-    <h2 class="fs-5">Niños</h2>
+    <h2 class="fs-6">Niños</h2>
   </label>
   <div class="num-input childs-wrapper d-flex align-items-center justify-content-between">
     <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
@@ -50,7 +50,7 @@
   </div>
 
   <label class="d-block mt-4" for="date">
-    <h2 class="fs-5">Fecha</h2>
+    <h2 class="fs-6">Fecha</h2>
   </label>
   <input class="py-2 px-4 w-100" type="date" name="date" id="date" min="{{ date_start }}" max="{{ date_end }}" required>
   <p class="fs-6 text-danger d-none ms-4">
@@ -59,7 +59,7 @@
   </p>
 
   <label class="d-block mt-4" for="time">
-    <h2 class="fs-5">Hora</h2>
+    <h2 class="fs-6">Hora</h2>
   </label>
   <select class="py-2 px-4 w-100" name="time" id="time"  required>
     {% for time in times %}
@@ -68,7 +68,7 @@
   </select>
 
   <label class="d-block mt-4" for="hotel">
-    <h2 class="fs-5">Hotel</h2>
+    <h2 class="fs-6">Hotel</h2>
   </label>
   {% if hotels %}
   <select class="py-2 px-4 w-100" name="hotel" id="hotel" required>
