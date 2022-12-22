@@ -2,3 +2,7 @@
 .fila-menu-superior .et_pb_column--with-menu {
 	display: none !important;
 }
+
+#columnaDerecha {
+	position: initial !important;
+}
