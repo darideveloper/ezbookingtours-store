@@ -13,14 +13,11 @@ def index (request):
 
 def widget (request, location, tour):
     """ Redirect to store admin page """
-    response = {
-        "status": "running",
-    }
     
     # get tours
     tours = models.Tour.objects.filter (location=location, name=tour, is_active=True)
     
-    # Show error page if tour not exist
+    # Return error of tour not found
     if tours.count() == 0:
         return render(request, 'store/404.html')
     
@@ -51,6 +48,10 @@ def widget (request, location, tour):
     tour_times_ids = map(lambda tour_time: tour_time.id, tour_times)
     times = list(map(lambda tour_time: tour_time.time_start.strftime("%H:%M"), tour_times))
     
+    # Return error of times not found
+    if not times:
+        return render(request, 'store/404.html')
+    
     # Get pick ups available for the tours
     pick_ups = models.PickUp.objects.filter (tour_time_id__in=tour_times_ids)
     
@@ -69,10 +70,8 @@ def widget (request, location, tour):
         
         hotels.append ({"id": pick_up_id, "hotel": hotel_text, "pick_up": pick_up_time, "tour_time": tour_time})
       
-    print(hotels)
      
-    # Render and submit data
-        
+    # Render and submit data        
     return render(request, 'store/widget.html', {
         "adults_price": adults_price,
         "childs_price": childs_price,
