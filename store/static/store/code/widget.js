@@ -64,10 +64,19 @@ input_date.addEventListener('change', function(e) {
 
   // Show error message if date is not available
   if (week_day_available) {
+
+    // Hide error message
     input_date_error.classList.add('d-none')
+
+    // Activate submit button
+    submit_button.disabled = false
   } else {
+    // Show error message
     input_date_error.classList.remove('d-none')
     input_date_error.querySelector ("span").innerHTML = week_day_spanish
+
+    // Deactivate submit button
+    submit_button.disabled = true
   }
 })
 
