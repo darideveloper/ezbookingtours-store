@@ -106,7 +106,8 @@ def widget (request, location, tour):
             "saturday": saturday,
             "sunday": sunday,
             "times": times,
-            "hotels": hotels,        
+            "hotels": hotels,    
+            "now": datetime.now().strftime("%Y-%m-%d"),    
         })
 
     # Process form in post

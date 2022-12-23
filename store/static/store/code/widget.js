@@ -48,12 +48,8 @@ function update_pick_up () {
   document.querySelector('.pick-up span').innerHTML = hotel.pick_up
 }
 
-// DATES
-
-// Validate date of the week when change date
-const week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const week_days_spanish = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-input_date.addEventListener('change', function(e) {
+function validate_date () {
+  // Validate date of the input form
 
   // Get date of the week
   const selected_date = new Date(input_date.value)
@@ -78,7 +74,14 @@ input_date.addEventListener('change', function(e) {
     // Deactivate submit button
     submit_button.disabled = true
   }
-})
+}
+
+// DATES
+
+// Validate date of the week when change date
+const week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const week_days_spanish = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+input_date.addEventListener('change', validate_date)
 
 // PRICE
 
@@ -160,3 +163,6 @@ if (input_hotel) {
   document.querySelector('.pick-up').classList.add("d-none")
   document.querySelector('label[for="hotel"]').classList.add('d-none')
 }
+
+// Validate date when page load
+validate_date ()
