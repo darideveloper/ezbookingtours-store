@@ -113,10 +113,10 @@ def widget (request, location, tour):
     elif request.method == 'POST':
         
         # Get form varuables
-        id_pick_up = request.POST.get('hotel', "")
-        first_name = request.POST.get('first-name', ""),
-        last_name = request.POST.get('last-name', ""),
-        email = request.POST.get('email', ""),
+        id_pick_up = request.POST.get("hotel", "")
+        first_name = request.POST.get("first-name", "")
+        last_name = request.POST.get("last-name", "")
+        email = request.POST.get("email", "")
         adults_num = int(request.POST.get('adults', 0))
         childs_num = int(request.POST.get('childs', 0))
         tour_date = request.POST.get('date', "")
