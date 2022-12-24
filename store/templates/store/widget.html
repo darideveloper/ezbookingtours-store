@@ -3,87 +3,89 @@
 
 
 {% block content %}
-<form action="." method="POST">
-  {% csrf_token %}
-  <h1 class="price text-primary fw-bold mb-0">
-    $
-    <span>
-      0
-    </span>
-    USD
-  </h1>
-  <hr>
-  <h2 class="fs-5">Duración</h2>
-  <p class="fs-6 mb-0">{{ duration }} hrs</p>
-
-  <label class="d-block mt-4" for="email">
-    <h2 class="fs-6">Email</h2>
-  </label>
-  <input class="py-2 px-4 w-100" type="email" name="email" id="email" placeholder="sample@gmail.com" required>
-
-  <label class="d-block mt-4" for="first-name">
-    <h2 class="fs-6">Nombre(s)</h2>
-  </label>
-  <input class="py-2 px-4 w-100" type="text" name="first-name" id="first-name" placeholder="Omar" required>
-
-  <label class="d-block mt-4" for="last-name">
-    <h2 class="fs-6">Apellidos</h2>
-  </label>
-  <input class="py-2 px-4 w-100" type="text" name="last-name" id="last-name" placeholder="Guzman"  required>
-
-  <label class="d-block mt-4" for="adults">
-    <h2 class="fs-6">Adultos</h2>
-  </label>
-  <div class="num-input adults-wrapper d-flex align-items-center justify-content-between">
-    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
-    <input class="py-2 px-4 num text-center border-0" type="number" name="adults" id="adults" min="1" max="20" value="1" readonly>
-    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
-  </div>
-
-  <label class="d-block mt-4" for="childs">
-    <h2 class="fs-6">Niños</h2>
-  </label>
-  <div class="num-input childs-wrapper d-flex align-items-center justify-content-between">
-    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
-    <input class="py-2 px-4 num text-center border-0" type="number" name="childs" id="childs" min="0" max="20" value="0" readonly>
-    <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
-  </div>
-
-  <label class="d-block mt-4" for="date">
-    <h2 class="fs-6">Fecha</h2>
-  </label>
-  <input class="py-2 px-4 w-100" type="date" name="date" id="date" min="{{ date_start }}" max="{{ date_end }}" value="{{ now }}"  required>
-  <p class="fs-6 text-danger d-none ms-4">
-    Este tour no está disponible los días 
-    <span>dia</span>
-  </p>
-
-  <label class="d-block mt-4" for="time">
-    <h2 class="fs-6">Hora</h2>
-  </label>
-  <select class="py-2 px-4 w-100" name="time" id="time"  required>
-    {% for time in times %}
-    <option value="{{ time }}">{{ time }}</option>
-    {% endfor %}
-  </select>
-
-  <label class="d-block mt-4" for="hotel">
-    <h2 class="fs-6">Hotel</h2>
-  </label>
-  {% if hotels %}
-  <select class="py-2 px-4 w-100" name="hotel" id="hotel" required>
-  </select>
-  {% endif %}
-  <p class="pick-up fs-6 mt-1 ms-4 mb-0">
-    Pick up: <span>10:40 hrs</span>
-  </p>
-
-  <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill mt-5" disabled>Agendar</button>
-
-  <div class="wrapper-spinner position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center d-none">
-    <img src="{% static 'store/imgs/spinner.gif' %}" alt="spinner icon" width="50">
-  </div>
-</form>
+<div class="content border px-4 py-5 position-relative">
+  <form action="." method="POST">
+    {% csrf_token %}
+    <h1 class="price text-primary fw-bold mb-0">
+      $
+      <span>
+        0
+      </span>
+      USD
+    </h1>
+    <hr>
+    <h2 class="fs-5">Duración</h2>
+    <p class="fs-6 mb-0">{{ duration }} hrs</p>
+  
+    <label class="d-block mt-4" for="email">
+      <h2 class="fs-6">Email</h2>
+    </label>
+    <input class="py-2 px-4 w-100" type="email" name="email" id="email" placeholder="sample@gmail.com" required>
+  
+    <label class="d-block mt-4" for="first-name">
+      <h2 class="fs-6">Nombre(s)</h2>
+    </label>
+    <input class="py-2 px-4 w-100" type="text" name="first-name" id="first-name" placeholder="Omar" required>
+  
+    <label class="d-block mt-4" for="last-name">
+      <h2 class="fs-6">Apellidos</h2>
+    </label>
+    <input class="py-2 px-4 w-100" type="text" name="last-name" id="last-name" placeholder="Guzman"  required>
+  
+    <label class="d-block mt-4" for="adults">
+      <h2 class="fs-6">Adultos</h2>
+    </label>
+    <div class="num-input adults-wrapper d-flex align-items-center justify-content-between">
+      <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
+      <input class="py-2 px-4 num text-center border-0" type="number" name="adults" id="adults" min="1" max="20" value="1" readonly>
+      <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
+    </div>
+  
+    <label class="d-block mt-4" for="childs">
+      <h2 class="fs-6">Niños</h2>
+    </label>
+    <div class="num-input childs-wrapper d-flex align-items-center justify-content-between">
+      <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">-</button>
+      <input class="py-2 px-4 num text-center border-0" type="number" name="childs" id="childs" min="0" max="20" value="0" readonly>
+      <button class="button button-seconday py-1 fs-4 rounded-circle" type="button">+</button>
+    </div>
+  
+    <label class="d-block mt-4" for="date">
+      <h2 class="fs-6">Fecha</h2>
+    </label>
+    <input class="py-2 px-4 w-100" type="date" name="date" id="date" min="{{ date_start }}" max="{{ date_end }}" value="{{ now }}"  required>
+    <p class="fs-6 text-danger d-none ms-4">
+      Este tour no está disponible los días 
+      <span>dia</span>
+    </p>
+  
+    <label class="d-block mt-4" for="time">
+      <h2 class="fs-6">Hora</h2>
+    </label>
+    <select class="py-2 px-4 w-100" name="time" id="time"  required>
+      {% for time in times %}
+      <option value="{{ time }}">{{ time }}</option>
+      {% endfor %}
+    </select>
+  
+    <label class="d-block mt-4" for="hotel">
+      <h2 class="fs-6">Hotel</h2>
+    </label>
+    {% if hotels %}
+    <select class="py-2 px-4 w-100" name="hotel" id="hotel" required>
+    </select>
+    {% endif %}
+    <p class="pick-up fs-6 mt-1 ms-4 mb-0">
+      Pick up: <span>10:40 hrs</span>
+    </p>
+  
+    <button type="submit" class="w-100 button button-primary py-2 fs-2 mt-3 rounded-pill mt-5" disabled>Agendar</button>
+  
+    <div class="wrapper-spinner position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center d-none">
+      <img src="{% static 'store/imgs/spinner.gif' %}" alt="spinner icon" width="50">
+    </div>
+  </form>
+</div>
 
 {% endblock %}
 

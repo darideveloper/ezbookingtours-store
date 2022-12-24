@@ -29,7 +29,7 @@ def widget (request, location, tour):
     
     # Return error of tour not found
     if tours.count() == 0:
-        return render(request, 'store/404.html')
+        return render(request, 'store/widget_404.html')
     
     # Get tour data
     id = tours[0].id
@@ -53,11 +53,11 @@ def widget (request, location, tour):
         
         # Validate end date
         if date_end < datetime.now().date():
-            return render(request, 'store/404.html') 
+            return render(request, 'store/widget_404.html') 
         
         # Validate active status
         if not is_active:
-            return render(request, 'store/404.html') 
+            return render(request, 'store/widget_404.html') 
         
         # Fix start date
         if  date_start < datetime.now().date():
@@ -70,7 +70,7 @@ def widget (request, location, tour):
         
         # Return error of times not found
         if not times:
-            return render(request, 'store/404.html')
+            return render(request, 'store/widget_404.html')
         
         # Get pick ups available for the tours
         pick_ups = models.PickUp.objects.filter (tour_time_id__in=tour_times_ids)
@@ -190,7 +190,7 @@ def widget (request, location, tour):
             return render(request, 'store/payment.html', {"stripe_link": stripe_link})
         else: 
             # Return error page
-            return render(request, 'store/404.html')
+            return render(request, 'store/widget_404.html')
 
 
 def success (request, sale_id):
@@ -200,7 +200,7 @@ def success (request, sale_id):
     
     # Return error page if sale not exists
     if not sale:
-        return render(request, 'store/404.html')
+        return render(request, 'store/widget_404.html')
     
     # Update pay status
     sale.is_paid = True
@@ -228,3 +228,9 @@ def success (request, sale_id):
             "email": sale.email,  
         }
     })
+    
+def error_404 (request, exception):
+    return render(request, 'store/404.html')
+
+def error_404_view (request):
+    return render(request, 'store/404.html')
