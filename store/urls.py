@@ -12,6 +12,7 @@ app_name = "store"
 urlpatterns = [
     path ('', views.index, name="index"),
     path ('widget/<str:location>/<str:tour>/', views.widget, name='widget'),
+    path ('success/<int:sale_id>/', views.success, name='success'),
 ]
     
     

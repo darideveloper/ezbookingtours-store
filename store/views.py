@@ -196,12 +196,35 @@ def widget (request, location, tour):
 def success (request, sale_id):
     
     # Get sale with id
-    sale = models.Sale.objects.filter(id=sale_id)
+    sale = models.Sale.objects.filter(id=sale_id).first()
+    
+    # Return error page if sale not exists
+    if not sale:
+        return render(request, 'store/404.html')
     
     # Update pay status
-    sale.update(status="paid")
-    
-    
-    
-    # Return sale data in template    
-    return render(request, 'store/sucess.html')
+    sale.is_paid = True
+    sale.save ()
+        
+    # Return summary data in template    
+    return render(request, 'store/sucess.html', {
+        "id_sale": sale.id,
+        "tour": {
+            "name": sale.tour.name,
+            "location": sale.tour.location,
+            "hotel": sale.hotel.name if sale.hotel else "",
+            "pick_up": sale.pick_up_time.strftime("%H:%M") if sale.pick_up_time else "",
+            "adults_num": sale.adults_num,
+            "childs_num": sale.childs_num,
+            "adults_price": sale.tour.adults_price,
+            "childs_price": sale.tour.childs_price,
+            "total": sale.total,
+            "date": sale.tour_date,
+            "time": sale.tour_time, 
+        },
+        "buyer": {
+            "first_name": sale.first_name,
+            "last_name": sale.last_name,
+            "email": sale.email,  
+        }
+    })
