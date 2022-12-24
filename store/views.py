@@ -133,7 +133,9 @@ def widget (request, location, tour):
         
         # Save new sale
         new_sale = models.Sale (
-            id_pick_up = pick_up,
+            hotel = pick_up.hotel_id if pick_up else "",
+            pick_up_time = pick_up.time if pick_up else "",
+            id_tour = tours[0],
             first_name = first_name,
             last_name = last_name,
             email = email,
@@ -141,17 +143,16 @@ def widget (request, location, tour):
             childs_num = childs_num,
             total = total,
             tour_date = tour_date,
-            tour_time = tour_time,            
+            tour_time = tour_time,
         )
         new_sale.save ()
 
         # Create stripe description
         stripe_link = "https://www.facebook.com/"
         stripe_description = f"Tour de ezbookingtours.com, en la fecha {tour_date} y hora {tour_time}. "
-        if id_pick_up:
-            pickup = models.PickUp.objects.get(id=id_pick_up)
-            pickup_time = pickup.time.strftime("%H:%M")
-            hotel = pickup.hotel_id.name
+        if pick_up:
+            pickup_time = pick_up.time.strftime("%H:%M")
+            hotel = pick_up.hotel_id.name
             stripe_description += f"Pick up en hotel {hotel} a las {pickup_time}"
             
         # Generate data for stripe api
@@ -182,7 +183,6 @@ def widget (request, location, tour):
         # Get buy url from stripe api
         res = requests.post("http://daridev2.pythonanywhere.com/", json=request_json)
         res_data = res.json()
-        print (res_data)
         if not "error" in res_data:
             stripe_link = res_data["stripe_url"]
 
@@ -193,5 +193,15 @@ def widget (request, location, tour):
             return render(request, 'store/404.html')
 
 
-def success (request):
-    return HttpResponse("success payment")
+def success (request, sale_id):
+    
+    # Get sale with id
+    sale = models.Sale.objects.filter(id=sale_id)
+    
+    # Update pay status
+    sale.update(status="paid")
+    
+    
+    
+    # Return sale data in template    
+    return render(request, 'store/sucess.html')

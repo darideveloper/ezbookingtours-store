@@ -5,16 +5,16 @@ from . import models
 class TourAdmin (admin.ModelAdmin):
     list_display = ('name', 'location', 'duration', 'is_active', "date_start", "date_end")
     list_filter = ('min_people', 'location', 'duration', 'is_active', "date_start", "date_end")
-    ordering = ['name', 'location', 'duration', 'is_active', "date_start"]
-    search_fields = ['name', 'location']
+    ordering = ('name', 'location', 'duration', 'is_active', "date_start")
+    search_fields = ('name', 'location')
     search_help_text = "Busca tours por nombre o localización"
     
 @admin.register (models.Hotel)
 class HotelAdmin (admin.ModelAdmin):
     list_display = ('name', 'address',)
     list_filter = ('address',)
-    ordering = ['name']
-    search_fields = ['name']
+    ordering = ('name',)
+    search_fields = ('name',)
     search_help_text = "Busca hoteles por nombre"
 
 class TimeTourFilter (admin.SimpleListFilter):
@@ -46,7 +46,7 @@ class TimeTourFilter (admin.SimpleListFilter):
 class TourTimeAdmin (admin.ModelAdmin):
     list_display = ('tour_id', 'time_start')
     list_filter = ('time_start', TimeTourFilter)
-    ordering = ['tour_id', 'time_start']
+    ordering = ('tour_id', 'time_start')
     
 class PickUpTourFilter (admin.SimpleListFilter):
     """ Custom filter for pick up admin """
@@ -78,10 +78,10 @@ class PickUpTourFilter (admin.SimpleListFilter):
 class PickUpAdmin (admin.ModelAdmin):
     list_display = ('hotel_id', 'tour_time_id', 'time')
     list_filter = ('hotel_id', PickUpTourFilter)
-    ordering = ['hotel_id', 'tour_time_id']
+    ordering = ('hotel_id', 'tour_time_id')
 
 @admin.register (models.Sale)
 class SalesAdmin (admin.ModelAdmin):
-    list_display = ('id_pick_up', 'first_name', 'last_name', 'email', 'adults_num', 'childs_num', 'total', 'is_paid', 'tour_date', 'buy_date')
+    list_display = ('email', 'tour', 'pick_up_time', 'total', 'is_paid', 'tour_date', 'buy_date')
     list_filter = ('email', 'is_paid', 'tour_date', 'buy_date')
-    ordering = ['id_pick_up', 'email', 'total', 'is_paid', 'tour_date', 'buy_date']
+    ordering = ('email', 'tour', 'pick_up_time', 'total', 'is_paid', 'tour_date', 'buy_date')

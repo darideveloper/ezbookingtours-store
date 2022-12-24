@@ -100,7 +100,9 @@ class PickUp (models.Model):
         
 class Sale (models.Model):
     id = models.AutoField(primary_key=True, auto_created=True, unique=True, editable=False, verbose_name='ID', db_index=True)
-    id_pick_up = models.ForeignKey(PickUp, on_delete=models.CASCADE, verbose_name='Tour Pick Up', help_text='Tour seleccionado con horario, hotel y pick up', null=True, blank=True)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Hotel', help_text='Hotel al que pertenece el tour en el horario seleccionado', null=True, blank=True)
+    pick_up_time = models.TimeField(verbose_name='Hora pick up', help_text='Hora de pick up en hotel', null=True, blank=True)
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, verbose_name='Tour', help_text='Tour seleccionado', null=False, blank=False)
     first_name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre del cliente')
     last_name = models.CharField(max_length=150, verbose_name='Apellido', db_index=True, help_text='Apellido del cliente')
     email = models.EmailField(max_length=150, verbose_name='Email', db_index=True, help_text='Email del cliente')
@@ -113,11 +115,7 @@ class Sale (models.Model):
     buy_date = models.DateTimeField(default=timezone.now, verbose_name='Fecha venta', help_text='Fecha de venta')
     
     def __str__(self):
-        tour_name = self.id_pick_up.tour_time_id.tour_id.name
-        hotel_name = self.id_pick_up.hotel_id.name
-        tour_time = self.id_pick_up.tour_time_id.time_start
-        return f"{self.first_name} {self.last_name} - Tour: {tour_name} - Hotel {hotel_name}, Hora {tour_time} - Total: {self.total} - Pagado: {self.is_paid}"
-    
+        return f"{self.first_name} {self.last_name} - Tour: {self.id_tour} - Hotel {self.hotel}, Hora {tour_time} - Total: {self.total} - Pagado: {self.is_paid}"
     class Meta:
         verbose_name_plural = "Ventas"
         verbose_name = "Venta"
