@@ -14,6 +14,10 @@ import os
 import django_heroku
 import dj_database_url
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load enviroment variables (for local)
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +31,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = 'mnksdfjhsdfjkhdfshgasdhcgvsdfjvdsfhuyf23654324233243#~€#~¬~€7o5=h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 # Application definition
 
