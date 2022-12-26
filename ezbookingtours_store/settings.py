@@ -165,3 +165,10 @@ django_heroku.settings(locals())
 
 # Allow iframing from other websites
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_CLIENT = os.getenv('EMAIL_CLIENT')
+EMAIL_USE_SSL = True

@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from .tools import send_sucess_mail
 
 # Get enviroment variables
 load_dotenv()
@@ -135,7 +136,7 @@ def widget (request, location, tour):
         new_sale = models.Sale (
             hotel = pick_up.hotel_id if pick_up else "",
             pick_up_time = pick_up.time if pick_up else "",
-            id_tour = tours[0],
+            tour = tours[0],
             first_name = first_name,
             last_name = last_name,
             email = email,
@@ -175,7 +176,7 @@ def widget (request, location, tour):
             }
             
         request_json = {
-            "user": "cancunconcier",
+            "user": "cancun_concierge_consolidated_supply",
             "url": f"{HOST}/store/success/{new_sale.id}",
             "products": products 
         }
@@ -205,10 +206,14 @@ def success (request, sale_id):
     # Update pay status
     sale.is_paid = True
     sale.save ()
-        
-    # Return summary data in template    
-    return render(request, 'store/sucess.html', {
+    
+    # Generate admins sale link
+    admin_sale_link = f"{HOST}/admin/store/sale/{sale.id}/change/" 
+    
+    context = {
         "id_sale": sale.id,
+        "is_email": False,
+        "admin_sale_link": admin_sale_link,
         "tour": {
             "name": sale.tour.name,
             "location": sale.tour.location,
@@ -227,7 +232,13 @@ def success (request, sale_id):
             "last_name": sale.last_name,
             "email": sale.email,  
         }
-    })
+    }
+    
+    # Send email to admin
+    send_sucess_mail (context)
+        
+    # Return summary data in template    
+    return render(request, 'store/success.html', context)
     
 def error_404 (request, exception):
     return render(request, 'store/404.html')

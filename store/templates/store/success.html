@@ -1,0 +1,72 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="content border px-4 py-5 position-relative">
+
+  {% if not is_email %}
+  <h1 class="fs-2 text-center mb-5">Pago realizado</h1>
+  {% endif %}
+  
+  <div class="content d-flex align-items-center justify-content-evenly mx-auto gap-5 flex-column flex-md-row w-80" style="max-width: 900px;">
+    
+    {% if not is_email %}
+    <img src="{% static 'store/imgs/logo.png' %}" width="200" alt="ezbookingtours logo">
+    {% endif %}
+
+    <div class="info">
+  
+      {% if is_email %}
+        <h2 class="fs-3">Inicio del proceso de compra</h2>
+        <p>
+          El cliente ha iniciado el proceso de comrpa. Si realiza el pago, recibirás una notificación de Stripe.
+          A contunuación se muestra el resumen del tour:
+        </p>
+      {% else %}
+        <h2 class="fs-3">Resumen de compra (EZBT{{id_sale}}):</h2>
+      {% endif %}
+  
+      <hr>
+  
+      <h3 class="fs-5 mb-3">Datos del comprador</h3>
+      <p class="ms-3">Nombre: <span class="fw-bold text-capitalize">{{buyer.first_name}}</span></p>
+      <p class="ms-3">Apellido: <span class="fw-bold text-capitalize">{{buyer.last_name}}</span></p>
+      <p class="ms-3">Email: <span class="fw-bold">{{buyer.email}}</span></p>
+  
+      <hr>
+  
+      <h3 class="fs-5 mb-3">Datos del tour</h3>
+      <p class="ms-3">Nombre: <span class="fw-bold text-capitalize">{{tour.name}}</span></p>
+      <p class="ms-3">Ubicación: <span class="fw-bold text-capitalize">{{tour.location}}</span></p>
+  
+      {% if tour.hotel and tour.pick_up %}
+        <p class="ms-3">Hotel: <span class="fw-bold text-capitalize">{{tour.hotel}}</span></p>
+        <p class="ms-3">Recogida: <span class="fw-bold text-capitalize">{{tour.pick_up}}</span></p>
+      {% endif %}
+  
+      <p class="ms-3">Adultos: <span class="fw-bold text-capitalize">{{tour.adults_price}} MXN X
+          {{tour.adults_num}}</span></p>
+      <p class="ms-3">Adultos: <span class="fw-bold text-capitalize">{{tour.childs_price}} MXN x
+          {{tour.childs_num}}</span></p>
+      <p class="ms-3 fs-5">Total: <span class="fw-bold text-capitalize">{{tour.total}} MXN</span></p>
+  
+      {% if is_email %}
+        <hr>
+        Puedes ver esta venta en el panel de administración, dando click <a href="{{admin_sale_link}}">aqí</a>
+      {% else %}
+        <button onclick="print()" class="button button-primary py-1 fs-4 rounded-pill mt-3" style="width: 300px;">Imprimir</button>
+      {% endif %}
+  
+      <style>
+        @media print {
+          .button {
+            display: none;
+          }
+        }
+      </style>
+  
+    </div>
+  </div>
+</div>
+
+{% endblock %}
