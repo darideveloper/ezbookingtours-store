@@ -115,7 +115,7 @@ class Sale (models.Model):
     buy_date = models.DateTimeField(default=timezone.now, verbose_name='Fecha venta', help_text='Fecha de venta')
     
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - Tour: {self.id_tour} - Hotel {self.hotel}, Hora {tour_time} - Total: {self.total} - Pagado: {self.is_paid}"
+        return f"{self.first_name} {self.last_name} - Tour: {self.tour} - Hotel {self.hotel}, Hora {self.tour_time} - Total: {self.total} - Pagado: {self.is_paid}"
     class Meta:
         verbose_name_plural = "Ventas"
         verbose_name = "Venta"
