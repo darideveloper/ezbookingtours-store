@@ -177,7 +177,7 @@ def widget (request, location, tour):
             
         request_json = {
             "user": "cancun_concierge_consolidated_supply",
-            "url": f"{HOST}/store/success/{new_sale.id}",
+            "url": f"{HOST}/success/{new_sale.id}",
             "products": products 
         }
         
