@@ -82,6 +82,6 @@ class PickUpAdmin (admin.ModelAdmin):
 
 @admin.register (models.Sale)
 class SalesAdmin (admin.ModelAdmin):
-    list_display = ('email', 'tour', 'pick_up_time', 'total', 'is_paid', 'tour_date', 'buy_date')
+    list_display = ('id', 'email', 'tour', 'pick_up_time', 'total', 'is_paid', 'tour_date', 'buy_date')
     list_filter = ('email', 'is_paid', 'tour_date', 'buy_date')
     ordering = ('email', 'tour', 'pick_up_time', 'total', 'is_paid', 'tour_date', 'buy_date')
