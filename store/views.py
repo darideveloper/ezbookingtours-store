@@ -134,8 +134,8 @@ def widget (request, location, tour):
         
         # Save new sale
         new_sale = models.Sale (
-            hotel = pick_up.hotel_id if pick_up else "",
-            pick_up_time = pick_up.time if pick_up else "",
+            hotel = pick_up.hotel_id if pick_up else None,
+            pick_up_time = pick_up.time if pick_up else None,
             tour = tours[0],
             first_name = first_name,
             last_name = last_name,
