@@ -182,7 +182,7 @@ def widget (request, location, tour):
         }
         
         # Get buy url from stripe api
-        res = requests.post("http://daridev2.pythonanywhere.com/", json=request_json)
+        res = requests.post("https://stripe-api-flask.herokuapp.com/", json=request_json)
         res_data = res.json()
         if not "error" in res_data:
             stripe_link = res_data["stripe_url"]
