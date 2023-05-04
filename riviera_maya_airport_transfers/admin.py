@@ -1,3 +1,18 @@
+
+from . import models
 from django.contrib import admin
 
-# Register your models here.
+@admin.register (models.AirbnbMunicipality)
+class AirbnbMunicipalityAdmin (admin.ModelAdmin):
+    list_display = ('name', 'extra_price')
+    ordering = ('name',)
+    
+@admin.register (models.Hotel)
+class HotelAdmin (admin.ModelAdmin):
+    list_display = ('name',)
+    ordering = ('name',)
+    
+@admin.register (models.Transport)
+class TransportAdmin (admin.ModelAdmin):
+    list_display = ('name', 'price', 'por_defecto',)
+    ordering = ('name',)
