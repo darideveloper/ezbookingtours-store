@@ -37,6 +37,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 
 INSTALLED_APPS = [
     'store',
+    'riviera_maya_airport_transfers'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
