@@ -14,5 +14,5 @@ class HotelAdmin (admin.ModelAdmin):
     
 @admin.register (models.Transport)
 class TransportAdmin (admin.ModelAdmin):
-    list_display = ('name', 'price', 'por_defecto',)
+    list_display = ('key', 'name', 'price', 'por_defecto',)
     ordering = ('name',)

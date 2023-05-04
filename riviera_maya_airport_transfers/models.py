@@ -18,6 +18,7 @@ class Hotel (models.Model):
         return f"{self.name}"
 
 class Transport (models.Model):
+    key = models.CharField(max_length=150, verbose_name='Clave', db_index=True, help_text='Clave del transporte', default='')
     name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre del transporte', default='')
     price = models.FloatField(verbose_name='Precio', help_text='Precio del transporte', default=0.0)
     por_defecto = models.BooleanField(verbose_name='Por defecto', help_text='Transporte por defecto', default=False)
