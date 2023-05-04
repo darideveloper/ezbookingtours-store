@@ -38,6 +38,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 INSTALLED_APPS = [
     'store',
     'riviera_maya_airport_transfers',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -173,3 +175,5 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_CLIENT = os.getenv('EMAIL_CLIENT')
 EMAIL_USE_SSL = True
+
+CORS_ALLOW_ALL_ORIGINS = True
