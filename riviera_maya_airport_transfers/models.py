@@ -13,6 +13,7 @@ class AirbnbMunicipality (models.Model):
     
 class Hotel (models.Model): 
     name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre del hotel', default='', unique=True)
+    extra_price = models.FloatField(verbose_name='Precio extra', help_text='Precio extra por el servicio en este hotel', default=0.0)
     
     def __str__ (self):
         return f"{self.name}"
