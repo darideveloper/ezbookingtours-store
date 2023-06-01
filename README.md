@@ -52,35 +52,35 @@ Project type: **client's project**
 
 # Details
 
-This project have been created in order to have a more detailed and custom checkout in the online store, with dynamic options not allowed by WordPress.\r
-\r
-The models/tables created in the database are:\r
-\r
-* Hotels\r
-* Pick ups en hoteles\r
-* Tiempo de tours\r
-* Tours\r
-* Ventas\r
-\r
-When a buy page of the online store loads, the dynamic link of the widget its generated based in the page content, and immediately its embedded the iframe and hidden the old checkout.\r
+This project have been created in order to have a more detailed and custom checkout in the online store, with dynamic options not allowed by WordPress.
+
+The models/tables created in the database are:
+
+* Hotels
+* Pick ups en hoteles
+* Tiempo de tours
+* Tours
+* Ventas
+
+When a buy page of the online store loads, the dynamic link of the widget its generated based in the page content, and immediately its embedded the iframe and hidden the old checkout.
 After the widget/iframe collected the sale data, the user its redirect to a stripe checkout.
 
 # Roadmap
 
-* [x] Create models\r
-* [x] Custom admin\r
-* [x] 404 page\r
-* [x] Widget\r
-\t* [x] Render with dynamic link\r
-\t* [x] Get info from models\r
-\t* [x] Embedded in WordPress\r
-\t* [x] Dynamic price\r
-\t* [x] Collect user data\r
-\t* [x] Show error screens where not found tour or time\r
-* [x] Save sales in database\r
-* [x] Loading spinner\r
-* [x] Success page after payment\r
-* [x] Submit email to client after sale\r
+* [x] Create models
+* [x] Custom admin
+* [x] 404 page
+* [x] Widget
+t* [x] Render with dynamic link
+t* [x] Get info from models
+t* [x] Embedded in WordPress
+t* [x] Dynamic price
+t* [x] Collect user data
+t* [x] Show error screens where not found tour or time
+* [x] Save sales in database
+* [x] Loading spinner
+* [x] Success page after payment
+* [x] Submit email to client after sale
 * [x] Connect to stripe checkout
 
 
