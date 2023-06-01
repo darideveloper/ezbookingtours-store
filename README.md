@@ -71,12 +71,12 @@ After the widget/iframe collected the sale data, the user its redirect to a stri
 * [x] Custom admin
 * [x] 404 page
 * [x] Widget
-t* [x] Render with dynamic link
-t* [x] Get info from models
-t* [x] Embedded in WordPress
-t* [x] Dynamic price
-t* [x] Collect user data
-t* [x] Show error screens where not found tour or time
+	* [x] Render with dynamic link
+	* [x] Get info from models
+	* [x] Embedded in WordPress
+	* [x] Dynamic price
+	* [x] Collect user data
+	* [x] Show error screens where not found tour or time
 * [x] Save sales in database
 * [x] Loading spinner
 * [x] Success page after payment
