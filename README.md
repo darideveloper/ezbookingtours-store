@@ -1,5 +1,5 @@
-<div><a href='https://github.com/github.com/darideveloper/blob/master/LICENSE' target='_blank'>
-            <img src='https://img.shields.io/github/license/github.com/darideveloper.svg?style=for-the-badge' alt='MIT License' height='30px'/>
+<div><a href='https://github.com/darideveloper/ezbookingtours-store/blob/master/LICENSE' target='_blank'>
+            <img src='https://img.shields.io/github/license/darideveloper/ezbookingtours-store.svg?style=for-the-badge' alt='MIT License' height='30px'/>
         </a><a href='https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/' target='_blank'>
                 <img src='https://img.shields.io/static/v1?style=for-the-badge&message=LinkedIn&color=0A66C2&logo=LinkedIn&logoColor=FFFFFF&label=' alt='Linkedin' height='30px'/>
             </a><a href='https://t.me/darideveloper' target='_blank'>
@@ -20,11 +20,7 @@ Visit at: **[ezbookingtours.com/tour/chichen-itza-tour-de-lujo-mexicanos-present
 
 Django dashboard to create checkout widgets to be embedded in WordPress online store [EZBookingTours](https://ezbookingtours.com/)
 
-Start date: **2022-12-15**
-
-Last update: **2023-05-11**
-
-Project type: **client's project**
+Project type: **client**
 
 </div><br><details>
             <summary>Table of Contents</summary>
@@ -82,5 +78,4 @@ After the widget/iframe collected the sale data, the user its redirect to a stri
 * [x] Success page after payment
 * [x] Submit email to client after sale
 * [x] Connect to stripe checkout
-
 
