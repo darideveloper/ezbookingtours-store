@@ -1,10 +1,16 @@
-
+import os
 import json
+import requests
+from dotenv import load_dotenv
 from django.http import JsonResponse
 from django.views import View
 from wedding import models
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+
+# Get enviroment variables
+load_dotenv()
+HOST = os.getenv('HOST')
 
 class IndexView (View):
     
@@ -43,4 +49,56 @@ class ValidateVipCodeView (View):
                 "message": "invalid vip code"
             })
         
+@method_decorator(csrf_exempt, name='dispatch')
+class BuyView (View):
+    
+    def post (self, request):
+        
+        # Get data
+        json_body = json.loads(request.body)
+        
+        name = json_body.get("name", "")
+        last_name = json_body.get("last-name", "")
+        arriving_price = json_body.get("arriving-price", 0.0)
+        departure_price = json_body.get("departure-price", 0.0)
+        vip_code = json_body.get("vip-code", "")
+        stripe_data = json_body.get("stripe-data", {})
+        
+        if not (name and last_name and arriving_price and departure_price and vip_code and stripe_data):
+            return JsonResponse({
+                "status": "error",
+                "message": "missing data"
+            })            
+        
+        # Save model
+        sale = models.Sale (
+            name=name,
+            last_name=last_name,
+            arriving_price=arriving_price,
+            departure_price=departure_price,
+            vip_code=vip_code,
+        )
+        sale.save ()
+        
+        # Generate stripe link
+        res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
+            "user": "cancun_concierge_consolidated_supply",
+            "url": f"{HOST}/success/{sale.id}",
+            "products": stripe_data
+        })
+        res_data = res.json()
+        
+        if not "error" in res_data:
+            stripe_link = res_data["stripe_url"]
+            return JsonResponse({
+                "status": "success",
+                "message": "stripe link generated",
+                "stripe_link": stripe_link
+            })
+        else: 
+            return JsonResponse({
+                "status": "error",
+                "message": "error generating stripe link",
+                "stripe_link": stripe_link
+            })
         
