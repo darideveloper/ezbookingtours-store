@@ -59,12 +59,10 @@ class BuyView (View):
         
         name = json_body.get("name", "")
         last_name = json_body.get("last-name", "")
-        arriving_price = json_body.get("arriving-price", 0.0)
-        departure_price = json_body.get("departure-price", 0.0)
         vip_code = json_body.get("vip-code", "")
         stripe_data = json_body.get("stripe-data", {})
         
-        if not (name and last_name and arriving_price and departure_price and vip_code and stripe_data):
+        if not (name and last_name and vip_code and stripe_data):
             return JsonResponse({
                 "status": "error",
                 "message": "missing data"
@@ -74,8 +72,6 @@ class BuyView (View):
         sale = models.Sale (
             name=name,
             last_name=last_name,
-            arriving_price=arriving_price,
-            departure_price=departure_price,
             vip_code=vip_code,
         )
         sale.save ()
