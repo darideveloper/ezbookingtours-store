@@ -5,6 +5,7 @@ class Sale (models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, default='')
     last_name = models.CharField(max_length=150, verbose_name='Apellido', db_index=True, default='')
     sale_datetime = models.DateTimeField(verbose_name='Fecha de venta', db_index=True, default=timezone.now)
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio', default=0)
     vip_code = models.CharField(max_length=150, verbose_name='Código VIP', db_index=True, default='')
     is_paid = models.BooleanField(verbose_name='Pagado', default=False)
     
