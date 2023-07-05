@@ -31,7 +31,7 @@ class ValidateVipCodeView (View):
             })
         
         # Query models
-        vip_codes_found = models.VipCode.objects.filter(value=vip_code)
+        vip_codes_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
         if vip_codes_found:
             return JsonResponse({
                 "status": "success",
