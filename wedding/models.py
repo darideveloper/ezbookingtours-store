@@ -28,7 +28,7 @@ class VipCode (models.Model):
         verbose_name = "Código VIP"
         
 class Settings (models.Model):
-    name = models.CharField(max_length=150, verbose_name='Nombre del ajuste', db_index=True, default='', unique=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre del ajuste', db_index=True, default='', unique=True, editable=False)
     value = models.CharField(max_length=150, verbose_name='Valor del ajuste', db_index=True, default='')
     
     def __str__ (self):
