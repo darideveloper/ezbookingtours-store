@@ -149,7 +149,6 @@ def widget (request, location, tour):
         new_sale.save ()
 
         # Create stripe description
-        stripe_link = "https://www.facebook.com/"
         stripe_description = f"Tour de ezbookingtours.com, en la fecha {tour_date} y hora {tour_time}. "
         if pick_up:
             pickup_time = pick_up.time.strftime("%H:%M")
