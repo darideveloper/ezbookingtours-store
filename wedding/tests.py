@@ -199,5 +199,57 @@ class TestViewTransports (TestCase):
         self.assertEqual(response.json()["message"], "no transports found")
         self.assertEqual(response.json()["data"], [])
         
+class TestViewHotels (TestCase):
+    
+    def setUp (self):
+        pass
+        
+    def test_get (self):
+        """ Test get hotels """
+        
+        # Create transport models
+        hotel_1 = models.Hotel.objects.create(
+            name = "Sample hotel 1",
+            extra_price = 100.51,
+        )
+        
+        hotel_2 = models.Hotel.objects.create(
+            name = "Sample hotel 2",
+            extra_price = 100.01,
+        )
+                
+        response = self.client.get(
+            f'{API_BASE}/hotels/'
+        )
+        
+        # Format data from models
+        data = []
+        for hotel in [hotel_1, hotel_2]:
+                        
+            data.append({
+                "id": hotel.id,
+                "name": hotel.name,
+                "extra_price": str(hotel.extra_price),
+            })
+            
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertEqual(response.json()["message"], "hotels found")
+        self.assertEqual(response.json()["data"], data)
+        
+    def text_no_models (self):
+        """ Test get hotels without models """
+        
+        response = self.client.get(
+            f'{API_BASE}/transports/'
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertEqual(response.json()["message"], "no hotels found")
+        self.assertEqual(response.json()["data"], [])
         
         
+          

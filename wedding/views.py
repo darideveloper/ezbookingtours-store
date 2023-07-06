@@ -121,3 +121,25 @@ class TransportsView (View):
                 "message": "transports not found",
                 "data": []
             }, safe=False)
+            
+class HotelsView (View):
+    
+    def get (self, request):
+        
+        data = models.Hotel.objects.all()
+        
+        if data:
+        
+            return JsonResponse({
+                "status": "success",
+                "message": "hotels found",
+                "data": list(data.values())
+            }, safe=False)
+            
+        else:
+            
+            return JsonResponse({
+                "status": "error",
+                "message": "hotels not found",
+                "data": []
+            }, safe=False)
