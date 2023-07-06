@@ -37,4 +37,25 @@ class Settings (models.Model):
     class Meta:
         verbose_name_plural = "Ajustes"
         verbose_name = "Ajuste"
+
+class Hotel (models.Model):
+    name = models.CharField(max_length=150, verbose_name='Nombre del hotel', db_index=True, default='', unique=True)
+    extra_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio extra', default=0)
     
+    def __str__ (self):
+        return f"{self.name} - {self.extra_price}"
+    
+    class Meta:
+        verbose_name_plural = "Hotel"
+        verbose_name = "Hotel"
+
+class Transport (models.Model):
+    key = models.CharField(max_length=150, verbose_name='Clave', db_index=True, help_text='Clave del transporte', default='', unique=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre del transporte', default='', unique=True)
+    price = models.FloatField(verbose_name='Precio', help_text='Precio del transporte', default=0.0)
+    por_defecto = models.BooleanField(verbose_name='Por defecto', help_text='Transporte por defecto', default=False)
+    
+    def __str__ (self):
+        if self.por_defecto:
+            return f"{self.name} ({self.price}) (Por defecto)"
+        return f"{self.name} ({self.price})"
