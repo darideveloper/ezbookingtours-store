@@ -80,9 +80,8 @@ class TestViewBuy (TestCase):
         self.sample_data = {        
             "name": "John",
             "last-name": "Doe",
-            "arriving-price": 100.0,
-            "departure-price": 100.0,
             "vip-code": "123456",
+            "price": 100,
             "stripe-data": {
                 "sample": {
                     "amount": 1,
@@ -95,7 +94,7 @@ class TestViewBuy (TestCase):
     
     def test_success (self):
         """ Test buy view """
-        
+                
         # Make request
         response = self.client.post(
             f'{API_BASE}/buy/', 
@@ -108,3 +107,41 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "stripe link generated")
         self.assertIn("checkout.stripe.com/c/pay/", response.json()["stripe_link"])
+        
+    def text_missing_data (self):
+        """ Test buy view without submiting full data """
+        
+        incomplete_data = self.sample_data.copy()
+        incomplete_data.pop("name")
+        
+        response = self.client.post(
+            f'{API_BASE}/buy/', 
+            json.dumps (incomplete_data),
+            content_type="application/json"
+        )
+        
+         # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertEqual(response.json()["message"], "missing data")
+    
+    def text_eror_stripe_link (self):
+        """ Test buy with incorrect stripe data """
+        
+        incomplete_data = self.sample_data.copy()
+        incomplete_data["stripe-data"]["sample"].pop("amount")
+        
+        response = self.client.post(
+            f'{API_BASE}/buy/', 
+            json.dumps (incomplete_data),
+            content_type="application/json"
+        )
+        
+         # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertEqual(response.json()["message"], "error generating stripe link")
+        
+        
+        
+# class TestViewTransports (TestCase):
