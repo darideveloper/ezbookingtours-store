@@ -108,7 +108,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["message"], "stripe link generated")
         self.assertIn("checkout.stripe.com/c/pay/", response.json()["stripe_link"])
         
-    def text_missing_data (self):
+    def test_missing_data (self):
         """ Test buy view without submiting full data """
         
         incomplete_data = self.sample_data.copy()
@@ -125,7 +125,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "missing data")
     
-    def text_eror_stripe_link (self):
+    def test_eror_stripe_link (self):
         """ Test buy with incorrect stripe data """
         
         incomplete_data = self.sample_data.copy()
@@ -186,7 +186,7 @@ class TestViewTransports (TestCase):
         self.assertEqual(response.json()["message"], "transports found")
         self.assertEqual(response.json()["data"], data)
         
-    def text_no_models (self):
+    def test_no_models (self):
         """ Test get transports without models """
         
         response = self.client.get(
@@ -196,7 +196,7 @@ class TestViewTransports (TestCase):
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "error")
-        self.assertEqual(response.json()["message"], "no transports found")
+        self.assertEqual(response.json()["message"], "transports not found")
         self.assertEqual(response.json()["data"], [])
         
 class TestViewHotels (TestCase):
@@ -238,17 +238,17 @@ class TestViewHotels (TestCase):
         self.assertEqual(response.json()["message"], "hotels found")
         self.assertEqual(response.json()["data"], data)
         
-    def text_no_models (self):
+    def test_no_models (self):
         """ Test get hotels without models """
         
         response = self.client.get(
-            f'{API_BASE}/transports/'
+            f'{API_BASE}/hotels/'
         )
         
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "error")
-        self.assertEqual(response.json()["message"], "no hotels found")
+        self.assertEqual(response.json()["message"], "hotels not found")
         self.assertEqual(response.json()["data"], [])
         
         

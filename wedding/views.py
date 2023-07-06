@@ -84,21 +84,23 @@ class BuyView (View):
             "url": f"{HOST}/success/{sale.id}",
             "products": stripe_data
         })
-        res_data = res.json()
         
-        if not "error" in res_data:
-            stripe_link = res_data["stripe_url"]
-            return JsonResponse({
-                "status": "success",
-                "message": "stripe link generated",
-                "stripe_link": stripe_link
-            })
-        else: 
+        
+        try:
+            res_data = res.json()
+        except:
             return JsonResponse({
                 "status": "error",
                 "message": "error generating stripe link",
-                "stripe_link": stripe_link
+                "stripe_link": None
             })
+            
+        return JsonResponse({
+            "status": "success",
+            "message": "stripe link generated",
+            "stripe_link": res_data["stripe_url"]
+        })
+            
 
 class TransportsView (View):
     
