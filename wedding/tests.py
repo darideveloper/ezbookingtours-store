@@ -137,11 +137,67 @@ class TestViewBuy (TestCase):
             content_type="application/json"
         )
         
-         # Check response
+        # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "error generating stripe link")
         
+class TestViewTransports (TestCase):
+    
+    def setUp (self):
+        pass
+        
+    def test_get (self):
+        """ Test get transports """
+        
+        # Create transport models
+        transport_1 = models.Transport.objects.create(
+            key="sample 1",
+            name="Sample transport 1",
+            price=100,
+            by_default=True
+        )
+        
+        transport_2 = models.Transport.objects.create(
+            key="sample 2",
+            name="Sample transport 2",
+            price=100,
+            by_default=True
+        )
+                
+        response = self.client.get(
+            f'{API_BASE}/transports/'
+        )
+        
+        # Format data from models
+        data = []
+        for transport in [transport_1, transport_2]:
+            data.append({
+                "id": transport.id,
+                "key": transport.key,
+                "name": transport.name,
+                "price": transport.price,
+                "by_default": transport.by_default
+            })
+            
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertEqual(response.json()["message"], "transports found")
+        self.assertEqual(response.json()["data"], data)
+        
+    def text_no_models (self):
+        """ Test get transports without models """
+        
+        response = self.client.get(
+            f'{API_BASE}/transports/'
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertEqual(response.json()["message"], "no transports found")
+        self.assertEqual(response.json()["data"], [])
         
         
-# class TestViewTransports (TestCase):
+        

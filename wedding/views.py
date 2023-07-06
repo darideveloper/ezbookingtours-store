@@ -99,4 +99,25 @@ class BuyView (View):
                 "message": "error generating stripe link",
                 "stripe_link": stripe_link
             })
+
+class TransportsView (View):
+    
+    def get (self, request):
         
+        data = models.Transport.objects.all()
+        
+        if data:
+        
+            return JsonResponse({
+                "status": "success",
+                "message": "transports found",
+                "data": list(data.values())
+            }, safe=False)
+            
+        else:
+            
+            return JsonResponse({
+                "status": "error",
+                "message": "transports not found",
+                "data": []
+            }, safe=False)
