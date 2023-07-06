@@ -15,8 +15,8 @@ class VipCodeAdmin (admin.ModelAdmin):
     list_filter = ('enabled',)
     list_max_show_all = 50
     
-@admin.register (models.Settings)
-class SettingsAdmin (admin.ModelAdmin): 
+@admin.register (models.Setting)
+class SettingAdmin (admin.ModelAdmin): 
     list_display = ('name', 'value')
     ordering = ('name',)
     list_max_show_all = 50
