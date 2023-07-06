@@ -128,7 +128,7 @@ class HotelsView (View):
     
     def get (self, request):
         
-        data = models.Hotel.objects.all()
+        data = models.Hotel.objects.all().order_by("name")
         
         if data:
         
