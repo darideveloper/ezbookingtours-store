@@ -37,8 +37,8 @@ class ValidateVipCodeView (View):
             })
         
         # Query models
-        vip_codes_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
-        if vip_codes_found:
+        vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
+        if vip_code_found:
             return JsonResponse({
                 "status": "success",
                 "message": "valid vip code"
@@ -63,11 +63,12 @@ class BuyView (View):
         vip_code = json_body.get("vip-code", "")
         stripe_data = json_body.get("stripe-data", {})
         
-        if not (name and last_name and price and vip_code and stripe_data):
+        if not (name and last_name and price and stripe_data):
             return JsonResponse({
                 "status": "error",
-                "message": "missing data"
+                "message": "missing data",
             })            
+        
         
         # Save model
         sale = models.Sale (
@@ -77,6 +78,18 @@ class BuyView (View):
             vip_code=vip_code,
         )
         sale.save ()
+        success_url = f"{HOST}/success/{sale.id}"
+        
+        # Validate vip code
+        vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
+        
+        # Directly return redirect to success page
+        if vip_code_found:
+            return JsonResponse({
+                "status": "success",
+                "message": "sale saved",
+                "redirect": success_url
+            })
         
         # Generate stripe link
         res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
@@ -85,20 +98,21 @@ class BuyView (View):
             "products": stripe_data
         })
         
-        
+        # Catch error if stripe link is not generated
         try:
             res_data = res.json()
         except:
             return JsonResponse({
                 "status": "error",
                 "message": "error generating stripe link",
-                "stripe_link": None
+                "redirect": None
             })
             
+        # Return stripe link
         return JsonResponse({
             "status": "success",
             "message": "stripe link generated",
-            "stripe_link": res_data["stripe_url"]
+            "redirect": res_data["stripe_url"]
         })
             
 

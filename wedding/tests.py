@@ -91,6 +91,9 @@ class TestViewBuy (TestCase):
                 }
             }
         }
+        
+        self.vip_code = "12345"
+        models.VipCode.objects.create(value=self.vip_code, enabled=True)
     
     def test_success (self):
         """ Test buy view """
@@ -106,7 +109,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "stripe link generated")
-        self.assertIn("checkout.stripe.com/c/pay/", response.json()["stripe_link"])
+        self.assertIn("checkout.stripe.com/c/pay/", response.json()["redirect"])
         
     def test_missing_data (self):
         """ Test buy view without submiting full data """
@@ -125,7 +128,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "missing data")
     
-    def test_eror_stripe_link (self):
+    def test_eror_stripe_data (self):
         """ Test buy with incorrect stripe data """
         
         incomplete_data = self.sample_data.copy()
@@ -142,6 +145,25 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "error generating stripe link")
         
+    def test_vip_sucess (self):
+        
+        # Replace vip code from sample data
+        self.sample_data["vip-code"] = self.vip_code
+        
+        response = self.client.post(
+            f'{API_BASE}/buy/', 
+            json.dumps (self.sample_data),
+            content_type="application/json"
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertEqual(response.json()["message"], "sale saved")
+        self.assertIn("success", response.json()["redirect"])
+        
+        
+    
 class TestViewTransports (TestCase):
     
     def setUp (self):
