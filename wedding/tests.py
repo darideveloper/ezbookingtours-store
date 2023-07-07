@@ -82,6 +82,7 @@ class TestViewBuy (TestCase):
             "last-name": "Doe",
             "vip-code": "123456",
             "price": 100,
+            "from-host": "https://www.darideveloper.com",
             "stripe-data": {
                 "sample": {
                     "amount": 1,

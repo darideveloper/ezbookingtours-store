@@ -62,8 +62,9 @@ class BuyView (View):
         price = json_body.get("price", 0)
         vip_code = json_body.get("vip-code", "")
         stripe_data = json_body.get("stripe-data", {})
+        from_host = json_body.get("from-host", "")
         
-        if not (name and last_name and price and stripe_data):
+        if not (name and last_name and price and stripe_data and from_host):
             return JsonResponse({
                 "status": "error",
                 "message": "missing data",
@@ -78,7 +79,7 @@ class BuyView (View):
             vip_code=vip_code,
         )
         sale.save ()
-        success_url = f"{HOST}/success/{sale.id}"
+        success_url = f"{HOST}/wedding/success/{sale.id}"
         
         # Validate vip code
         vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
@@ -94,13 +95,15 @@ class BuyView (View):
         # Generate stripe link
         res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
             "user": "cancun_concierge_consolidated_supply",
-            "url": f"{HOST}/success/{sale.id}",
+            "url": from_host,
+            "url_success": f"{HOST}/success/{sale.id}",
             "products": stripe_data
         })
         
         # Catch error if stripe link is not generated
         try:
             res_data = res.json()
+            print (res_data)
         except:
             return JsonResponse({
                 "status": "error",
