@@ -64,7 +64,7 @@ class BuyView (View):
         stripe_data = json_body.get("stripe-data", {})
         from_host = json_body.get("from-host", "")
         
-        if not (name and last_name and price and stripe_data and from_host):
+        if not (name and last_name and stripe_data and from_host):
             return JsonResponse({
                 "status": "error",
                 "message": "missing data",
