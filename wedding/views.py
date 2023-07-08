@@ -13,6 +13,7 @@ load_dotenv()
 HOST = os.getenv('HOST')
 
 class IndexView (View):
+    """ Test home view """
     
     def get (self, request):
         """ Show confirmation messaje """
@@ -23,6 +24,7 @@ class IndexView (View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ValidateVipCodeView (View):
+    """ Get vip code from json post data and check if it is valid """
     
     def post (self, request):
         """ Check if vip code is valid """
@@ -51,6 +53,7 @@ class ValidateVipCodeView (View):
         
 @method_decorator(csrf_exempt, name='dispatch')
 class BuyView (View):
+    """ Save sale data and redirect to success page or stripe payment page """
     
     def post (self, request):
         
@@ -120,6 +123,7 @@ class BuyView (View):
             
 
 class TransportsView (View):
+    """ Get available transports """
     
     def get (self, request):
         
@@ -142,6 +146,7 @@ class TransportsView (View):
             }, safe=False)
             
 class HotelsView (View):
+    """ Get available hotels """
     
     def get (self, request):
         
@@ -162,3 +167,31 @@ class HotelsView (View):
                 "message": "hotels not found",
                 "data": []
             }, safe=False)
+            
+class FreeDaysView (View):
+    """ Get deys without charge """
+    
+    def get (self, request):
+        
+        # Query free days from models
+        try:
+            arrival_free_date = models.Setting.objects.get(name="arrival_free_date")
+            departure_free_date = models.Setting.objects.get(name="departure_free_date")
+        except:
+            return JsonResponse({
+                "status": "error",
+                "message": "error getting free days",
+                "data": {}
+            }, safe=False)
+            
+        # Return free days
+        return JsonResponse({
+            "status": "success",
+            "message": "free days found",
+            "data": {
+                "arrival": arrival_free_date.value,
+                "departure": departure_free_date.value
+            }
+        }, safe=False)
+        
+        

@@ -274,5 +274,50 @@ class TestViewHotels (TestCase):
         self.assertEqual(response.json()["message"], "hotels not found")
         self.assertEqual(response.json()["data"], [])
         
+class TestViewFreeDays (TestCase):
+    
+    def setUp (self):
+        pass
+        
+    def test_get (self):
+        """ Test get free days """
+        
+        # Create transport models
+        arrival_date = "2021-01-01"
+        departure_date = "2021-01-02"
+        models.Setting.objects.create(
+            name="arrival_free_date",
+            value=arrival_date
+        )
+        models.Setting.objects.create(
+            name="departure_free_date",
+            value=departure_date
+        )
+        
+        response = self.client.get(
+            f'{API_BASE}/free-days/'
+        )
+
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertEqual(response.json()["message"], "free days found")
+        self.assertEqual(response.json()["data"], {
+            "arrival": arrival_date,
+            "departure": departure_date
+        })
+        
+    def test_no_models (self):
+        """ Test get hotels without models """
+        
+        response = self.client.get(
+            f'{API_BASE}/free-days/'
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertEqual(response.json()["message"], "error getting free days")
+        self.assertEqual(response.json()["data"], {})
         
           
