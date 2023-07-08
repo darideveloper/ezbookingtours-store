@@ -20,6 +20,8 @@ class TestViewValidateVipCode (TestCase):
         
     def setUp (self):
         
+        self.api_endpoint = f'{API_BASE}/validate-vip-code/'
+        
         # Create VipCodes
         self.vip_code = "12345"
         models.VipCode.objects.create(value=self.vip_code, enabled=True)
@@ -29,7 +31,7 @@ class TestViewValidateVipCode (TestCase):
         
         # Make request
         response = self.client.post(
-            f'{API_BASE}/validate-vip-code/', 
+            self.api_endpoint, 
             json.dumps ({"vip-code": self.vip_code}),
             content_type="application/json"
         )
@@ -46,7 +48,7 @@ class TestViewValidateVipCode (TestCase):
         
         # Make request
         response = self.client.post(
-            f'{API_BASE}/validate-vip-code/', 
+            self.api_endpoint, 
             json.dumps ({"vip-code": "1234567"}),
             content_type="application/json"
         )
@@ -62,7 +64,7 @@ class TestViewValidateVipCode (TestCase):
         
         # Make request
         response = self.client.post(
-            f'{API_BASE}/validate-vip-code/',
+            self.api_endpoint,
             json.dumps ({}),
             content_type="application/json"
         )
@@ -77,6 +79,10 @@ class TestViewValidateVipCode (TestCase):
 class TestViewBuy (TestCase):
     
     def setUp (self):
+        
+        self.api_endpoint = f"{API_BASE}/buy/" 
+        
+        # Create sample data
         self.sample_data = {        
             "name": "John",
             "last-name": "Doe",
@@ -101,7 +107,7 @@ class TestViewBuy (TestCase):
                 
         # Make request
         response = self.client.post(
-            f'{API_BASE}/buy/', 
+            self.api_endpoint, 
             json.dumps (self.sample_data),
             content_type="application/json"
         )
@@ -119,7 +125,7 @@ class TestViewBuy (TestCase):
         incomplete_data.pop("name")
         
         response = self.client.post(
-            f'{API_BASE}/buy/', 
+            self.api_endpoint, 
             json.dumps (incomplete_data),
             content_type="application/json"
         )
@@ -136,7 +142,7 @@ class TestViewBuy (TestCase):
         incomplete_data["stripe-data"]["sample"].pop("amount")
         
         response = self.client.post(
-            f'{API_BASE}/buy/', 
+            self.api_endpoint, 
             json.dumps (incomplete_data),
             content_type="application/json"
         )
@@ -152,7 +158,7 @@ class TestViewBuy (TestCase):
         self.sample_data["vip-code"] = self.vip_code
         
         response = self.client.post(
-            f'{API_BASE}/buy/', 
+            self.api_endpoint, 
             json.dumps (self.sample_data),
             content_type="application/json"
         )
@@ -168,7 +174,8 @@ class TestViewBuy (TestCase):
 class TestViewTransports (TestCase):
     
     def setUp (self):
-        pass
+        
+        self.api_endpoint = f"{API_BASE}/transports/"
         
     def test_get (self):
         """ Test get transports """
@@ -189,7 +196,7 @@ class TestViewTransports (TestCase):
         )
                 
         response = self.client.get(
-            f'{API_BASE}/transports/'
+            self.api_endpoint
         )
         
         # Format data from models
@@ -213,7 +220,7 @@ class TestViewTransports (TestCase):
         """ Test get transports without models """
         
         response = self.client.get(
-            f'{API_BASE}/transports/'
+            self.api_endpoint
         )
         
         # Check response
@@ -225,7 +232,7 @@ class TestViewTransports (TestCase):
 class TestViewHotels (TestCase):
     
     def setUp (self):
-        pass
+        self.api_endpoint = f"{API_BASE}/hotels/"
         
     def test_get (self):
         """ Test get hotels """
@@ -242,7 +249,7 @@ class TestViewHotels (TestCase):
         )
                 
         response = self.client.get(
-            f'{API_BASE}/hotels/'
+            self.api_endpoint
         )
         
         # Format data from models
@@ -265,7 +272,7 @@ class TestViewHotels (TestCase):
         """ Test get hotels without models """
         
         response = self.client.get(
-            f'{API_BASE}/hotels/'
+            self.api_endpoint
         )
         
         # Check response
@@ -277,7 +284,7 @@ class TestViewHotels (TestCase):
 class TestViewFreeDays (TestCase):
     
     def setUp (self):
-        pass
+        self.api_endpoint = f"{API_BASE}/free-days/"
         
     def test_get (self):
         """ Test get free days """
@@ -295,7 +302,7 @@ class TestViewFreeDays (TestCase):
         )
         
         response = self.client.get(
-            f'{API_BASE}/free-days/'
+            self.api_endpoint
         )
 
         # Check response
@@ -311,7 +318,7 @@ class TestViewFreeDays (TestCase):
         """ Test get hotels without models """
         
         response = self.client.get(
-            f'{API_BASE}/free-days/'
+            self.api_endpoint
         )
         
         # Check response
