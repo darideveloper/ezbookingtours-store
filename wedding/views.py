@@ -81,6 +81,7 @@ class BuyView (View):
             price=price,
             last_name=last_name,
             vip_code=vip_code,
+            stripe_data=stripe_data
         )
         sale.save ()
         success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"

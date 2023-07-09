@@ -8,6 +8,7 @@ class Sale (models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio', default=0)
     vip_code = models.CharField(max_length=150, verbose_name='Código VIP', db_index=True, default='')
     is_paid = models.BooleanField(verbose_name='Pagado', default=False)
+    stripe_data = models.JSONField(verbose_name='Datos de Stripe', default=dict, blank=True, null=True)
     
     def __str__ (self):
         return f"{self.name} {self.last_name} - {self.sale_datetime}"
