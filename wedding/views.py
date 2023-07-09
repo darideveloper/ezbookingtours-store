@@ -74,20 +74,20 @@ class BuyView (View):
                 "message": "missing data",
             })            
         
+        vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
         
         # Save model
         sale = models.Sale (
             name=name,
             price=price,
             last_name=last_name,
-            vip_code=vip_code,
+            vip_code=vip_code if vip_code_found else "",
             stripe_data=stripe_data
         )
         sale.save ()
         success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"
         
         # Validate vip code
-        vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
         
         # Directly return redirect to success page
         if vip_code_found:
