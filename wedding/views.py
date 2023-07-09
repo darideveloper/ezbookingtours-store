@@ -168,26 +168,26 @@ class HotelsView (View):
                 "data": []
             }, safe=False)
             
-class FreeDaysView (View):
+class FreeDatesView (View):
     """ Get deys without charge """
     
     def get (self, request):
         
-        # Query free days from models
+        # Query free dates from models
         try:
             arrival_free_date = models.Setting.objects.get(name="arrival_free_date")
             departure_free_date = models.Setting.objects.get(name="departure_free_date")
         except:
             return JsonResponse({
                 "status": "error",
-                "message": "error getting free days",
+                "message": "error getting free dates",
                 "data": {}
             }, safe=False)
             
-        # Return free days
+        # Return free dates
         return JsonResponse({
             "status": "success",
-            "message": "free days found",
+            "message": "free dates found",
             "data": {
                 "arrival": arrival_free_date.value,
                 "departure": departure_free_date.value
