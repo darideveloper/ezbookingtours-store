@@ -94,7 +94,7 @@ class BuyView (View):
         # Validate vip code
         
         # Directly return redirect to success page
-        if vip_code_found:
+        if vip_code_found or price == 0:
             return JsonResponse({
                 "status": "success",
                 "message": "sale saved",
