@@ -68,6 +68,10 @@ class BuyView (View):
         stripe_data = json_body.get("stripe-data", {})
         from_host = json_body.get("from-host", "")
         
+        # Clean from host
+        from_host_end = from_host.rfind("/")
+        from_host = from_host[:from_host_end]
+        
         if not (name and last_name and stripe_data and from_host):
             return JsonResponse({
                 "status": "error",
