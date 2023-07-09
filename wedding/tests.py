@@ -327,4 +327,45 @@ class TestViewFreedates (TestCase):
         self.assertEqual(response.json()["message"], "error getting free dates")
         self.assertEqual(response.json()["data"], {})
         
-          
+
+class TestSuccessView (TestCase):
+    
+    def setUp(self):
+        
+        self.api_endpoint = f"{API_BASE}/success/x/?from=https://www.darideveloper.com"
+        
+        # Create sale
+        self.sale = models.Sale.objects.create(
+            name="John",
+            last_name="Doe",
+            price=100,
+            vip_code="12345"
+        )
+        
+    def test_invalid_sale (self):
+        """ Try to acreedit invalid sale id """
+        
+        response = self.client.get(
+            self.api_endpoint.replace("x", "100")
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 302)
+        
+        # Validate model
+        self.sale.refresh_from_db()
+        self.assertEqual(self.sale.is_paid, False)
+        
+    def test_valid_sale (self):
+        """ Acreedit valid sale id """
+        
+        response = self.client.get(
+            self.api_endpoint.replace("x", "1")
+        )
+        
+        # Check response
+        self.assertEqual(response.status_code, 302)
+        
+        # Validate model
+        self.sale.refresh_from_db()
+        self.assertEqual(self.sale.is_paid, False)

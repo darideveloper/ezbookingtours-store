@@ -7,6 +7,7 @@ from django.views import View
 from wedding import models
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.shortcuts import redirect
 
 # Get enviroment variables
 load_dotenv()
@@ -82,7 +83,7 @@ class BuyView (View):
             vip_code=vip_code,
         )
         sale.save ()
-        success_url = f"{HOST}/wedding/success/{sale.id}"
+        success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"
         
         # Validate vip code
         vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
@@ -106,7 +107,6 @@ class BuyView (View):
         # Catch error if stripe link is not generated
         try:
             res_data = res.json()
-            print (res_data)
         except:
             return JsonResponse({
                 "status": "error",
@@ -194,4 +194,23 @@ class FreeDatesView (View):
             }
         }, safe=False)
         
+class SuccessView (View):
+    """ Complete sale and redirect to success page """
+    
+    def get (self, request, sale_id):
         
+        # Get from host from get parans
+        from_host = request.GET.get("from", "")
+        
+        # Query sale from models
+        try:
+            sale = models.Sale.objects.get(id=sale_id)
+        except:
+            return redirect (from_host)
+            
+        # Complete sale
+        sale.is_paid = True
+        sale.save()
+        
+        # Return success page
+        return redirect (f"{from_host}?thanks=true")
