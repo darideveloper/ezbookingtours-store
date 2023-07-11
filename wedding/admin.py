@@ -16,11 +16,6 @@ class VipCodeAdmin (admin.ModelAdmin):
     list_filter = ('enabled',)
     list_max_show_all = 50
     
-@admin.register (models.Setting)
-class SettingAdmin (admin.ModelAdmin): 
-    list_display = ('name', 'value')
-    ordering = ('name',)
-    
 @admin.register (models.Hotel)
 class HotelAdmin (admin.ModelAdmin): 
     list_display = ('name', 'extra_price')
