@@ -60,3 +60,29 @@ class Transport (models.Model):
         if self.by_default:
             return f"{self.name} ({self.price}) (Por defecto)"
         return f"{self.name} ({self.price})"
+    
+    class Meta:
+        verbose_name_plural = "Transportes"
+        verbose_name = "Transporte"
+    
+class FreeDaysCategory (models.Model):
+    name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, help_text='Nombre de la categoría', default='', unique=True)
+    
+    def __str__ (self):
+        return self.name
+    
+    class Meta:
+        verbose_name_plural = "Categoria de días gratis"
+        verbose_name = "Categoria de días gratis"
+    
+class FreeDays (models.Model):
+    date = models.DateField(verbose_name='Fecha', db_index=True, help_text='Fecha de día gratis', default=timezone.now, unique=True)
+    category = models.ForeignKey(FreeDaysCategory, verbose_name='Categoría', db_index=True, help_text='Categoría de día gratis', on_delete=models.CASCADE)
+    
+    def __str__ (self):
+        return f"{self.date} - {self.category}"
+    
+    class Meta:
+        verbose_name_plural = "Días grais"
+        verbose_name = "Día gratis"
+        
