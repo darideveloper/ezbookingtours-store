@@ -72,6 +72,6 @@ class FreeDays (models.Model):
         return f"{self.date} - {self.category}"
     
     class Meta:
-        verbose_name_plural = "Días grais"
+        verbose_name_plural = "Días gratis"
         verbose_name = "Día gratis"
         
