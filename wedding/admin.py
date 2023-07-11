@@ -30,3 +30,13 @@ class HotelAdmin (admin.ModelAdmin):
 class TransportAdmin (admin.ModelAdmin): 
     list_display = ('key', 'name', 'price', 'by_default')
     ordering = ('key', 'name', 'price', 'by_default')
+    
+@admin.register (models.FreeDays)
+class FreeDaysAdmin (admin.ModelAdmin): 
+    list_display = ('date', 'category')
+    ordering = ('date', 'category')
+    
+@admin.register (models.FreeDaysCategory)
+class FreeDaysCategoryAdmin (admin.ModelAdmin): 
+    list_display = ('name',)
+    ordering = ('name',)
