@@ -102,10 +102,14 @@ class BuyView (View):
             })
         
         # Generate stripe link
+        url_success = f"{HOST}/success/{sale.id}"
+        if HOST == "http://localhost:8000":
+            url_success = f"https://www.darideveloper.com/success/{sale.id}"
+            
         res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
             "user": "cancun_concierge_consolidated_supply",
             "url": from_host,
-            "url_success": f"{HOST}/success/{sale.id}",
+            "url_success": url_success,
             "products": stripe_data
         })
         
@@ -178,11 +182,18 @@ class FreeDatesView (View):
     
     def get (self, request):
         
-        # Query free dates from models
+        
         try:
-            arrival_free_date = models.Setting.objects.get(name="arrival_free_date")
-            departure_free_date = models.Setting.objects.get(name="departure_free_date")
-        except:
+            # Query free dates from models
+            arrival_category = models.FreeDaysCategory.objects.get(name="arrival")
+            departure_category = models.FreeDaysCategory.objects.get(name="departure")
+            arrival_objs = models.FreeDays.objects.filter(category=arrival_category)
+            departure_objs = models.FreeDays.objects.filter(category=departure_category)
+
+            # Format dates
+            arrival_dates = [arrival_obj.date for arrival_obj in arrival_objs]
+            departure_dates = [departure_obj.date for departure_obj in departure_objs]
+        except Exception as e:
             return JsonResponse({
                 "status": "error",
                 "message": "error getting free dates",
@@ -194,8 +205,8 @@ class FreeDatesView (View):
             "status": "success",
             "message": "free dates found",
             "data": {
-                "arrival": arrival_free_date.value,
-                "departure": departure_free_date.value
+                "arrival": arrival_dates,
+                "departure": departure_dates,
             }
         }, safe=False)
         

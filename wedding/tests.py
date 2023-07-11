@@ -1,6 +1,7 @@
 import json
 from wedding import models
 from django.test import TestCase
+from datetime import datetime
 
 API_BASE = "/wedding"
 
@@ -88,7 +89,7 @@ class TestViewBuy (TestCase):
             "last-name": "Doe",
             "vip-code": "123456",
             "price": 100,
-            "from-host": "https://www.darideveloper.com",
+            "from-host": "https://www.darideveloper.com/",
             "stripe-data": {
                 "sample": {
                     "amount": 1,
@@ -168,9 +169,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "sale saved")
         self.assertIn("success", response.json()["redirect"])
-        
-        
-    
+           
 class TestViewTransports (TestCase):
     
     def setUp (self):
@@ -180,7 +179,7 @@ class TestViewTransports (TestCase):
     def test_get (self):
         """ Test get transports """
         
-        # Create transport models
+        # Create models
         transport_1 = models.Transport.objects.create(
             key="sample 1",
             name="Sample transport 1",
@@ -237,7 +236,7 @@ class TestViewHotels (TestCase):
     def test_get (self):
         """ Test get hotels """
         
-        # Create transport models
+        # Create models
         hotel_1 = models.Hotel.objects.create(
             name = "Sample hotel 1",
             extra_price = 100.51,
@@ -289,16 +288,24 @@ class TestViewFreedates (TestCase):
     def test_get (self):
         """ Test get free dates """
         
-        # Create transport models
-        arrival_date = "2021-01-01"
-        departure_date = "2021-01-02"
-        models.Setting.objects.create(
-            name="arrival_free_date",
-            value=arrival_date
+        # Create models
+        arrival_category = models.FreeDaysCategory.objects.create(
+            name="arrival"
         )
-        models.Setting.objects.create(
-            name="departure_free_date",
-            value=departure_date
+        departure_category = models.FreeDaysCategory.objects.create(
+            name="departure"
+        )
+        
+        arrival_date = datetime(2021, 1, 1)
+        departure_date = datetime(2021, 1, 2)
+
+        models.FreeDays.objects.create(
+            date=arrival_date,
+            category=arrival_category
+        )
+        models.FreeDays.objects.create(
+            date=departure_date,
+            category=departure_category
         )
         
         response = self.client.get(
@@ -310,8 +317,8 @@ class TestViewFreedates (TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "free dates found")
         self.assertEqual(response.json()["data"], {
-            "arrival": arrival_date,
-            "departure": departure_date
+            "arrival": [arrival_date.strftime("%Y-%m-%d")],
+            "departure": [departure_date.strftime("%Y-%m-%d")]
         })
         
     def test_no_models (self):
@@ -327,7 +334,6 @@ class TestViewFreedates (TestCase):
         self.assertEqual(response.json()["message"], "error getting free dates")
         self.assertEqual(response.json()["data"], {})
         
-
 class TestSuccessView (TestCase):
     
     def setUp(self):
