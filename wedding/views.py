@@ -136,7 +136,7 @@ class TransportsView (View):
     
     def get (self, request):
         
-        data = models.Transport.objects.all()
+        data = models.Transport.objects.all().order_by("id")
         
         if data:
         
