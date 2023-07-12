@@ -65,7 +65,7 @@ class FreeDaysCategory (models.Model):
         verbose_name = "Categoria de días gratis"
     
 class FreeDays (models.Model):
-    date = models.DateField(verbose_name='Fecha', db_index=True, help_text='Fecha de día gratis', default=timezone.now, unique=True)
+    date = models.DateField(verbose_name='Fecha', db_index=True, help_text='Fecha de día gratis', default=timezone.now)
     category = models.ForeignKey(FreeDaysCategory, verbose_name='Categoría', db_index=True, help_text='Categoría de día gratis', on_delete=models.CASCADE)
     
     def __str__ (self):
