@@ -79,7 +79,7 @@ class BuyView (View):
             })            
         
         vip_code_found = models.VipCode.objects.filter(value=vip_code, enabled=True).exists()
-        
+                
         # Save model
         sale = models.Sale (
             name=name,
@@ -101,15 +101,15 @@ class BuyView (View):
                 "redirect": success_url
             })
         
-        # Generate stripe link
-        url_success = f"{HOST}/success/{sale.id}"
+        # Fix local host link
         if HOST == "http://localhost:8000":
-            url_success = f"https://www.darideveloper.com/success/{sale.id}"
+            success_url = f"https://www.darideveloper.com/success/{sale.id}"
             
+        # Generate stripe link
         res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
-            "user": "cancun_concierge_consolidated_supply",
+            "user": "cancunconcier",
             "url": from_host,
-            "url_success": url_success,
+            "url_success": success_url,
             "products": stripe_data
         })
         
