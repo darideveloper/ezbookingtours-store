@@ -23,7 +23,7 @@ def __sort_data__ (data:list):
     return json.dumps(data_sorted)
         
 def index (request):
-    """ Redirect to store admin page """
+    """ Sample running page """
     response = {
         "status": "running",
     }
