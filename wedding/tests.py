@@ -296,15 +296,25 @@ class TestViewFreedates (TestCase):
             name="departure"
         )
         
-        arrival_date = datetime(2021, 1, 1)
-        departure_date = datetime(2021, 1, 2)
+        arrival_date_1 = datetime(2021, 1, 1)
+        arrival_date_2 = datetime(2021, 1, 2)
+        departure_date_1 = datetime(2021, 1, 1)
+        departure_date_2 = datetime(2021, 1, 2)
 
         models.FreeDays.objects.create(
-            date=arrival_date,
+            date=arrival_date_1,
             category=arrival_category
         )
         models.FreeDays.objects.create(
-            date=departure_date,
+            date=arrival_date_2,
+            category=arrival_category
+        )
+        models.FreeDays.objects.create(
+            date=departure_date_1,
+            category=departure_category
+        )
+        models.FreeDays.objects.create(
+            date=departure_date_2,
             category=departure_category
         )
         
@@ -317,8 +327,8 @@ class TestViewFreedates (TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "free dates found")
         self.assertEqual(response.json()["data"], {
-            "arrival": [arrival_date.strftime("%Y-%m-%d")],
-            "departure": [departure_date.strftime("%Y-%m-%d")]
+            "arrival": [arrival_date_1.strftime("%Y-%m-%d"), arrival_date_2.strftime("%Y-%m-%d")],
+            "departure": [departure_date_2.strftime("%Y-%m-%d"), departure_date_1.strftime("%Y-%m-%d")]
         })
         
     def test_no_models (self):

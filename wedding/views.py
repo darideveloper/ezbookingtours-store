@@ -182,13 +182,12 @@ class FreeDatesView (View):
     
     def get (self, request):
         
-        
         try:
             # Query free dates from models
             arrival_category = models.FreeDaysCategory.objects.get(name="arrival")
             departure_category = models.FreeDaysCategory.objects.get(name="departure")
-            arrival_objs = models.FreeDays.objects.filter(category=arrival_category)
-            departure_objs = models.FreeDays.objects.filter(category=departure_category)
+            arrival_objs = models.FreeDays.objects.filter(category=arrival_category).order_by('date')
+            departure_objs = models.FreeDays.objects.filter(category=departure_category).order_by('-date')
 
             # Format dates
             arrival_dates = [arrival_obj.date for arrival_obj in arrival_objs]
