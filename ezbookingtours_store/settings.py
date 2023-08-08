@@ -34,6 +34,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 # Application definition
 
 INSTALLED_APPS = [
+    'will_ryan_airport_transfers',
     'store',
     'riviera_maya_airport_transfers',
     'wedding',
