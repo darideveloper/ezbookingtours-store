@@ -14,7 +14,7 @@ class TransportAdmin (admin.ModelAdmin):
     
 @admin.register (models.Sale)
 class SaleAdmin (admin.ModelAdmin):
-    list_display = ('name', 'last_name', 'sale_datetime', 'price', 'full_data',)
-    ordering = ('-sale_datetime', 'name', 'last_name', 'price')
+    list_display = ('id', 'name', 'last_name', 'email', 'sale_datetime', 'price', 'full_data',)
+    ordering = ('id', '-sale_datetime', 'name', 'last_name', 'email', 'price')
     list_filter = ('sale_datetime', 'price')
     

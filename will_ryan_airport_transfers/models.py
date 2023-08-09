@@ -20,8 +20,10 @@ class Transport (models.Model):
         return f"{self.name} ({self.price})"
     
 class Sale (models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, default='')
     last_name = models.CharField(max_length=150, verbose_name='Apellido', db_index=True, default='')
+    email = models.EmailField(verbose_name='Email', default='')    
     sale_datetime = models.DateTimeField(verbose_name='Fecha de venta', db_index=True, default=timezone.now)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio', default=0)
     full_data = models.TextField(verbose_name='Datos completos', default='')
