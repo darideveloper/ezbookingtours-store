@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmation email</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      text-align: center;
+      font-weight: bold;
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    span {
+      font-weight: normal
+    }
+  </style>
+</head>
+
+<body>
+  <h1>
+    <span>
+      Voucher:
+    </span>
+    {{id}}
+  </h1>
+
+  <img src="https://github.com/darideveloper/ezbookingtours-store/blob/master/will_ryan_airport_transfers/static/will_ryan_airport_transfers/imgs/logo.png?raw=true" width="200"
+    alt="Will Ryan Airport Transfers Logo">
+
+  <h2>
+    <span>
+      Name:
+    </span>
+    {{first_name}} {{last_name}}
+  </h2>
+  <h2>
+    <span>
+      Price:
+    </span>
+    {{price}} USD
+  </h2>
+
+  <br>
+  <h2>
+    <span>
+      Full Details:
+    </span>
+  </h2>
+
+  {% for line in details %}
+  <h3>
+    <span>
+      {{line.name}}:
+    </span>
+    {{line.value}}
+  </h3>
+  {% endfor %}
+</body>
+
+</html>

@@ -79,6 +79,7 @@ class TestViewSales (TestCase):
         self.last_name = "sample last"
         self.price = 10.0
         self.details = "sample details"
+        self.email = "sample@gmail.com"
         
     def test_post (self):
         """ Test save new sale """
@@ -89,7 +90,8 @@ class TestViewSales (TestCase):
                 "name": self.name,
                 "last-name": self.last_name,
                 "price": self.price,
-                "details": self.details
+                "details": self.details,
+                "email": self.email
             }),
             content_type="application/json"
         )
@@ -107,6 +109,7 @@ class TestViewSales (TestCase):
         self.assertEqual(sale.last_name, self.last_name)
         self.assertEqual(sale.price, self.price)
         self.assertEqual(sale.full_data, self.details)
+        self.assertEqual(sale.email, self.email)
         
     def test_post_missing_data (self):
         
@@ -120,7 +123,7 @@ class TestViewSales (TestCase):
         )
         
         # Validate response
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             "status": "error",
             "message": "missing data",

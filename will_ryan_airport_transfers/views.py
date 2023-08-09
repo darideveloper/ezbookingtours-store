@@ -1,10 +1,12 @@
 import json
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from will_ryan_airport_transfers import models
 from django.core import serializers
 from django.views import View
 from django.utils.decorators import method_decorator
+from will_ryan_airport_transfers import tools
 
 def __sort_data__ (data:list, reverse:bool=False):
     """ Soprt data serializable by name field
@@ -72,19 +74,42 @@ class SalesView (View):
         last_name = json_body.get("last-name", "")
         price = json_body.get("price")
         details = json_body.get("details", "")
+        email = json_body.get("email", "")
         
-        if not (name and last_name and price and details):
+        if not (name and last_name and price and details and email):
             return JsonResponse({
                 "status": "error",
                 "message": "missing data",
             }, status=400)            
                         
         # Save model
-        models.Sale.objects.create (
+        sale = models.Sale (
             name=name,
             last_name=last_name,
+            email=email,
             price=price,
             full_data=details.replace('"', ''),
+        )
+        sale.save ()
+        
+        # Generate formated details
+        details_lines = details.split(",")
+        details_objs = []
+        for line in details_lines:
+            line_split = line.split(":")
+            details_objs.append({
+                "name": line_split[0],
+                "value": line_split[1],
+            })
+            
+        # Submit emails
+        tools.send_sucess_mail (
+            sale.id,
+            sale.name,
+            sale.last_name,
+            sale.price,
+            details_objs,
+            email
         )
             
         # Return stripe link
