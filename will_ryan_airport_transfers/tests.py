@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 from will_ryan_airport_transfers import models
 
@@ -68,4 +69,59 @@ class TestViewTransports (TestCase):
             "name": self.transport_2.name,
             "price": self.transport_2.price,
             "por_defecto": self.transport_2.por_defecto
+        })
+        
+class TestViewSales (TestCase):
+    
+    def setUp (self):
+        
+        self.name = "sample first"
+        self.last_name = "sample last"
+        self.price = 10.0
+        self.details = "sample details"
+        
+    def test_post (self):
+        """ Test save new sale """
+        
+        response = self.client.post(
+            f"{API_BASE}/sale/",
+            json.dumps({
+                "name": self.name,
+                "last-name": self.last_name,
+                "price": self.price,
+                "details": self.details
+            }),
+            content_type="application/json"
+        )
+        
+        # Validate response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "success",
+            "message": "Sale saved",
+        })
+        
+        # Validate model
+        sale = models.Sale.objects.first()
+        self.assertEqual(sale.name, self.name)
+        self.assertEqual(sale.last_name, self.last_name)
+        self.assertEqual(sale.price, self.price)
+        self.assertEqual(sale.full_data, self.details)
+        
+    def test_post_missing_data (self):
+        
+        response = self.client.post(
+            f"{API_BASE}/sale/",
+            json.dumps({
+                "name": self.name,
+                "last-name": self.last_name,
+            }),
+            content_type="application/json"
+        )
+        
+        # Validate response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "error",
+            "message": "missing data",
         })

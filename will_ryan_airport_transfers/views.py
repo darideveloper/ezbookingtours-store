@@ -3,6 +3,8 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from will_ryan_airport_transfers import models
 from django.core import serializers
+from django.views import View
+from django.utils.decorators import method_decorator
 
 def __sort_data__ (data:list, reverse:bool=False):
     """ Soprt data serializable by name field
@@ -35,7 +37,6 @@ def index (request):
     }
     return JsonResponse(response)
 
-@csrf_exempt
 def hotels (request):
     
     # Get data
@@ -47,7 +48,6 @@ def hotels (request):
         
     return HttpResponse (data_serialized, content_type="application/json") 
 
-@csrf_exempt
 def transports (request):
     
     # Get data
@@ -58,4 +58,37 @@ def transports (request):
     data_serialized = __sort_data__ (data_serialized)
     
     return HttpResponse (data_serialized, content_type="application/json") 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SalesView (View):
+    """ Save sale data and redirect to success page or stripe payment page """
     
+    def post (self, request):
+        
+        # Get data
+        json_body = json.loads(request.body)
+        
+        name = json_body.get("name", "")
+        last_name = json_body.get("last-name", "")
+        price = json_body.get("price")
+        details = json_body.get("details", "")
+        
+        if not (name and last_name and price and details):
+            return JsonResponse({
+                "status": "error",
+                "message": "missing data",
+            }, status=400)            
+                        
+        # Save model
+        models.Sale.objects.create (
+            name=name,
+            last_name=last_name,
+            price=price,
+            full_data=details.replace('"', ''),
+        )
+            
+        # Return stripe link
+        return JsonResponse({
+            "status": "success",
+            "message": "Sale saved",
+        })
