@@ -4,11 +4,14 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import os
 
-def send_sucess_mail (id:int, first_name:str, last_name:str, 
+def send_sucess_mail (subject:str,template_path:str, id:int, 
+                      first_name:str, last_name:str, 
                       price:float, details:list, email:str):
     """ Send sucess email to buyer
 
     Args:
+        subject (str): email subject
+        template_path (str): template path
         id (int): sale id
         first_name (str): buyer first name
         last_name (str): buyer last name
@@ -16,10 +19,6 @@ def send_sucess_mail (id:int, first_name:str, last_name:str,
         details (list): sale full details
         email (str): buyer email
     """
-    
-    # Get template path
-    current_folder = os.path.dirname(os.path.abspath(__file__))
-    template_path = os.path.join(current_folder, "templates", "will_ryan_airport_transfers", 'mail.html')
     
     # Get html and plain message
     context = {
@@ -33,7 +32,7 @@ def send_sucess_mail (id:int, first_name:str, last_name:str,
     plain_message = strip_tags(html_message)
     
     # Create message, attach html message and submit
-    message = EmailMultiAlternatives("Voucher Will Ryan Airport Transfers",
+    message = EmailMultiAlternatives(subject,
                                     plain_message,
                                     settings.EMAIL_HOST_USER,
                                     [email])

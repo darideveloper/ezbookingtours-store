@@ -1,3 +1,4 @@
+import os
 import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -6,7 +7,7 @@ from will_ryan_airport_transfers import models
 from django.core import serializers
 from django.views import View
 from django.utils.decorators import method_decorator
-from will_ryan_airport_transfers import tools
+from ezbookingtours_store import tools
 
 def __sort_data__ (data:list, reverse:bool=False):
     """ Soprt data serializable by name field
@@ -103,7 +104,11 @@ class SalesView (View):
             })
             
         # Submit emails
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        template_path = os.path.join(current_folder, "templates", "will_ryan_airport_transfers", "mail.html")
         tools.send_sucess_mail (
+            "Voucher Will Ryan Airport Transfers",
+            template_path,
             sale.id,
             sale.name,
             sale.last_name,

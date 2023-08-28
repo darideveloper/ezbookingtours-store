@@ -8,6 +8,7 @@ from wedding import models
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
+from ezbookingtours_store import tools
 
 # Get enviroment variables
 load_dotenv()
@@ -99,6 +100,33 @@ class BuyView (View):
         
         # Directly return redirect to success page
         if vip_code_found or price == 0:
+            
+            # Format email data
+            stripe_data_key = list(stripe_data.keys())[0]
+            details_lines = stripe_data[stripe_data_key]["description"]
+            details_lines = details_lines.split(",")
+            details_objs = []
+            for line in details_lines:
+                line_split = line.split(":")
+                details_objs.append({
+                    "name": line_split[0],
+                    "value": line_split[1],
+                })
+            
+            # Submit confirmation email
+            current_folder = os.path.dirname(os.path.abspath(__file__))
+            template_path = os.path.join(current_folder, "templates", "wedding", "mail.html")
+            tools.send_sucess_mail (
+                "Sarina Abhi Airport Transfer",
+                template_path,
+                sale.id,
+                sale.name,
+                sale.last_name,
+                sale.price,
+                details_objs,
+                email
+            )
+            
             return JsonResponse({
                 "status": "success",
                 "message": "sale saved",
