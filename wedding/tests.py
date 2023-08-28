@@ -97,7 +97,9 @@ class TestViewBuy (TestCase):
                     "image_url": "https://www.darideveloper.com/imgs/logo.png",
                     "price": 100
                 }
-            }
+            },
+            "phone": "1234567890",
+            "email": "sample@gmail.com"
         }
         
         self.vip_code = "12345"

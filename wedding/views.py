@@ -67,12 +67,14 @@ class BuyView (View):
         vip_code = json_body.get("vip-code", "")
         stripe_data = json_body.get("stripe-data", {})
         from_host = json_body.get("from-host", "")
+        phone = json_body.get("phone", "")
+        email = json_body.get("email", "")
         
         # Clean from host
         from_host_end = from_host.rfind("/")
         from_host = from_host[:from_host_end]
         
-        if not (name and last_name and stripe_data and from_host):
+        if not (name and last_name and stripe_data and from_host and phone and email):
             return JsonResponse({
                 "status": "error",
                 "message": "missing data",
@@ -86,7 +88,9 @@ class BuyView (View):
             price=price,
             last_name=last_name,
             vip_code=vip_code if vip_code_found else "",
-            stripe_data=stripe_data
+            stripe_data=stripe_data,
+            phone=phone,
+            email=email
         )
         sale.save ()
         success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"
@@ -228,4 +232,4 @@ class SuccessView (View):
         sale.save()
         
         # Return success page
-        return redirect (f"{from_host}?thanks=true")
+        return redirect (f"{from_host}/?thanks=true")
