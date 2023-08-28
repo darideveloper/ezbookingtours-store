@@ -78,7 +78,7 @@ class TestViewSales (TestCase):
         self.name = "sample first"
         self.last_name = "sample last"
         self.price = 10.0
-        self.details = "sample details"
+        self.details = "Name: sample 4, Last name: q, Email: darideveloper@gmail.com, Passengers: 1, Hotel: Viceroy Riviera Maya, Arriving date: 2023-01-01, Arriving time: 01:00, Airline: 111, Flight: aaaa, Departing date: 2023-01-01"
         self.email = "sample@gmail.com"
         
     def test_post (self):
@@ -91,7 +91,7 @@ class TestViewSales (TestCase):
                 "last-name": self.last_name,
                 "price": self.price,
                 "details": self.details,
-                "email": self.email
+                "email": self.email,
             }),
             content_type="application/json"
         )
