@@ -1,5 +1,6 @@
 import os
 import json
+from ezbookingtours_store import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -114,6 +115,8 @@ class SalesView (View):
             sale.last_name,
             sale.price,
             details_objs,
+            settings.EMAIL_HOST_USER_OMAR,
+            settings.EMAIL_HOST_OMAR,
             email
         )
             

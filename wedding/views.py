@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from ezbookingtours_store import settings
 from dotenv import load_dotenv
 from django.http import JsonResponse
 from django.views import View
@@ -124,6 +125,8 @@ class BuyView (View):
                 sale.last_name,
                 sale.price,
                 details_objs,
+                settings.EMAIL_HOST_USER_INFO,
+                settings.EMAIL_HOST_INFO,
                 email
             )
             

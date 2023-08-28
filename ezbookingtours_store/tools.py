@@ -1,12 +1,13 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import os
 
 def send_sucess_mail (subject:str,template_path:str, id:int, 
                       first_name:str, last_name:str, 
-                      price:float, details:list, email:str):
+                      price:float, details:list, 
+                      from_email:str, host:str, email:str):
     """ Send sucess email to buyer
 
     Args:
@@ -17,6 +18,8 @@ def send_sucess_mail (subject:str,template_path:str, id:int,
         last_name (str): buyer last name
         price (float): sale price
         details (list): sale full details
+        from_email (str): from email
+        host (str): email host
         email (str): buyer email
     """
     
@@ -32,9 +35,16 @@ def send_sucess_mail (subject:str,template_path:str, id:int,
     plain_message = strip_tags(html_message)
     
     # Create message, attach html message and submit
+    connection = get_connection(
+        host=host,
+        port=settings.EMAIL_PORT,
+        username=from_email,
+        password=settings.EMAIL_HOST_PASSWORD,
+    )
     message = EmailMultiAlternatives(subject,
                                     plain_message,
-                                    settings.EMAIL_HOST_USER,
-                                    [email])
+                                    from_email,
+                                    [email], 
+                                    connection=connection)
     message.attach_alternative(html_message, "text/html")
     message.send()
