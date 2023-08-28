@@ -3,10 +3,10 @@ from wedding import models
 
 @admin.register (models.Sale)
 class SaleAdmin (admin.ModelAdmin):
-    list_display = ('name', 'last_name', 'sale_datetime', 'price', 'vip_code', 'is_paid', 'stripe_data')
+    list_display = ('name', 'last_name', 'sale_datetime', 'price', 'vip_code', 'is_paid', 'phone', 'email', 'stripe_data')
     ordering = ('-sale_datetime', 'name', 'last_name')
     list_filter = ('sale_datetime', 'is_paid', 'vip_code')
-    search_fields = ('name', 'last_name', 'vip_code', 'stripe_data')
+    search_fields = ('name', 'last_name', 'vip_code', 'stripe_data', 'phone', 'email')
     list_max_show_all = 50
     
 @admin.register (models.VipCode)
