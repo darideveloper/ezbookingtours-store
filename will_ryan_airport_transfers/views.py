@@ -108,7 +108,10 @@ class SalesView (View):
         current_folder = os.path.dirname(os.path.abspath(__file__))
         template_path = os.path.join(current_folder, "templates", "will_ryan_airport_transfers", "mail.html")
         tools.send_sucess_mail (
-            "Voucher Will Ryan Airport Transfers",
+            [
+                "Voucher Will Ryan Airport Transfers", 
+                f"(#{sale.id}) Will Ryan Airport Transfers"
+            ],
             template_path,
             sale.id,
             sale.name,

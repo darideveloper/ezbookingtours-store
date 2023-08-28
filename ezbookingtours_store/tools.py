@@ -4,14 +4,14 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import os
 
-def send_sucess_mail (subject:str,template_path:str, id:int, 
+def send_sucess_mail (subjects:list,template_path:str, id:int, 
                       first_name:str, last_name:str, 
                       price:float, details:list, 
                       from_email:str, host:str, email:str):
     """ Send sucess email to buyer
 
     Args:
-        subject (str): email subject
+        subjects (list): list of subjects (for client and admin)
         template_path (str): template path
         id (int): sale id
         first_name (str): buyer first name
@@ -41,10 +41,21 @@ def send_sucess_mail (subject:str,template_path:str, id:int,
         username=from_email,
         password=settings.EMAIL_HOST_PASSWORD,
     )
-    message = EmailMultiAlternatives(subject,
+    
+    # Send email to client
+    message = EmailMultiAlternatives(subjects[0],
                                     plain_message,
                                     from_email,
                                     [email], 
+                                    connection=connection)
+    message.attach_alternative(html_message, "text/html")
+    message.send()
+    
+    # Send email to admin
+    message = EmailMultiAlternatives(subjects[1],
+                                    plain_message,
+                                    from_email,
+                                    [settings.EMAIL_CLIENT], 
                                     connection=connection)
     message.attach_alternative(html_message, "text/html")
     message.send()

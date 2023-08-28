@@ -118,7 +118,10 @@ class BuyView (View):
             current_folder = os.path.dirname(os.path.abspath(__file__))
             template_path = os.path.join(current_folder, "templates", "wedding", "mail.html")
             tools.send_sucess_mail (
-                "Sarina Abhi Airport Transfer",
+                [
+                    "Sarina Abhi Airport Transfer", 
+                    f"(#{sale.id}) Sarina Abhi Airport Transfer"
+                ],
                 template_path,
                 sale.id,
                 sale.name,
