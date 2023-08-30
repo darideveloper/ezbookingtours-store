@@ -21,7 +21,7 @@ def send_sucess_mail (context):
     # Create message, attach html message and submit
     message = EmailMultiAlternatives("Nuevo proceso de compra iniciado",
                                     plain_message,
-                                    settings.EMAIL_HOST_USER,
+                                    settings.EMAIL_HOST_USER_OMAR,
                                     [settings.EMAIL_CLIENT])
     message.attach_alternative(html_message, "text/html")
     message.send()
