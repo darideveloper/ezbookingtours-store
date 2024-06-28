@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
-import django_heroku
-import dj_database_url
-from pathlib import Path
+import sys
 from dotenv import load_dotenv
 
 # Load enviroment variables (for local)
@@ -85,27 +83,27 @@ WSGI_APPLICATION = 'ezbookingtours_store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    # MySQL
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'ezbookingtours_store',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3306',
-    # }
-     
-    # Postgress
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ezbookingtours_store',
-        'USER': 'daridev',
-        'PASSWORD': '2nMIe8McUCcbDhPPGUCNpJC2iNgKDtP5',
-        'HOST': 'dpg-cef3eqsgqg4b3haa6eq0-a.ohio-postgres.render.com',
-        'PORT': '5432',
+# Database
+IS_TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+if IS_TESTING:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get("DB_ENGINE"),
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': os.environ.get("DB_PORT"),
+        }
+    }
 
 
 # Password validation
@@ -138,10 +136,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
-
-
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -162,9 +156,6 @@ STATICFILES_DIRS = [
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
 
 # Allow iframing from other websites
 X_FRAME_OPTIONS = 'ALLOWALL'
