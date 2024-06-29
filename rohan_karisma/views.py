@@ -4,10 +4,12 @@ import requests
 from dotenv import load_dotenv
 from django.views import View
 from rohan_karisma import models
-from django.http import JsonResponse
+from django.template import loader
+from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from datetime import datetime
 
 load_dotenv()
 STRIPE_FLASK_API = os.getenv("STRIPE_FLASK_API")
@@ -42,10 +44,10 @@ class SaleView(View):
         departing = ""
         for description_key, description_value in description.items():
             if "arriving" in description_key:
-                key_clean = description_key.replace("arriving ", "")
+                key_clean = description_key.replace("arriving_", "")
                 arriving += f"{key_clean}: {description_value} |\n"
             elif "departing" in description_key:
-                key_clean = description_key.replace("departing ", "")
+                key_clean = description_key.replace("departing_", "")
                 departing += f"{key_clean}: {description_value} |\n"
                 
         # Save model
@@ -95,5 +97,41 @@ class SaleDoneView(View):
         sale.sale_done = True
         sale.save()
         
+        # Invoice date
+        today = datetime.today().strftime('%Y-%m-%d')
+        
+        # Invoice details
+        details = {}
+        arriving_items = sale.arriving.split(" |\n")
+        for arriving_item in arriving_items:
+            if not arriving_item:
+                continue
+            key, value = arriving_item.split(": ")
+            details[f"Arriving {key}"] = value
+            
+        departing_items = sale.departing.split(" |\n")
+        for departing_item in departing_items:
+            if not departing_item:
+                continue
+            key, value = departing_item.split(": ")
+            details[f"Departing {key}"] = value
+            
+        details["passengers"] = sale.passengers
+        details["transport type"] = sale.transport_type
+        details["transport vehicle"] = sale.transport_vehicule
+        
+        # Render html email template
+        template = loader.get_template('rohan_karisma/email.html')
+        return HttpResponse(template.render({
+            "today": today,
+            "name": sale.name,
+            "last_name": sale.last_name,
+            "price": f"{sale.price}.00 USD",
+            "cta": ROHAN_KARISMA_PAGE,
+            "id": sale.id,
+            "details": details,
+        }))
+        
+        
         # Redirect to done page
-        return redirect(ROHAN_KARISMA_PAGE)
+        return redirect(f'{ROHAN_KARISMA_PAGE}?done=true')
