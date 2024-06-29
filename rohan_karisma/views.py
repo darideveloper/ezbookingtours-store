@@ -7,10 +7,12 @@ from rohan_karisma import models
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 
 load_dotenv()
 STRIPE_FLASK_API = os.getenv("STRIPE_FLASK_API")
 HOST = os.getenv("HOST")
+ROHAN_KARISMA_PAGE = os.getenv("ROHAN_KARISMA_PAGE")
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -73,3 +75,23 @@ class SaleView(View):
         
         # Return same api response
         return JsonResponse(json_res)
+    
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class SaleDoneView(View):
+    
+    def get(self, request, sale_id):
+        
+        # Get sale
+        sale = models.Sale.objects.filter(id=sale_id)
+        if not sale.exists():
+            return JsonResponse({"message": "Venta no encontrada"}, status=404)
+        else:
+            sale = sale.first()
+        
+        # Update sale
+        sale.sale_done = True
+        sale.save()
+        
+        # Redirect to done page
+        return redirect(ROHAN_KARISMA_PAGE)
