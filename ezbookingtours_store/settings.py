@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'store',
     'riviera_maya_airport_transfers',
     'wedding',
+    'rohan_karisma',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
