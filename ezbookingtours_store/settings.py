@@ -172,3 +172,8 @@ EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
 EMAIL_CLIENT = os.getenv('EMAIL_CLIENT')
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Default email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = EMAIL_HOST_OMAR
+EMAIL_HOST_USER = EMAIL_HOST_USER_OMAR
