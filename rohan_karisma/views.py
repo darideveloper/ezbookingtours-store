@@ -17,6 +17,7 @@ ROHAN_KARISMA_PAGE = os.getenv("ROHAN_KARISMA_PAGE")
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SaleView(View):
+    """ Get sale json data, save in database and return stripe api response """
     
     def post(self, request):
         
@@ -79,6 +80,7 @@ class SaleView(View):
     
 @method_decorator(csrf_exempt, name='dispatch')
 class SaleDoneView(View):
+    """ Set sale as done and redirect to landing page """
     
     def get(self, request, sale_id):
         
