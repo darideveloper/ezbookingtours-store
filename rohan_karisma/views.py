@@ -115,14 +115,14 @@ class SaleDoneView(View):
             if not arriving_item:
                 continue
             key, value = arriving_item.split(": ")
-            details[f"Arriving {key}"] = value
+            details[f"Arriving {key.replace('_', '')}"] = value
             
         departing_items = sale.departing.split(" |\n")
         for departing_item in departing_items:
             if not departing_item:
                 continue
             key, value = departing_item.split(": ")
-            details[f"Departing {key}"] = value
+            details[f"Departing {key.replace('_', '')}"] = value
             
         details["passengers"] = sale.passengers
         details["transport type"] = sale.transport_type

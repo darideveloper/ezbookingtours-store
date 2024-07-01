@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -333,7 +331,7 @@
     }
 
     .email-masthead_logo {
-      width: 94px;
+      width: 250px;
     }
 
     .email-masthead_name {
@@ -482,11 +480,13 @@
       <td align="center">
         <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
           <tr>
-            <img src="{% static 'rohan_karisma/imgs/logo.webp' %}" alt="Logo Rohan Karisma Airport Transfers">
             <td class="email-masthead">
               <a href="{{cta}}" class="f-fallback email-masthead_name">
                 Cancun Concierge Airport Transfers
               </a>
+              <center>
+                <img class="email-masthead_logo" src="https://raw.githubusercontent.com/darideveloper/ezbookingtours-store/master/rohan_karisma/static/rohan_karisma/imgs/logo.png" alt="Logo Rohan Karisma Airport Transfers">
+              </center>
             </td>
           </tr>
           <!-- Email Body -->
