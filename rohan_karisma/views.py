@@ -9,10 +9,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from datetime import datetime
-from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import EmailMultiAlternatives, get_connection
+from django.core.mail import EmailMultiAlternatives
 
 
 load_dotenv()
@@ -146,7 +145,7 @@ class SaleDoneView(View):
         # Send email to client
         emails_subjects = {
             EMAIL_USER: "New Sale in Rohan Karisma",
-            sale.email: "Rohan Karisma - Sale Invoice"
+            sale.email: "Rohan & Karisma Wedding - Transportation Confirmation"
         }
         for to_email, subject in emails_subjects.items():
             print(f"Sending rohan karisma email to {to_email}")
