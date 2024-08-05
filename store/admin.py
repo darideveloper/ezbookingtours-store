@@ -48,36 +48,11 @@ class TourTimeAdmin (admin.ModelAdmin):
     list_filter = ('time_start', TimeTourFilter)
     ordering = ('tour_id', 'time_start')
     
-class PickUpTourFilter (admin.SimpleListFilter):
-    """ Custom filter for pick up admin """
-    
-    # Custom filter for pick up admin
-    title = 'tour'
 
-    # Parameter for the filter that will be used in the URL query.
-    parameter_name = 'tour'
-
-    def lookups(self, request, model_admin):
-        """ Options in filters menu """
-        
-        # Get tours objects
-        pick_ups = model_admin.model.objects.all ()
-        tours_times = list(map (lambda pick_up: pick_up.tour_time_id, pick_ups))
-        tours = list(map (lambda tour_time: tour_time.tour_id, tours_times))
-        tours_text = set(map (lambda tour: (str(tour.id), tour.name + " - " + tour.location), tours))
-        
-        return tours_text
-
-    def queryset(self, request, queryset):
-        """ Filter queryset by tour id """
-        
-        if self.value():
-            return queryset.filter (tour_time_id__tour_id__id=self.value())
-            
 @admin.register (models.PickUp)
 class PickUpAdmin (admin.ModelAdmin):
     list_display = ('hotel_id', 'tour_time_id', 'time')
-    list_filter = ('hotel_id', PickUpTourFilter)
+    list_filter = ('hotel_id',)
     ordering = ('hotel_id', 'tour_time_id')
 
 @admin.register (models.Sale)
