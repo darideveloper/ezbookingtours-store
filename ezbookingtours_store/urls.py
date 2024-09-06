@@ -14,6 +14,7 @@ urlpatterns = [
     path('will-ryan/', include('will_ryan_airport_transfers.urls')),
     path('rohan-karisma/', include('rohan_karisma.urls')),
     path('driven-mastermind/', include('driven_mastermind.urls')),
+    path('andrea-scott/', include('andrea_scott.urls')),
 ]
 
 handler404 = 'store.views.error_404'
