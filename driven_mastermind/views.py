@@ -33,10 +33,18 @@ class SaleView(View):
         total_price = json_data['Price']
         
         # Convert string
-        arriving_date = datetime.strptime(arriving_date_str, '%Y-%m-%d')
-        arriving_time = datetime.strptime(arriving_time_str, '%H:%M')
-        departing_date = datetime.strptime(departing_date_str, '%Y-%m-%d')
-        departing_time = datetime.strptime(departing_time_str, '%H:%M')
+        arriving_date = None
+        arriving_time = None
+        departing_date = None
+        departing_time = None
+        if arriving_date_str:
+            arriving_date = datetime.strptime(arriving_date_str, '%Y-%m-%d')
+        if arriving_time_str:
+            arriving_time = datetime.strptime(arriving_time_str, '%H:%M')
+        if departing_date_str:
+            departing_date = datetime.strptime(departing_date_str, '%Y-%m-%d')
+        if departing_time_str:
+            departing_time = datetime.strptime(departing_time_str, '%H:%M')
         
         # Save instance in database
         models.Sale.objects.create(

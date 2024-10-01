@@ -8,14 +8,22 @@ class Sale(models.Model):
     client_last_name = models.CharField(verbose_name='Apellido del cliente')
     passenger_number = models.IntegerField(verbose_name='Número de pasajeros')
     hotel = models.CharField(verbose_name='Hotel')
-    arriving_date = models.DateField(verbose_name='Fecha de llegada')
-    arriving_time = models.TimeField(verbose_name='Hora de llegada')
-    arriving_airline = models.CharField(verbose_name='Aerolínea de llegada')
-    arriving_flight = models.CharField(verbose_name='Vuelo de llegada')
-    departing_date = models.DateField(verbose_name='Fecha de salida')
-    departing_time = models.TimeField(verbose_name='Hora de salida')
-    departing_airline = models.CharField(verbose_name='Aerolínea de salida')
-    departing_flight = models.CharField(verbose_name='Vuelo de salida')
+    arriving_date = models.DateField(verbose_name='Fecha de llegada',
+                                     null=True, blank=True)
+    arriving_time = models.TimeField(verbose_name='Hora de llegada',
+                                     null=True, blank=True)
+    arriving_airline = models.CharField(verbose_name='Aerolínea de llegada',
+                                        null=True, blank=True)
+    arriving_flight = models.CharField(verbose_name='Vuelo de llegada',
+                                       null=True, blank=True)
+    departing_date = models.DateField(verbose_name='Fecha de salida',
+                                      null=True, blank=True)
+    departing_time = models.TimeField(verbose_name='Hora de salida',
+                                      null=True, blank=True)
+    departing_airline = models.CharField(verbose_name='Aerolínea de salida',
+                                         null=True, blank=True)
+    departing_flight = models.CharField(verbose_name='Vuelo de salida',
+                                        null=True, blank=True)
     reservation_date_time = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Fecha y hora de la reservación'
