@@ -144,7 +144,7 @@ class BuyView (View):
             success_url = f"https://www.darideveloper.com/success/{sale.id}"
             
         # Generate stripe link
-        res = requests.post("https://stripe-api-flask.herokuapp.com/", json={
+        res = requests.post("https://services.darideveloper.com/stripe-api/", json={
             "user": "cancunconcier",
             "url": from_host,
             "url_success": success_url,
