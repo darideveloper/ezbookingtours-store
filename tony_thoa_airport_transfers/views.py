@@ -94,7 +94,11 @@ class BuyView(View):
             email=email,
         )
         sale.save()
-        success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"
+        success_url = f"{HOST}/tony-thoa/success/{sale.id}?from={from_host}"
+        
+        # add backslash to from_host if it does not have it
+        if from_host[-1] != "/":
+            from_host += "/"
 
         # Validate vip code
 
@@ -118,7 +122,7 @@ class BuyView(View):
             # Submit confirmation email
             current_folder = os.path.dirname(os.path.abspath(__file__))
             template_path = os.path.join(
-                current_folder, "templates", "tony_thoa", "mail.html"
+                current_folder, "templates", "tony_thoa_airport_transfers", "mail.html"
             )
             tools.send_sucess_mail(
                 [
@@ -137,7 +141,11 @@ class BuyView(View):
             )
 
             return JsonResponse(
-                {"status": "success", "message": "sale saved", "redirect": success_url}
+                {
+                    "status": "success",
+                    "message": "sale saved",
+                    "redirect": success_url
+                }
             )
 
         # Fix local host link
