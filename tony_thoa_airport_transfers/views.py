@@ -118,7 +118,7 @@ class BuyView(View):
             # Submit confirmation email
             current_folder = os.path.dirname(os.path.abspath(__file__))
             template_path = os.path.join(
-                current_folder, "templates", "wedding", "mail.html"
+                current_folder, "templates", "tony_thoa", "mail.html"
             )
             tools.send_sucess_mail(
                 [

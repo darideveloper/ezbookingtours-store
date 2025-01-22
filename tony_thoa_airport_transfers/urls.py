@@ -1,4 +1,4 @@
-from wedding import views
+from tony_thoa_airport_transfers import views
 from django.urls import path
 
 urlpatterns = [
