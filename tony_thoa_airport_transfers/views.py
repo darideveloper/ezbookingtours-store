@@ -95,10 +95,6 @@ class BuyView(View):
         )
         sale.save()
         success_url = f"{HOST}/tony-thoa/success/{sale.id}?from={from_host}"
-        
-        # add backslash to from_host if it does not have it
-        if from_host[-1] != "/":
-            from_host += "/"
 
         # Validate vip code
 
