@@ -122,8 +122,8 @@ class BuyView(View):
             )
             tools.send_sucess_mail(
                 [
-                    "Sarina Abhi Airport Transfer",
-                    f"(#{sale.id}) Sarina Abhi Airport Transfer",
+                    "Thoa & Tony Airport Transfer",
+                    f"(#{sale.id}) Thoa & Tony Airport Transfer",
                 ],
                 template_path,
                 sale.id,
