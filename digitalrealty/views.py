@@ -12,13 +12,14 @@ from datetime import datetime
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 
 load_dotenv()
 STRIPE_FLASK_API = os.getenv("STRIPE_FLASK_API")
 HOST = os.getenv("HOST")
 DIGITALREALTY_PAGE = os.getenv("DIGITALREALTY_PAGE")
-EMAIL_USER = os.getenv("EMAIL_HOST_USER_OMAR")
+EMAIL_USER = settings.EMAIL_HOST_USER
 
 
 @method_decorator(csrf_exempt, name="dispatch")

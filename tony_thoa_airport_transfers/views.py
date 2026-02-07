@@ -131,17 +131,11 @@ class BuyView(View):
                 sale.last_name,
                 sale.price,
                 details_objs,
-                settings.EMAIL_HOST_USER_INFO,
-                settings.EMAIL_HOST_INFO,
-                email,
+                email=email,
             )
 
             return JsonResponse(
-                {
-                    "status": "success",
-                    "message": "sale saved",
-                    "redirect": success_url
-                }
+                {"status": "success", "message": "sale saved", "redirect": success_url}
             )
 
         # Fix local host link

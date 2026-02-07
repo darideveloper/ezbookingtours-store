@@ -1,0 +1,36 @@
+# Tasks: Consolidate Email Configuration
+
+- [x] **Infrastructure & Configuration**
+    - [x] Update `ezbookingtours_store/settings.py`:
+        - Rename `EMAIL_HOST_USER_OMAR` to `EMAIL_HOST_USER`.
+        - Rename `EMAIL_HOST_OMAR` to `EMAIL_HOST`.
+        - Remove `EMAIL_HOST_USER_INFO` and `EMAIL_HOST_INFO`.
+    - [x] Update `Dockerfile`:
+        - Rename all `ARG` and `ENV` occurrences of `OMAR` suffix to unified names.
+        - Remove all `ARG` and `ENV` occurrences of `INFO` variables.
+    - [x] Update `.env` (Manual):
+        - `EMAIL_HOST_OMAR` -> `EMAIL_HOST`.
+        - `EMAIL_HOST_USER_OMAR` -> `EMAIL_HOST_USER`.
+        - Delete `EMAIL_HOST_INFO` and `EMAIL_HOST_USER_INFO`.
+- [x] **Core Tools**
+    - [x] Refactor `ezbookingtours_store/tools.py`:
+        - Change `send_sucess_mail` to use `settings.EMAIL_HOST` and `settings.EMAIL_HOST_USER` by default.
+    - [x] Refactor `store/tools.py`:
+        - Change `settings.EMAIL_HOST_USER_OMAR` to `settings.EMAIL_HOST_USER`.
+- [x] **App Views Refactoring**
+    - [x] Refactor `wedding/views.py`:
+        - Replace `settings.EMAIL_HOST_USER_INFO` with `settings.EMAIL_HOST_USER`.
+        - Replace `settings.EMAIL_HOST_INFO` with `settings.EMAIL_HOST`.
+    - [x] Refactor `tony_thoa_airport_transfers/views.py`:
+        - Replace `settings.EMAIL_HOST_USER_INFO` with `settings.EMAIL_HOST_USER`.
+        - Replace `settings.EMAIL_HOST_INFO` with `settings.EMAIL_HOST`.
+    - [x] Refactor `will_ryan_airport_transfers/views.py`:
+        - Replace `settings.EMAIL_HOST_USER_OMAR` with `settings.EMAIL_HOST_USER`.
+        - Replace `settings.EMAIL_HOST_OMAR` with `settings.EMAIL_HOST`.
+    - [x] Refactor `digitalrealty/views.py`:
+        - Replace `os.getenv("EMAIL_HOST_USER_OMAR")` with `settings.EMAIL_HOST_USER`.
+    - [x] Refactor `rohan_karisma/views.py`:
+        - Replace `os.getenv("EMAIL_HOST_USER_OMAR")` with `settings.EMAIL_HOST_USER`.
+- [x] **Validation**
+    - [x] Run `python manage.py test` to ensure all purchase flows still work correctly.
+    - [x] Verify environment variable loading in Django shell: `from django.conf import settings; print(settings.EMAIL_HOST)`.

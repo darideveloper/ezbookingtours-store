@@ -130,9 +130,7 @@ class BuyView(View):
                 sale.last_name,
                 sale.price,
                 details_objs,
-                settings.EMAIL_HOST_USER_INFO,
-                settings.EMAIL_HOST_INFO,
-                email,
+                email=email,
             )
 
             return JsonResponse(

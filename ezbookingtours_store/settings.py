@@ -159,10 +159,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Allow iframing from other websites
 X_FRAME_OPTIONS = "ALLOWALL"
 
-EMAIL_HOST_USER_OMAR = os.getenv("EMAIL_HOST_USER_OMAR")
-EMAIL_HOST_OMAR = os.getenv("EMAIL_HOST_OMAR")
-EMAIL_HOST_USER_INFO = os.getenv("EMAIL_HOST_USER_INFO")
-EMAIL_HOST_INFO = os.getenv("EMAIL_HOST_INFO")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
@@ -173,5 +171,3 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Default email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = EMAIL_HOST_OMAR
-EMAIL_HOST_USER = EMAIL_HOST_USER_OMAR

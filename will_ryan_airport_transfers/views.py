@@ -11,7 +11,7 @@ from ezbookingtours_store import tools
 
 
 def __sort_data__(data: list, reverse: bool = False):
-    """ Soprt data serializable by name field
+    """Soprt data serializable by name field
 
     Args:
         data (list): dictionaries with fields
@@ -29,15 +29,14 @@ def __sort_data__(data: list, reverse: bool = False):
         names.reverse()
 
     for name in names:
-        current_row = list(
-            filter(lambda row: row["fields"]["name"] == name, data))[0]
+        current_row = list(filter(lambda row: row["fields"]["name"] == name, data))[0]
         data_sorted.append(current_row)
 
     return json.dumps(data_sorted)
 
 
 def index(request):
-    """ Sample running page """
+    """Sample running page"""
     response = {
         "status": "running",
     }
@@ -68,9 +67,9 @@ def transports(request):
     return HttpResponse(data_serialized, content_type="application/json")
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class SalesView (View):
-    """ Save sale data and redirect to success page or stripe payment page """
+@method_decorator(csrf_exempt, name="dispatch")
+class SalesView(View):
+    """Save sale data and redirect to success page or stripe payment page"""
 
     def post(self, request):
 
@@ -84,10 +83,13 @@ class SalesView (View):
         email = json_body.get("email", "")
 
         if not (name and last_name and price and details and email):
-            return JsonResponse({
-                "status": "error",
-                "message": "missing data",
-            }, status=400)
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "missing data",
+                },
+                status=400,
+            )
 
         # Save model
         sale = models.Sale(
@@ -95,7 +97,7 @@ class SalesView (View):
             last_name=last_name,
             email=email,
             price=price,
-            full_data=details.replace('"', ''),
+            full_data=details.replace('"', ""),
         )
         sale.save()
 
@@ -104,19 +106,22 @@ class SalesView (View):
         details_objs = []
         for line in details_lines:
             line_split = line.split(":")
-            details_objs.append({
-                "name": line_split[0],
-                "value": line_split[1],
-            })
+            details_objs.append(
+                {
+                    "name": line_split[0],
+                    "value": line_split[1],
+                }
+            )
 
         # Submit emails
         current_folder = os.path.dirname(os.path.abspath(__file__))
         template_path = os.path.join(
-            current_folder, "templates", "will_ryan_airport_transfers", "mail.html")
+            current_folder, "templates", "will_ryan_airport_transfers", "mail.html"
+        )
         tools.send_sucess_mail(
             [
                 "Voucher Will Ryan Airport Transfers",
-                f"(#{sale.id}) Will Ryan Airport Transfers"
+                f"(#{sale.id}) Will Ryan Airport Transfers",
             ],
             template_path,
             sale.id,
@@ -124,13 +129,13 @@ class SalesView (View):
             sale.last_name,
             sale.price,
             details_objs,
-            settings.EMAIL_HOST_USER_OMAR,
-            settings.EMAIL_HOST_OMAR,
-            email
+            email=email,
         )
 
         # Return stripe link
-        return JsonResponse({
-            "status": "success",
-            "message": "Sale saved",
-        })
+        return JsonResponse(
+            {
+                "status": "success",
+                "message": "Sale saved",
+            }
+        )
