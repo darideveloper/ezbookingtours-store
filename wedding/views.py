@@ -106,12 +106,13 @@ class BuyView(View):
             details_objs = []
             for line in details_lines:
                 line_split = line.split(":")
-                details_objs.append(
-                    {
-                        "name": line_split[0],
-                        "value": line_split[1],
-                    }
-                )
+                if len(line_split) > 1:
+                    details_objs.append(
+                        {
+                            "name": line_split[0],
+                            "value": line_split[1],
+                        }
+                    )
 
             # Submit confirmation email
             current_folder = os.path.dirname(os.path.abspath(__file__))

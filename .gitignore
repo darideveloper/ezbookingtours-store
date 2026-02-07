@@ -12,3 +12,5 @@ db.*
 staticfiles
 *.sqlite3
 .env
+
+*.temp
