@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .tools import send_sucess_mail
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, get_connection
 
 # Get enviroment variables
 load_dotenv()
@@ -279,23 +279,35 @@ def test_email(request):
         try:
             data = json.loads(request.body)
             recipient = data.get("email", settings.EMAIL_CLIENT)
+            send = data.get("send", True)
         except json.JSONDecodeError:
             recipient = request.GET.get("email", settings.EMAIL_CLIENT)
+            send = request.GET.get("send", "true").lower() == "true"
     else:
         recipient = request.GET.get("email", settings.EMAIL_CLIENT)
+        send = request.GET.get("send", "true").lower() == "true"
 
     try:
-        send_mail(
-            "Test Email - EzBookingTours",
-            "This is a test email to verify that the SMTP credentials are working correctly.",
-            settings.EMAIL_HOST_USER,
-            [recipient],
-            fail_silently=False,
-        )
+        if send:
+            send_mail(
+                "Test Email - EzBookingTours",
+                "This is a test email to verify that the SMTP credentials are working correctly.",
+                settings.EMAIL_HOST_USER,
+                [recipient],
+                fail_silently=False,
+            )
+            message = f"Email sent successfully to {recipient}"
+        else:
+            # Test connection and credentials only
+            connection = get_connection()
+            connection.open()
+            connection.close()
+            message = "SMTP credentials verified successfully (no email sent)"
+
         return JsonResponse(
             {
                 "status": "success",
-                "message": f"Email sent successfully to {recipient}",
+                "message": message,
                 "config": {
                     "host": settings.EMAIL_HOST,
                     "port": settings.EMAIL_PORT,
