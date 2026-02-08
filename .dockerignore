@@ -1,0 +1,17 @@
+venv
+.git
+.gitignore
+*.pyc
+__pycache__
+.env
+Dockerfile
+.vscode
+.agent
+AGENTS.md
+LICENSE
+README.md
+erros.temp
+screenshots
+wordpress
+openspec
+docs
