@@ -2,7 +2,34 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from datetime import datetime
 import os
+
+
+def parse_dt(value, formats):
+    """Parse a date or time string using a list of possible formats.
+
+    Args:
+        value (str): The string to parse.
+        formats (list): A list of format strings to try.
+
+    Returns:
+        datetime|date|time|None: The parsed object or None if no format matches.
+    """
+    if not value:
+        return None
+        
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(value, fmt)
+            if "%H:%M" in fmt:
+                return dt.time()
+            if "%Y-%m-%d" in fmt:
+                return dt.date()
+            return dt
+        except ValueError:
+            continue
+    return None
 
 
 def send_sucess_mail(

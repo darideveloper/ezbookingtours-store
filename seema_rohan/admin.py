@@ -7,17 +7,39 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "last_name",
+        "transport_type",
+        "hotel",
         "sale_datetime",
         "price",
         "is_paid",
-        "phone",
-        "email",
-        "stripe_data",
     )
     ordering = ("-sale_datetime", "name", "last_name")
-    list_filter = ("sale_datetime", "is_paid")
-    search_fields = ("name", "last_name", "stripe_data", "phone", "email")
+    list_filter = ("sale_datetime", "is_paid", "transport_type", "hotel")
+    search_fields = ("name", "last_name", "hotel_name", "phone", "email", "arriving_flight", "departing_flight")
     list_max_show_all = 50
+    
+    fieldsets = (
+        ('Información del cliente', {
+            'fields': ('name', 'last_name', 'email', 'phone', 'passengers')
+        }),
+        ('Información de transporte', {
+            'fields': ('transport_type', 'price', 'is_paid', 'sale_datetime')
+        }),
+        ('Información del hotel', {
+            'fields': ('hotel', 'hotel_name')
+        }),
+        ('Información de llegada', {
+            'fields': ('arriving_date', 'arriving_time', 'arriving_airline', 'arriving_flight')
+        }),
+        ('Información de salida', {
+            'fields': ('departing_date', 'departing_time', 'departing_airline', 'departing_flight')
+        }),
+        ('Extra', {
+            'fields': ('stripe_data',),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ('sale_datetime', 'stripe_data')
 
 
 @admin.register(models.Hotel)

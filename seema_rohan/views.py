@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from datetime import datetime
 from ezbookingtours_store import settings
 from dotenv import load_dotenv
 from django.http import JsonResponse
@@ -32,20 +33,16 @@ class BuyView(View):
 
         # Get data
         json_body = json.loads(request.body)
-
-        name = json_body.get("name", "")
-        last_name = json_body.get("last-name", "")
-        price = json_body.get("price", 0)
-        stripe_data = json_body.get("stripe-data", {})
         from_host = json_body.get("from-host", "")
-        phone = json_body.get("phone", "")
-        email = json_body.get("email", "")
 
         # Clean from host
         from_host_end = from_host.rfind("/")
         from_host = from_host[:from_host_end]
 
-        if not (name and last_name and stripe_data and from_host and phone and email):
+        # Use the new model method for parsing
+        sale, details_objs = models.Sale.from_payload(json_body)
+
+        if not (sale.name and sale.last_name and sale.stripe_data and from_host and sale.phone and sale.email):
             return JsonResponse(
                 {
                     "status": "error",
@@ -53,32 +50,8 @@ class BuyView(View):
                 }
             )
 
-        # Save model
-        sale = models.Sale(
-            name=name,
-            price=price,
-            last_name=last_name,
-            stripe_data=stripe_data,
-            phone=phone,
-            email=email,
-        )
         sale.save()
         success_url = f"{HOST}/seema-rohan/success/{sale.id}?from={from_host}"
-
-        # Format email data
-        stripe_data_key = list(stripe_data.keys())[0]
-        details_lines = stripe_data[stripe_data_key]["description"]
-        details_lines = details_lines.split(",")
-        details_objs = []
-        for line in details_lines:
-            line_split = line.split(":")
-            if len(line_split) > 1:
-                details_objs.append(
-                    {
-                        "name": line_split[0],
-                        "value": line_split[1],
-                    }
-                )
 
         # Submit confirmation email
         current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -96,7 +69,7 @@ class BuyView(View):
             sale.last_name,
             sale.price,
             details_objs,
-            email=email,
+            email=sale.email,
         )
 
         return JsonResponse(
