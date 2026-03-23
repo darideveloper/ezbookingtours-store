@@ -17,66 +17,6 @@ class TestViewIndex (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains (response, "Running")
         
-class TestViewValidateVipCode (TestCase):
-        
-    def setUp (self):
-        
-        self.api_endpoint = f'{API_BASE}/validate-vip-code/'
-        
-        # Create VipCodes
-        self.vip_code = "12345"
-        models.VipCode.objects.create(value=self.vip_code, enabled=True)
-        
-    def test_valid (self):
-        """ Test validate vip code view """
-        
-        # Make request
-        response = self.client.post(
-            self.api_endpoint, 
-            json.dumps ({"vip-code": self.vip_code}),
-            content_type="application/json"
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            "status": "success",
-            "message": "valid vip code"
-        })
-    
-    def test_invalid (self):
-        """ Test validate vip code view """
-        
-        # Make request
-        response = self.client.post(
-            self.api_endpoint, 
-            json.dumps ({"vip-code": "1234567"}),
-            content_type="application/json"
-        )
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            "status": "error",
-            "message": "invalid vip code"
-        })
-        
-    def test_missing_vip_code (self):
-        """ Test validate vip code view """
-        
-        # Make request
-        response = self.client.post(
-            self.api_endpoint,
-            json.dumps ({}),
-            content_type="application/json"
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            "status": "error",
-            "message": "vip-code missing"
-        })
-        
 class TestViewBuy (TestCase):
     
     def setUp (self):
@@ -87,7 +27,6 @@ class TestViewBuy (TestCase):
         self.sample_data = {        
             "name": "John",
             "last-name": "Doe",
-            "vip-code": "123456",
             "price": 100,
             "from-host": "https://www.darideveloper.com/",
             "stripe-data": {
@@ -101,9 +40,6 @@ class TestViewBuy (TestCase):
             "phone": "1234567890",
             "email": "sample@gmail.com"
         }
-        
-        self.vip_code = "12345"
-        models.VipCode.objects.create(value=self.vip_code, enabled=True)
     
     def test_success (self):
         """ Test buy view """
@@ -118,8 +54,8 @@ class TestViewBuy (TestCase):
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "success")
-        self.assertEqual(response.json()["message"], "stripe link generated")
-        self.assertIn("checkout.stripe.com/c/pay/", response.json()["redirect"])
+        self.assertEqual(response.json()["message"], "sale saved")
+        self.assertIn("/seema-rohan/success/", response.json()["redirect"])
         
     def test_missing_data (self):
         """ Test buy view without submiting full data """
@@ -137,40 +73,6 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "missing data")
-    
-    def test_eror_stripe_data (self):
-        """ Test buy with incorrect stripe data """
-        
-        incomplete_data = self.sample_data.copy()
-        incomplete_data["stripe-data"]["sample"].pop("amount")
-        
-        response = self.client.post(
-            self.api_endpoint, 
-            json.dumps (incomplete_data),
-            content_type="application/json"
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "error")
-        self.assertEqual(response.json()["message"], "error generating stripe link")
-        
-    def test_vip_sucess (self):
-        
-        # Replace vip code from sample data
-        self.sample_data["vip-code"] = self.vip_code
-        
-        response = self.client.post(
-            self.api_endpoint, 
-            json.dumps (self.sample_data),
-            content_type="application/json"
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "success")
-        self.assertEqual(response.json()["message"], "sale saved")
-        self.assertIn("success", response.json()["redirect"])
            
 class TestViewTransports (TestCase):
     
@@ -282,70 +184,6 @@ class TestViewHotels (TestCase):
         self.assertEqual(response.json()["message"], "hotels not found")
         self.assertEqual(response.json()["data"], [])
         
-class TestViewFreedates (TestCase):
-    
-    def setUp (self):
-        self.api_endpoint = f"{API_BASE}/free-dates/"
-        
-    def test_get (self):
-        """ Test get free dates """
-        
-        # Create models
-        arrival_category = models.FreeDaysCategory.objects.create(
-            name="arrival"
-        )
-        departure_category = models.FreeDaysCategory.objects.create(
-            name="departure"
-        )
-        
-        arrival_date_1 = datetime(2021, 1, 1)
-        arrival_date_2 = datetime(2021, 1, 2)
-        departure_date_1 = datetime(2021, 1, 1)
-        departure_date_2 = datetime(2021, 1, 2)
-
-        models.FreeDays.objects.create(
-            date=arrival_date_1,
-            category=arrival_category
-        )
-        models.FreeDays.objects.create(
-            date=arrival_date_2,
-            category=arrival_category
-        )
-        models.FreeDays.objects.create(
-            date=departure_date_1,
-            category=departure_category
-        )
-        models.FreeDays.objects.create(
-            date=departure_date_2,
-            category=departure_category
-        )
-        
-        response = self.client.get(
-            self.api_endpoint
-        )
-
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "success")
-        self.assertEqual(response.json()["message"], "free dates found")
-        self.assertEqual(response.json()["data"], {
-            "arrival": [arrival_date_1.strftime("%Y-%m-%d"), arrival_date_2.strftime("%Y-%m-%d")],
-            "departure": [departure_date_2.strftime("%Y-%m-%d"), departure_date_1.strftime("%Y-%m-%d")]
-        })
-        
-    def test_no_models (self):
-        """ Test get hotels without models """
-        
-        response = self.client.get(
-            self.api_endpoint
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["status"], "error")
-        self.assertEqual(response.json()["message"], "error getting free dates")
-        self.assertEqual(response.json()["data"], {})
-        
 class TestSuccessView (TestCase):
     
     def setUp(self):
@@ -356,8 +194,7 @@ class TestSuccessView (TestCase):
         self.sale = models.Sale.objects.create(
             name="John",
             last_name="Doe",
-            price=100,
-            vip_code="12345"
+            price=100
         )
         
     def test_invalid_sale (self):
@@ -378,7 +215,7 @@ class TestSuccessView (TestCase):
         """ Acreedit valid sale id """
         
         response = self.client.get(
-            self.api_endpoint.replace("x", "1")
+            self.api_endpoint.replace("x", str(self.sale.id))
         )
         
         # Check response
@@ -386,4 +223,4 @@ class TestSuccessView (TestCase):
         
         # Validate model
         self.sale.refresh_from_db()
-        self.assertEqual(self.sale.is_paid, False)
+        self.assertEqual(self.sale.is_paid, True)

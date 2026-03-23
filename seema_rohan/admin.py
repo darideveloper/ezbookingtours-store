@@ -9,23 +9,14 @@ class SaleAdmin(admin.ModelAdmin):
         "last_name",
         "sale_datetime",
         "price",
-        "vip_code",
         "is_paid",
         "phone",
         "email",
         "stripe_data",
     )
     ordering = ("-sale_datetime", "name", "last_name")
-    list_filter = ("sale_datetime", "is_paid", "vip_code")
-    search_fields = ("name", "last_name", "vip_code", "stripe_data", "phone", "email")
-    list_max_show_all = 50
-
-
-@admin.register(models.VipCode)
-class VipCodeAdmin(admin.ModelAdmin):
-    list_display = ("value", "enabled")
-    ordering = ("value",)
-    list_filter = ("enabled",)
+    list_filter = ("sale_datetime", "is_paid")
+    search_fields = ("name", "last_name", "stripe_data", "phone", "email")
     list_max_show_all = 50
 
 
@@ -39,15 +30,3 @@ class HotelAdmin(admin.ModelAdmin):
 class TransportAdmin(admin.ModelAdmin):
     list_display = ("key", "name", "price", "by_default")
     ordering = ("key", "name", "price", "by_default")
-
-
-@admin.register(models.FreeDays)
-class FreeDaysAdmin(admin.ModelAdmin):
-    list_display = ("date", "category")
-    ordering = ("date", "category")
-
-
-@admin.register(models.FreeDaysCategory)
-class FreeDaysCategoryAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-    ordering = ("name",)

@@ -25,31 +25,8 @@ class IndexView(View):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class ValidateVipCodeView(View):
-    """Get vip code from json post data and check if it is valid"""
-
-    def post(self, request):
-        """Check if vip code is valid"""
-
-        # Get vip code from json post data
-        vip_code = json.loads(request.body).get("vip-code", "")
-
-        if not vip_code:
-            return JsonResponse({"status": "error", "message": "vip-code missing"})
-
-        # Query models
-        vip_code_found = models.VipCode.objects.filter(
-            value=vip_code, enabled=True
-        ).exists()
-        if vip_code_found:
-            return JsonResponse({"status": "success", "message": "valid vip code"})
-        else:
-            return JsonResponse({"status": "error", "message": "invalid vip code"})
-
-
-@method_decorator(csrf_exempt, name="dispatch")
 class BuyView(View):
-    """Save sale data and redirect to success page or stripe payment page"""
+    """Save sale data and redirect to success page"""
 
     def post(self, request):
 
@@ -59,7 +36,6 @@ class BuyView(View):
         name = json_body.get("name", "")
         last_name = json_body.get("last-name", "")
         price = json_body.get("price", 0)
-        vip_code = json_body.get("vip-code", "")
         stripe_data = json_body.get("stripe-data", {})
         from_host = json_body.get("from-host", "")
         phone = json_body.get("phone", "")
@@ -77,16 +53,11 @@ class BuyView(View):
                 }
             )
 
-        vip_code_found = models.VipCode.objects.filter(
-            value=vip_code, enabled=True
-        ).exists()
-
         # Save model
         sale = models.Sale(
             name=name,
             price=price,
             last_name=last_name,
-            vip_code=vip_code if vip_code_found else "",
             stripe_data=stripe_data,
             phone=phone,
             email=email,
@@ -94,83 +65,42 @@ class BuyView(View):
         sale.save()
         success_url = f"{HOST}/seema-rohan/success/{sale.id}?from={from_host}"
 
-        # Validate vip code
+        # Format email data
+        stripe_data_key = list(stripe_data.keys())[0]
+        details_lines = stripe_data[stripe_data_key]["description"]
+        details_lines = details_lines.split(",")
+        details_objs = []
+        for line in details_lines:
+            line_split = line.split(":")
+            if len(line_split) > 1:
+                details_objs.append(
+                    {
+                        "name": line_split[0],
+                        "value": line_split[1],
+                    }
+                )
 
-        # Directly return redirect to success page
-        if vip_code_found or price == 0:
-
-            # Format email data
-            stripe_data_key = list(stripe_data.keys())[0]
-            details_lines = stripe_data[stripe_data_key]["description"]
-            details_lines = details_lines.split(",")
-            details_objs = []
-            for line in details_lines:
-                line_split = line.split(":")
-                if len(line_split) > 1:
-                    details_objs.append(
-                        {
-                            "name": line_split[0],
-                            "value": line_split[1],
-                        }
-                    )
-
-            # Submit confirmation email
-            current_folder = os.path.dirname(os.path.abspath(__file__))
-            template_path = os.path.join(
-                current_folder, "templates", "seema_rohan", "mail.html"
-            )
-            tools.send_sucess_mail(
-                [
-                    "Seema Rohan Airport Transfer",
-                    f"(#{sale.id}) Seema Rohan Airport Transfer",
-                ],
-                template_path,
-                sale.id,
-                sale.name,
-                sale.last_name,
-                sale.price,
-                details_objs,
-                email=email,
-            )
-
-            return JsonResponse(
-                {"status": "success", "message": "sale saved", "redirect": success_url}
-            )
-
-        # Fix local host link
-        if HOST == "http://localhost:8000":
-            success_url = f"https://www.darideveloper.com/success/{sale.id}"
-
-        # Generate stripe link
-        res = requests.post(
-            "https://services.darideveloper.com/stripe-api/",
-            json={
-                "user": "cancunconcier",
-                "url": from_host,
-                "url_success": success_url,
-                "products": stripe_data,
-            },
+        # Submit confirmation email
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        template_path = os.path.join(
+            current_folder, "templates", "seema_rohan", "mail.html"
+        )
+        tools.send_sucess_mail(
+            [
+                "Seema Rohan Airport Transfer",
+                f"(#{sale.id}) Seema Rohan Airport Transfer",
+            ],
+            template_path,
+            sale.id,
+            sale.name,
+            sale.last_name,
+            sale.price,
+            details_objs,
+            email=email,
         )
 
-        # Catch error if stripe link is not generated
-        try:
-            res_data = res.json()
-        except Exception:
-            return JsonResponse(
-                {
-                    "status": "error",
-                    "message": "error generating stripe link",
-                    "redirect": None,
-                }
-            )
-
-        # Return stripe link
         return JsonResponse(
-            {
-                "status": "success",
-                "message": "stripe link generated",
-                "redirect": res_data["stripe_url"],
-            }
+            {"status": "success", "message": "sale saved", "redirect": success_url}
         )
 
 
@@ -224,45 +154,6 @@ class HotelsView(View):
                 {"status": "error", "message": "hotels not found", "data": []},
                 safe=False,
             )
-
-
-class FreeDatesView(View):
-    """Get deys without charge"""
-
-    def get(self, request):
-
-        try:
-            # Query free dates from models
-            arrival_category = models.FreeDaysCategory.objects.get(name="arrival")
-            departure_category = models.FreeDaysCategory.objects.get(name="departure")
-            arrival_objs = models.FreeDays.objects.filter(
-                category=arrival_category
-            ).order_by("date")
-            departure_objs = models.FreeDays.objects.filter(
-                category=departure_category
-            ).order_by("-date")
-
-            # Format dates
-            arrival_dates = [arrival_obj.date for arrival_obj in arrival_objs]
-            departure_dates = [departure_obj.date for departure_obj in departure_objs]
-        except Exception:
-            return JsonResponse(
-                {"status": "error", "message": "error getting free dates", "data": {}},
-                safe=False,
-            )
-
-        # Return free dates
-        return JsonResponse(
-            {
-                "status": "success",
-                "message": "free dates found",
-                "data": {
-                    "arrival": arrival_dates,
-                    "departure": departure_dates,
-                },
-            },
-            safe=False,
-        )
 
 
 class SuccessView(View):
