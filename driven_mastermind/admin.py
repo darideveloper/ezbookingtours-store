@@ -1,9 +1,10 @@
 from django.contrib import admin
 from driven_mastermind import models
+from ezbookingtours_store.admin import ModelAdminUnfoldBase
 
 
 @admin.register(models.Sale)
-class SaleAdmin(admin.ModelAdmin):
+class SaleAdmin(ModelAdminUnfoldBase):
     list_display = (
         'id',
         'client_email',

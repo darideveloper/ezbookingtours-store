@@ -1,9 +1,10 @@
 from django.contrib import admin
 from wedding import models
+from ezbookingtours_store.admin import ModelAdminUnfoldBase
 
 
 @admin.register(models.Sale)
-class SaleAdmin(admin.ModelAdmin):
+class SaleAdmin(ModelAdminUnfoldBase):
     list_display = (
         "name",
         "last_name",
@@ -22,7 +23,7 @@ class SaleAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.VipCode)
-class VipCodeAdmin(admin.ModelAdmin):
+class VipCodeAdmin(ModelAdminUnfoldBase):
     list_display = ("value", "enabled")
     ordering = ("value",)
     list_filter = ("enabled",)
@@ -30,24 +31,24 @@ class VipCodeAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Hotel)
-class HotelAdmin(admin.ModelAdmin):
+class HotelAdmin(ModelAdminUnfoldBase):
     list_display = ("name", "extra_price")
     ordering = ("name", "extra_price")
 
 
 @admin.register(models.Transport)
-class TransportAdmin(admin.ModelAdmin):
+class TransportAdmin(ModelAdminUnfoldBase):
     list_display = ("key", "name", "price", "by_default")
     ordering = ("key", "name", "price", "by_default")
 
 
 @admin.register(models.FreeDays)
-class FreeDaysAdmin(admin.ModelAdmin):
+class FreeDaysAdmin(ModelAdminUnfoldBase):
     list_display = ("date", "category")
     ordering = ("date", "category")
 
 
 @admin.register(models.FreeDaysCategory)
-class FreeDaysCategoryAdmin(admin.ModelAdmin):
+class FreeDaysCategoryAdmin(ModelAdminUnfoldBase):
     list_display = ("name",)
     ordering = ("name",)

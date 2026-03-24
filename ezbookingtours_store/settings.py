@@ -32,6 +32,10 @@ DEBUG = os.getenv("DEBUG") == "True"
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
+    "unfold.contrib.inlines",
     "seema_rohan",
     "digitalrealty",
     "andrea_scott",
@@ -69,7 +73,7 @@ ROOT_URLCONF = "ezbookingtours_store.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -151,6 +155,7 @@ STATIC_URL = "/static/"
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, "static"),
+    os.path.join(BASE_DIR, "static"),
 ]
 
 # Simplified static file serving.
@@ -172,3 +177,274 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Default email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
+UNFOLD = {
+    "SITE_TITLE": "Omar Dashboard",
+    "SITE_HEADER": "Omar Admin",
+    "SITE_SUBHEADER": "Omar Dashboard",
+    "SITE_URL": "/",
+    "SITE_ICON": lambda request: static("favicon.png"),
+    #"SITE_LOGO": lambda request: static("logo.webp"),
+    #"SITE_SYMBOL": "directions_car",
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/png",
+            "href": lambda request: static("favicon.png"),
+        },
+    ],
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "ENVIRONMENT": "utils.callbacks.environment_callback",
+    "THEME": "light",
+    "COLORS": {
+        "primary": {
+            "50": "oklch(0.97 0.01 255)",
+            "100": "oklch(0.92 0.03 255)",
+            "200": "oklch(0.85 0.05 255)",
+            "300": "oklch(0.75 0.07 255)",
+            "400": "oklch(0.65 0.08 255)",
+            "500": "oklch(0.48 0.08 255)",
+            "600": "oklch(0.40 0.07 255)",
+            "700": "oklch(0.32 0.06 255)",
+            "800": "oklch(0.25 0.05 255)",
+            "900": "oklch(0.18 0.04 255)",
+            "950": "oklch(0.12 0.03 255)",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": _("Autenticación"),
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {
+                        "title": _("Usuarios"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                    {
+                        "title": _("Grupos"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Tienda"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Tours"),
+                        "icon": "map",
+                        "link": reverse_lazy("admin:store_tour_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:store_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Horarios de Tours"),
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:store_tourtime_changelist"),
+                    },
+                    {
+                        "title": _("Recogidas"),
+                        "icon": "location_on",
+                        "link": reverse_lazy("admin:store_pickup_changelist"),
+                    },
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:store_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Sección de Traslados"),
+                "separator": True,
+                "items": [],
+            },
+            {
+                "title": _("Riviera Maya"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:riviera_maya_airport_transfers_transport_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:riviera_maya_airport_transfers_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Municipios"),
+                        "icon": "location_city",
+                        "link": reverse_lazy("admin:riviera_maya_airport_transfers_airbnbmunicipality_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Will Ryan"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:will_ryan_airport_transfers_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:will_ryan_airport_transfers_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:will_ryan_airport_transfers_transport_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Tony Thoa"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:tony_thoa_airport_transfers_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:tony_thoa_airport_transfers_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:tony_thoa_airport_transfers_transport_changelist"),
+                    },
+                    {
+                        "title": _("Códigos VIP"),
+                        "icon": "vpn_key",
+                        "link": reverse_lazy("admin:tony_thoa_airport_transfers_vipcode_changelist"),
+                    },
+                    {
+                        "title": _("Días Gratis"),
+                        "icon": "event",
+                        "link": reverse_lazy("admin:tony_thoa_airport_transfers_freedays_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Digital Realty"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:digitalrealty_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Rohan Karisma"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:rohan_karisma_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Seema Rohan"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:seema_rohan_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:seema_rohan_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:seema_rohan_transport_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Andrea Scott"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:andrea_scott_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Driven Mastermind"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:driven_mastermind_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Bodas"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas de Bodas"),
+                        "icon": "favorite",
+                        "link": reverse_lazy("admin:wedding_sale_changelist"),
+                    },
+                    {
+                        "title": _("Códigos VIP"),
+                        "icon": "vpn_key",
+                        "link": reverse_lazy("admin:wedding_vipcode_changelist"),
+                    },
+                    {
+                        "title": _("Días Gratis"),
+                        "icon": "event_available",
+                        "link": reverse_lazy("admin:wedding_freedays_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:wedding_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:wedding_transport_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+}
+

@@ -1,9 +1,10 @@
 from django.contrib import admin
 from seema_rohan import models
+from ezbookingtours_store.admin import ModelAdminUnfoldBase
 
 
 @admin.register(models.Sale)
-class SaleAdmin(admin.ModelAdmin):
+class SaleAdmin(ModelAdminUnfoldBase):
     list_display = (
         "name",
         "last_name",
@@ -47,12 +48,12 @@ class SaleAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Hotel)
-class HotelAdmin(admin.ModelAdmin):
+class HotelAdmin(ModelAdminUnfoldBase):
     list_display = ("name", "extra_price")
     ordering = ("name", "extra_price")
 
 
 @admin.register(models.Transport)
-class TransportAdmin(admin.ModelAdmin):
+class TransportAdmin(ModelAdminUnfoldBase):
     list_display = ("key", "name", "price", "by_default")
     ordering = ("key", "name", "price", "by_default")

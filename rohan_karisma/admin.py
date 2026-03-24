@@ -1,9 +1,10 @@
 from django.contrib import admin
 from rohan_karisma.models import Sale
+from ezbookingtours_store.admin import ModelAdminUnfoldBase
 
 
 @admin.register(Sale)
-class AdminSale(admin.ModelAdmin):
+class AdminSale(ModelAdminUnfoldBase):
     
     # Search in all fields
     list_display = [field.name for field in Sale._meta.get_fields()]

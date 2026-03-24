@@ -1,9 +1,10 @@
 from django.contrib import admin
 from digitalrealty.models import Sale
+from ezbookingtours_store.admin import ModelAdminUnfoldBase
 
 
 @admin.register(Sale)
-class AdminDigitalRealtySale(admin.ModelAdmin):
+class AdminDigitalRealtySale(ModelAdminUnfoldBase):
 
     list_display = [field.name for field in Sale._meta.get_fields()]
     search_fields = [field.name for field in Sale._meta.get_fields()]
