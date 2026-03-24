@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from urllib.parse import quote
 from datetime import datetime
 from ezbookingtours_store import settings
 from dotenv import load_dotenv
@@ -35,10 +36,6 @@ class BuyView(View):
         json_body = json.loads(request.body)
         from_host = json_body.get("from-host", "")
 
-        # Clean from host
-        from_host_end = from_host.rfind("/")
-        from_host = from_host[:from_host_end]
-
         # Use the new model method for parsing
         sale, details_objs = models.Sale.from_payload(json_body)
 
@@ -51,7 +48,7 @@ class BuyView(View):
             )
 
         sale.save()
-        success_url = f"{HOST}/seema-rohan/success/{sale.id}?from={from_host}"
+        success_url = f"{HOST}/seema-rohan/success/{sale.id}?from={quote(from_host)}"
 
         # Submit confirmation email
         current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -148,4 +145,10 @@ class SuccessView(View):
         sale.save()
 
         # Return success page
-        return redirect(f"{from_host}/?thanks=true")
+        if "?" in from_host:
+            return redirect(f"{from_host}&thanks=true")
+        else:
+            # Add trailing slash if not present and no query params
+            if not from_host.endswith("/"):
+                from_host += "/"
+            return redirect(f"{from_host}?thanks=true")

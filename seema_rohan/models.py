@@ -14,20 +14,20 @@ class Sale (models.Model):
     # Structured fields
     hotel = models.ForeignKey('Hotel', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Hotel')
     transport_type = models.ForeignKey('Transport', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Tipo de transporte')
-    hotel_name = models.CharField(max_length=150, default='', verbose_name='Nombre del hotel (Personalizado)')
-    passengers = models.IntegerField(default=1, verbose_name='Pasajeros')
+    hotel_name = models.CharField(max_length=150, default='', verbose_name='Nombre del hotel (Personalizado)', blank=True)
+    passengers = models.IntegerField(default=1, verbose_name='Pasajeros', blank=True)
     
     # Arriving Details
     arriving_date = models.DateField(null=True, blank=True, verbose_name='Fecha de llegada')
     arriving_time = models.TimeField(null=True, blank=True, verbose_name='Hora de llegada')
-    arriving_airline = models.CharField(max_length=150, default='', verbose_name='Aerolínea de llegada')
-    arriving_flight = models.CharField(max_length=150, default='', verbose_name='Vuelo de llegada')
+    arriving_airline = models.CharField(max_length=150, default='', verbose_name='Aerolínea de llegada', blank=True)
+    arriving_flight = models.CharField(max_length=150, default='', verbose_name='Vuelo de llegada', blank=True)
     
     # Departing Details
     departing_date = models.DateField(null=True, blank=True, verbose_name='Fecha de salida')
     departing_time = models.TimeField(null=True, blank=True, verbose_name='Hora de salida')
-    departing_airline = models.CharField(max_length=150, default='', verbose_name='Aerolínea de salida')
-    departing_flight = models.CharField(max_length=150, default='', verbose_name='Vuelo de salida')
+    departing_airline = models.CharField(max_length=150, default='', verbose_name='Aerolínea de salida', blank=True)
+    departing_flight = models.CharField(max_length=150, default='', verbose_name='Vuelo de salida', blank=True)
     
     def __str__ (self):
         return f"{self.name} {self.last_name} - {self.transport_type or 'Sin transporte'} - {self.sale_datetime.date()}"
