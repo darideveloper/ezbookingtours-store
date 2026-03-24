@@ -1,7 +1,5 @@
 import os
 import json
-import requests
-from urllib.parse import quote
 from datetime import datetime
 from ezbookingtours_store import settings
 from dotenv import load_dotenv
@@ -10,12 +8,10 @@ from django.views import View
 from seema_rohan import models
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.shortcuts import redirect
 from ezbookingtours_store import tools
 
 # Get enviroment variables
 load_dotenv()
-HOST = os.getenv("HOST")
 
 
 class IndexView(View):
@@ -28,13 +24,18 @@ class IndexView(View):
 
 @method_decorator(csrf_exempt, name="dispatch")
 class BuyView(View):
-    """Save sale data and redirect to success page"""
+    """Save sale data and return direct frontend success redirect"""
 
     def post(self, request):
 
         # Get data
         json_body = json.loads(request.body)
         from_host = json_body.get("from-host", "")
+
+        # Clean from host
+        if "/" in from_host:
+            from_host_end = from_host.rfind("/")
+            from_host = from_host[:from_host_end]
 
         # Use the new model method for parsing
         sale, details_objs = models.Sale.from_payload(json_body)
@@ -47,8 +48,9 @@ class BuyView(View):
                 }
             )
 
+        # Save sale (unpaid by default, managed manually in cash outside the app)
         sale.save()
-        success_url = f"{HOST}/seema-rohan/success/{sale.id}?from={quote(from_host)}"
+        success_url = f"{from_host}/?thanks=true"
 
         # Submit confirmation email
         current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -124,31 +126,3 @@ class HotelsView(View):
                 {"status": "error", "message": "hotels not found", "data": []},
                 safe=False,
             )
-
-
-class SuccessView(View):
-    """Complete sale and redirect to success page"""
-
-    def get(self, request, sale_id):
-
-        # Get from host from get parans
-        from_host = request.GET.get("from", "")
-
-        # Query sale from models
-        try:
-            sale = models.Sale.objects.get(id=sale_id)
-        except Exception:
-            return redirect(from_host)
-
-        # Complete sale
-        sale.is_paid = True
-        sale.save()
-
-        # Return success page
-        if "?" in from_host:
-            return redirect(f"{from_host}&thanks=true")
-        else:
-            # Add trailing slash if not present and no query params
-            if not from_host.endswith("/"):
-                from_host += "/"
-            return redirect(f"{from_host}?thanks=true")
