@@ -40,13 +40,10 @@ The hotels endpoint MUST return all available hotel options.
 The `Sale` model **MUST** capture all booking details in dedicated database columns and **MUST** relate to `Hotel` and `Transport` models via ForeignKeys. Parsing logic **MUST** be encapsulated within the `Sale` model using a structured mapping approach.
 
 #### Scenario: Sale Creation from Payload Method
-- **Given** a raw JSON payload from the frontend
+- **Given** a raw JSON payload from the frontend with `"Hotel: other"` and `"Hotel name: [Custom Name]"`
 - **When** the `Sale.from_payload()` method is called
-- **Then** a `Sale` instance is returned with all fields correctly parsed and ForeignKeys correctly looked up
-- **And** the instance **SHALL NOT** store the `price` field in the database
-- **And** the `hotel_name` field **SHALL** be an empty string if a matching `Hotel` record is found
-- **And** the `hotel_name` field **SHALL** only be populated if no `Hotel` record matches the name from the payload
-- **And** the implementation **SHALL** avoid deep nested `if-elif` chains by using a dictionary-based mapping system
+- **Then** the returned `Sale` instance MUST have `hotel_name` set to `[Custom Name]` and `hotel` ForeignKey set to `None` (if no `Hotel` record matches the name).
+- **And** the `hotel_name` field **SHALL** correctly keep its value if the custom hotel name does not match any existing `Hotel` record.
 
 ### Requirement: Dynamic Price Calculation
 The `Sale` model **MUST** provide a way to calculate the total price of the sale dynamically.

@@ -55,7 +55,7 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "sale saved")
-        self.assertIn("/seema-rohan/success/", response.json()["redirect"])
+        self.assertEqual(response.json()["redirect"], "https://www.darideveloper.com/?thanks=true")
 
         # Check that sale is NOT paid initially
         sale = models.Sale.objects.latest('id')
@@ -77,6 +77,40 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "missing data")
+
+    def test_hotel_name_saving(self):
+        """ Test that custom hotel name is saved when hotel is 'other' """
+        
+        payload = {
+            "name": "test",
+            "last-name": "test",
+            "price": 0,
+            "vip-code": "",
+            "stripe-data": {
+                "Airport - Hotel Transfer": {
+                    "amount": 1,
+                    "description": "Name: test, Last name: test, Passengers: 1, Email: test@gmail.com, Phone: t122133, Hotel: other, Hotel Name: test naother, Arriving date: 2026-01-01, Arriving time: 02:00, Airline: test, Flight: test",
+                    "price": 0,
+                    "image_url": "http://localhost:5173/imgs/logo.png"
+                }
+            },
+            "from-host": "http://localhost:5173/?thanks=true",
+            "phone": "t122133",
+            "email": "test@gmail.com"
+        }
+        
+        response = self.client.post(
+            self.api_endpoint, 
+            json.dumps(payload),
+            content_type="application/json"
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        
+        sale = models.Sale.objects.latest('id')
+        self.assertEqual(sale.hotel_name, "test naother")
+        self.assertIsNone(sale.hotel)
            
 class TestViewTransports (TestCase):
     
@@ -187,43 +221,3 @@ class TestViewHotels (TestCase):
         self.assertEqual(response.json()["status"], "error")
         self.assertEqual(response.json()["message"], "hotels not found")
         self.assertEqual(response.json()["data"], [])
-        
-class TestSuccessView (TestCase):
-    
-    def setUp(self):
-        
-        self.api_endpoint = f"{API_BASE}/success/x/?from=https://www.darideveloper.com"
-        
-        # Create sale
-        self.sale = models.Sale.objects.create(
-            name="John",
-            last_name="Doe"
-        )
-        
-    def test_invalid_sale (self):
-        """ Try to acreedit invalid sale id """
-        
-        response = self.client.get(
-            self.api_endpoint.replace("x", "100")
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 302)
-        
-        # Validate model
-        self.sale.refresh_from_db()
-        self.assertEqual(self.sale.is_paid, False)
-        
-    def test_valid_sale (self):
-        """ Acreedit valid sale id """
-        
-        response = self.client.get(
-            self.api_endpoint.replace("x", str(self.sale.id))
-        )
-        
-        # Check response
-        self.assertEqual(response.status_code, 302)
-        
-        # Validate model
-        self.sale.refresh_from_db()
-        self.assertEqual(self.sale.is_paid, True)

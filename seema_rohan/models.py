@@ -74,25 +74,23 @@ class Sale (models.Model):
             "departing_flight": "",
         }
         
-        airline_count = 0
-        flight_count = 0
         details_objs = []
 
-        # Field mapping for simple parsing
+        # Field mapping for simple parsing (lowercase keys)
         SIMPLE_MAPPING = {
-            "Passengers": ("passengers", int),
-            "Arriving date": ("arriving_date", lambda v: parse_dt(v, ["%Y-%m-%d"])),
-            "Arriving time": ("arriving_time", lambda v: parse_dt(v, ["%H:%M"])),
-            "Departing date": ("departing_date", lambda v: parse_dt(v, ["%Y-%m-%d"])),
-            "Departing time": ("departing_time", lambda v: parse_dt(v, ["%H:%M"])),
+            "passengers": ("passengers", int),
+            "arriving date": ("arriving_date", lambda v: parse_dt(v, ["%Y-%m-%d"])),
+            "arriving time": ("arriving_time", lambda v: parse_dt(v, ["%H:%M"])),
+            "departing date": ("departing_date", lambda v: parse_dt(v, ["%Y-%m-%d"])),
+            "departing time": ("departing_time", lambda v: parse_dt(v, ["%H:%M"])),
         }
         
-        # Sequence mapping for duplicate labels
+        # Sequence mapping for duplicate labels (lowercase keys)
         SEQUENCE_MAPPING = {
-            "Airline": ["arriving_airline", "departing_airline"],
-            "Flight": ["arriving_flight", "departing_flight"],
+            "airline": ["arriving_airline", "departing_airline"],
+            "flight": ["arriving_flight", "departing_flight"],
         }
-        counts = {"Airline": 0, "Flight": 0}
+        counts = {"airline": 0, "flight": 0}
 
         for line in details_lines:
             line_split = line.split(":")
@@ -101,19 +99,20 @@ class Sale (models.Model):
                 value = ":".join(line_split[1:]).strip()
                 details_objs.append({"name": key, "value": value})
                 
-                # Logic Implementation
-                if key in SIMPLE_MAPPING:
-                    attr, func = SIMPLE_MAPPING[key]
+                # Logic Implementation (Case-insensitive)
+                key_lower = key.lower()
+                if key_lower in SIMPLE_MAPPING:
+                    attr, func = SIMPLE_MAPPING[key_lower]
                     try: booking_details[attr] = func(value)
                     except: pass
-                elif key in SEQUENCE_MAPPING:
-                    idx = counts[key]
-                    if idx < len(SEQUENCE_MAPPING[key]):
-                        booking_details[SEQUENCE_MAPPING[key][idx]] = value
-                        counts[key] += 1
-                elif key == "Hotel" and value.lower() != "other":
+                elif key_lower in SEQUENCE_MAPPING:
+                    idx = counts[key_lower]
+                    if idx < len(SEQUENCE_MAPPING[key_lower]):
+                        booking_details[SEQUENCE_MAPPING[key_lower][idx]] = value
+                        counts[key_lower] += 1
+                elif key_lower == "hotel" and value.lower() != "other":
                     booking_details["hotel_name"] = value
-                elif key == "Hotel name":
+                elif key_lower == "hotel name":
                     booking_details["hotel_name"] = value
 
         hotel_obj = None
