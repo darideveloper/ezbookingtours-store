@@ -5,7 +5,7 @@ from . import models
 from datetime import datetime
 from dotenv import load_dotenv
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .tools import send_sucess_mail
@@ -20,10 +20,7 @@ HOST = os.getenv("HOST")
 # Create your views here.
 def index(request):
     """Redirect to store admin page"""
-    response = {
-        "status": "running",
-    }
-    return JsonResponse(response)
+    return redirect("admin:index")
 
 
 @csrf_exempt
