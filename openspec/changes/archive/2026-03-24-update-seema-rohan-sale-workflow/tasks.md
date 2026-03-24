@@ -1,0 +1,24 @@
+# Tasks for update-seema-rohan-sale-workflow
+
+- [x] Reproduce the `hotel_name` bug using `seema_rohan/repro_bug.py`.
+- [x] Update `seema_rohan/models.py`:
+    - [x] Remove `price` field from `Sale` model.
+    - [x] Add `total_price` property to `Sale` model.
+    - [x] Update `Sale.from_payload` method (stop storing `price`).
+    - [x] Update `Sale.from_payload` method (only set `hotel_name` if no `hotel_obj` is found).
+- [x] Update `seema_rohan/views.py`:
+    - [x] Verify `BuyView.post` logic for `is_paid=False`.
+    - [x] Update `BuyView.post` to use `sale.total_price`.
+- [x] Update `seema_rohan/admin.py`:
+    - [x] Update `SaleAdmin.list_display` and `fieldsets` to show `total_price` instead of `price`.
+- [x] Update `openspec/specs/seema-rohan-refactor/spec.md`:
+    - [x] Update `Automatic Sale Confirmation` (set `is_paid=False`).
+    - [x] Update `Structured Sale Storage` (remove `price`).
+    - [x] Update `Structured Sale Storage` (fix redundant `hotel_name`).
+    - [x] Add `Dynamic Price Calculation` requirement.
+- [x] Run `python manage.py makemigrations seema_rohan` and `python manage.py migrate seema_rohan`.
+- [x] Run the reproduction script `seema_rohan/repro_bug.py` to verify the `hotel_name` fix.
+- [x] Update `seema_rohan/tests.py`:
+    - [x] Update tests to match new behavior.
+- [x] Verify all tests pass.
+- [x] Delete the temporary reproduction script `seema_rohan/repro_bug.py`.

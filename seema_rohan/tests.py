@@ -2,6 +2,7 @@ import json
 from seema_rohan import models
 from django.test import TestCase
 from datetime import datetime
+from decimal import Decimal
 
 API_BASE = "/seema-rohan"
 
@@ -27,7 +28,6 @@ class TestViewBuy (TestCase):
         self.sample_data = {        
             "name": "John",
             "last-name": "Doe",
-            "price": 100,
             "from-host": "https://www.darideveloper.com/",
             "stripe-data": {
                 "sample": {
@@ -56,6 +56,10 @@ class TestViewBuy (TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertEqual(response.json()["message"], "sale saved")
         self.assertIn("/seema-rohan/success/", response.json()["redirect"])
+
+        # Check that sale is NOT paid initially
+        sale = models.Sale.objects.latest('id')
+        self.assertFalse(sale.is_paid)
         
     def test_missing_data (self):
         """ Test buy view without submiting full data """
@@ -87,14 +91,14 @@ class TestViewTransports (TestCase):
         transport_1 = models.Transport.objects.create(
             key="sample 1",
             name="Sample transport 1",
-            price=100,
+            price=Decimal("100.00"),
             by_default=True
         )
         
         transport_2 = models.Transport.objects.create(
             key="sample 2",
             name="Sample transport 2",
-            price=100,
+            price=Decimal("100.00"),
             by_default=True
         )
                 
@@ -109,7 +113,7 @@ class TestViewTransports (TestCase):
                 "id": transport.id,
                 "key": transport.key,
                 "name": transport.name,
-                "price": transport.price,
+                "price": "{:.2f}".format(transport.price),
                 "by_default": transport.by_default
             })
             
@@ -143,12 +147,12 @@ class TestViewHotels (TestCase):
         # Create models
         hotel_1 = models.Hotel.objects.create(
             name = "Sample hotel 1",
-            extra_price = 100.51,
+            extra_price = Decimal("100.51"),
         )
         
         hotel_2 = models.Hotel.objects.create(
             name = "Sample hotel 2",
-            extra_price = 100.01,
+            extra_price = Decimal("100.01"),
         )
                 
         response = self.client.get(
@@ -162,7 +166,7 @@ class TestViewHotels (TestCase):
             data.append({
                 "id": hotel.id,
                 "name": hotel.name,
-                "extra_price": str(hotel.extra_price),
+                "extra_price": "{:.2f}".format(hotel.extra_price),
             })
             
         # Check response
@@ -193,8 +197,7 @@ class TestSuccessView (TestCase):
         # Create sale
         self.sale = models.Sale.objects.create(
             name="John",
-            last_name="Doe",
-            price=100
+            last_name="Doe"
         )
         
     def test_invalid_sale (self):

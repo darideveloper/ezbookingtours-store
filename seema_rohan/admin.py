@@ -10,7 +10,7 @@ class SaleAdmin(admin.ModelAdmin):
         "transport_type",
         "hotel",
         "sale_datetime",
-        "price",
+        "get_total_price",
         "is_paid",
     )
     ordering = ("-sale_datetime", "name", "last_name")
@@ -23,7 +23,7 @@ class SaleAdmin(admin.ModelAdmin):
             'fields': ('name', 'last_name', 'email', 'phone', 'passengers')
         }),
         ('Información de transporte', {
-            'fields': ('transport_type', 'price', 'is_paid', 'sale_datetime')
+            'fields': ('transport_type', 'get_total_price', 'is_paid', 'sale_datetime')
         }),
         ('Información del hotel', {
             'fields': ('hotel', 'hotel_name')
@@ -39,7 +39,11 @@ class SaleAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    readonly_fields = ('sale_datetime', 'stripe_data')
+    readonly_fields = ('sale_datetime', 'stripe_data', 'get_total_price')
+
+    @admin.display(description="Precio total")
+    def get_total_price(self, obj):
+        return obj.total_price
 
 
 @admin.register(models.Hotel)

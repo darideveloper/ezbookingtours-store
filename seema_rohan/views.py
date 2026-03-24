@@ -67,7 +67,7 @@ class BuyView(View):
             sale.id,
             sale.name,
             sale.last_name,
-            sale.price,
+            sale.total_price,
             details_objs,
             email=sale.email,
         )

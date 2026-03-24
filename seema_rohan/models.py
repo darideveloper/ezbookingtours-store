@@ -6,7 +6,6 @@ class Sale (models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', db_index=True, default='')
     last_name = models.CharField(max_length=150, verbose_name='Apellido', db_index=True, default='')
     sale_datetime = models.DateTimeField(verbose_name='Fecha de venta', db_index=True, default=timezone.now)
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio', default=0)
     is_paid = models.BooleanField(verbose_name='Pagado', default=False)
     phone = models.CharField(max_length=150, verbose_name='Teléfono', db_index=True, default='')
     email = models.EmailField(verbose_name='Email', default='')
@@ -33,6 +32,18 @@ class Sale (models.Model):
     def __str__ (self):
         return f"{self.name} {self.last_name} - {self.transport_type or 'Sin transporte'} - {self.sale_datetime.date()}"
     
+    @property
+    def total_price(self):
+        """
+        Calculates the total price of the sale based on transport and hotel.
+        """
+        total = 0
+        if self.transport_type:
+            total += self.transport_type.price
+        if self.hotel:
+            total += self.hotel.extra_price
+        return total
+
     @classmethod
     def from_payload(cls, json_body):
         """
@@ -41,7 +52,6 @@ class Sale (models.Model):
         """
         name = json_body.get("name", "")
         last_name = json_body.get("last-name", "")
-        price = json_body.get("price", 0)
         stripe_data = json_body.get("stripe-data", {})
         phone = json_body.get("phone", "")
         email = json_body.get("email", "")
@@ -107,8 +117,11 @@ class Sale (models.Model):
                     booking_details["hotel_name"] = value
 
         hotel_obj = None
-        if booking_details["hotel_name"]:
-            hotel_obj = Hotel.objects.filter(name=booking_details["hotel_name"]).first()
+        hotel_name_custom = booking_details["hotel_name"]
+        if hotel_name_custom:
+            hotel_obj = Hotel.objects.filter(name=hotel_name_custom).first()
+            if hotel_obj:
+                hotel_name_custom = ""
             
         transport_obj = None
         if stripe_data_key:
@@ -116,14 +129,13 @@ class Sale (models.Model):
 
         sale = cls(
             name=name,
-            price=price,
             last_name=last_name,
             stripe_data=stripe_data,
             phone=phone,
             email=email,
             hotel=hotel_obj,
             transport_type=transport_obj,
-            hotel_name=booking_details["hotel_name"],
+            hotel_name=hotel_name_custom,
             passengers=booking_details["passengers"],
             arriving_date=booking_details["arriving_date"],
             arriving_time=booking_details["arriving_time"],
