@@ -39,8 +39,10 @@ class BuyView(View):
 
         # Use the new model method for parsing
         sale, details_objs = models.Sale.from_payload(json_body)
+        print(f"[DEBUG] Seema Rohan - Parsing payload for: {sale.name} {sale.last_name}")
 
         if not (sale.name and sale.last_name and sale.stripe_data and from_host and sale.phone and sale.email):
+            print(f"[DEBUG] Seema Rohan - Error: Missing data. Name: {sale.name}, Last: {sale.last_name}, Phone: {sale.phone}, Email: {sale.email}, Host: {from_host}")
             return JsonResponse(
                 {
                     "status": "error",
@@ -50,6 +52,7 @@ class BuyView(View):
 
         # Save sale (unpaid by default, managed manually in cash outside the app)
         sale.save()
+        print(f"[DEBUG] Seema Rohan - Sale saved with ID: {sale.id}")
         success_url = f"{from_host}/?thanks=true"
 
         # Submit confirmation email
@@ -57,19 +60,25 @@ class BuyView(View):
         template_path = os.path.join(
             current_folder, "templates", "seema_rohan", "mail.html"
         )
-        tools.send_sucess_mail(
-            [
-                "Seema Rohan Airport Transfer",
-                f"(#{sale.id}) Seema Rohan Airport Transfer",
-            ],
-            template_path,
-            sale.id,
-            sale.name,
-            sale.last_name,
-            sale.total_price,
-            details_objs,
-            email=sale.email,
-        )
+        
+        print(f"[DEBUG] Seema Rohan - Attempting to send confirmation email to: {sale.email}")
+        try:
+            tools.send_sucess_mail(
+                [
+                    "Seema Rohan Airport Transfer",
+                    f"(#{sale.id}) Seema Rohan Airport Transfer",
+                ],
+                template_path,
+                sale.id,
+                sale.name,
+                sale.last_name,
+                sale.total_price,
+                details_objs,
+                email=sale.email,
+            )
+            print(f"[DEBUG] Seema Rohan - send_sucess_mail called successfully")
+        except Exception as e:
+            print(f"[DEBUG] Seema Rohan - Error calling send_sucess_mail: {str(e)}")
 
         return JsonResponse(
             {"status": "success", "message": "sale saved", "redirect": success_url}

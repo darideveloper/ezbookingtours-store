@@ -59,6 +59,7 @@ def send_sucess_mail(
         email (str): buyer email
     """
 
+    print(f"[DEBUG] TOOLS - Starting send_sucess_mail for ID: {id}, To: {email}")
     # Use defaults from settings if not provided
     if not from_email:
         from_email = settings.EMAIL_HOST_USER
@@ -73,31 +74,53 @@ def send_sucess_mail(
         "price": price,
         "details": details,
     }
-    html_message = render_to_string(template_path, context)
-    plain_message = strip_tags(html_message)
+    
+    try:
+        html_message = render_to_string(template_path, context)
+        plain_message = strip_tags(html_message)
+        print(f"[DEBUG] TOOLS - Email rendered successfully using template: {template_path}")
+    except Exception as e:
+        print(f"[DEBUG] TOOLS - Error rendering email template: {str(e)}")
+        raise
 
     # Create message, attach html message and submit
-    connection = get_connection(
-        host=host,
-        port=settings.EMAIL_PORT,
-        username=from_email,
-        password=settings.EMAIL_HOST_PASSWORD,
-    )
+    try:
+        connection = get_connection(
+            host=host,
+            port=settings.EMAIL_PORT,
+            username=from_email,
+            password=settings.EMAIL_HOST_PASSWORD,
+        )
+        print(f"[DEBUG] TOOLS - SMTP Connection established with: {host}:{settings.EMAIL_PORT}")
+    except Exception as e:
+        print(f"[DEBUG] TOOLS - Error connecting to SMTP: {str(e)}")
+        raise
 
     # Send email to client
-    message = EmailMultiAlternatives(
-        subjects[0], plain_message, from_email, [email], connection=connection
-    )
-    message.attach_alternative(html_message, "text/html")
-    message.send()
+    try:
+        message = EmailMultiAlternatives(
+            subjects[0], plain_message, from_email, [email], connection=connection
+        )
+        message.attach_alternative(html_message, "text/html")
+        message.send()
+        print(f"[DEBUG] TOOLS - Client email sent successfully to: {email}")
+    except Exception as e:
+        print(f"[DEBUG] TOOLS - Error sending client email: {str(e)}")
+        raise
 
     # Send email to admin
-    message = EmailMultiAlternatives(
-        subjects[1],
-        plain_message,
-        from_email,
-        [settings.EMAIL_CLIENT],
-        connection=connection,
-    )
-    message.attach_alternative(html_message, "text/html")
-    message.send()
+    try:
+        admin_email = settings.EMAIL_CLIENT
+        message = EmailMultiAlternatives(
+            subjects[1],
+            plain_message,
+            from_email,
+            [admin_email],
+            connection=connection,
+        )
+        message.attach_alternative(html_message, "text/html")
+        message.send()
+        print(f"[DEBUG] TOOLS - Admin email sent successfully to: {admin_email}")
+    except Exception as e:
+        print(f"[DEBUG] TOOLS - Error sending admin email: {str(e)}")
+        raise
