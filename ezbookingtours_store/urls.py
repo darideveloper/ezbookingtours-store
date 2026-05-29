@@ -11,6 +11,7 @@ urlpatterns = [
     path("driven-mastermind/", include("driven_mastermind.urls")),
     path("andrea-scott/", include("andrea_scott.urls")),
     path("tony-thoa/", include("tony_thoa_airport_transfers.urls")),
+    path("rhea-peeyush/", include("rhea_peeyush_airport_transfers.urls")),
     path("digitalrealty/", include("digitalrealty.urls")),
     path("seema-rohan/", include("seema_rohan.urls")),
 ]

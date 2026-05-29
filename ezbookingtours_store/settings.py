@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "wedding",
     "rohan_karisma",
     "tony_thoa_airport_transfers",
+    "rhea_peeyush_airport_transfers",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -345,6 +346,37 @@ UNFOLD = {
                         "title": _("Días Gratis"),
                         "icon": "event",
                         "link": reverse_lazy("admin:tony_thoa_airport_transfers_freedays_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Rhea Peeyush"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:rhea_peeyush_airport_transfers_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:rhea_peeyush_airport_transfers_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:rhea_peeyush_airport_transfers_transport_changelist"),
+                    },
+                    {
+                        "title": _("Códigos VIP"),
+                        "icon": "vpn_key",
+                        "link": reverse_lazy("admin:rhea_peeyush_airport_transfers_vipcode_changelist"),
+                    },
+                    {
+                        "title": _("Días Gratis"),
+                        "icon": "event",
+                        "link": reverse_lazy("admin:rhea_peeyush_airport_transfers_freedays_changelist"),
                     },
                 ],
             },
