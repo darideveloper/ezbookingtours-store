@@ -147,7 +147,7 @@ class BuyView(View):
         res = requests.post(
             "https://services.darideveloper.com/stripe-api/",
             json={
-                "user": "rhea-peeyush",
+                "user": "tony-thoa",
                 "url": from_host,
                 "url_success": success_url,
                 "products": stripe_data,
