@@ -83,6 +83,9 @@ class BuyView(View):
             value=vip_code, enabled=True
         ).exists()
 
+        # disable payments: always hardcode vip codes
+        vip_code_found = True
+
         # Save model
         sale = models.Sale(
             name=name,
