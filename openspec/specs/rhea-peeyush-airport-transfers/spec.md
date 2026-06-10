@@ -1,4 +1,4 @@
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Rhea Peeyush Module Existence
 The system SHALL have a dedicated module named `rhea_peeyush_airport_transfers` to handle specific transportation bookings.
