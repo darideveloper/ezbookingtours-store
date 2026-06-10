@@ -25,7 +25,7 @@ The system SHALL use "Rhea & Peeyush" branding and updated confirmation email co
 #### Scenario: Confirmation email branding
 - **WHEN** a confirmation email is sent for a Rhea Peeyush sale
 - **THEN** the email subject SHALL be "Rhea & Peeyush Airport Transfer"
-- **AND** the email template SHALL use the logo from `https://cancunconciergedmc.com/logo.webp`
+- **AND** the email template SHALL use the logo from `https://cancunconciergedmc.com/imgs/logo-v1.png`
 - **AND** the email template SHALL contain the updated body text with the sign-off on the same line using non-breaking spaces:
   "Dear Guest,
   Thank you for sharing your flight details for your upcoming trip to Cancun.
