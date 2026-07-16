@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "digitalrealty",
     "andrea_scott",
     "driven_mastermind",
+    "loris",
     "will_ryan_airport_transfers",
     "store",
     "riviera_maya_airport_transfers",
@@ -294,6 +295,27 @@ UNFOLD = {
                         "title": _("Municipios"),
                         "icon": "location_city",
                         "link": reverse_lazy("admin:riviera_maya_airport_transfers_airbnbmunicipality_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Lori's Birthday"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:loris_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:loris_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:loris_transport_changelist"),
                     },
                 ],
             },

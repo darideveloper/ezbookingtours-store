@@ -6,6 +6,7 @@ urlpatterns = [
     path("", include("store.urls")),
     path("riviera/", include("riviera_maya_airport_transfers.urls")),
     path("wedding/", include("wedding.urls")),
+    path("loris/", include("loris.urls")),
     path("will-ryan/", include("will_ryan_airport_transfers.urls")),
     path("rohan-karisma/", include("rohan_karisma.urls")),
     path("driven-mastermind/", include("driven_mastermind.urls")),
