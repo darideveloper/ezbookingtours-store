@@ -1,5 +1,6 @@
 import json
 from django.test import TestCase
+from django.core import mail
 from loris import models
 
 API_BASE = "/loris"
@@ -128,3 +129,44 @@ class TestViewSales (TestCase):
             "status": "error",
             "message": "missing data",
         })
+        
+    def test_post_without_price (self):
+        """ POST without price should succeed and save with price=0 """
+        
+        response = self.client.post(
+            f"{API_BASE}/sale/",
+            json.dumps({
+                "name": self.name,
+                "last-name": self.last_name,
+                "details": self.details,
+                "email": self.email,
+            }),
+            content_type="application/json"
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            "status": "success",
+            "message": "Sale saved",
+        })
+        
+        sale = models.Sale.objects.first()
+        self.assertEqual(sale.price, 0)
+        
+    def test_email_omits_price (self):
+        """ Confirmation email should not contain price """
+        
+        self.client.post(
+            f"{API_BASE}/sale/",
+            json.dumps({
+                "name": self.name,
+                "last-name": self.last_name,
+                "details": self.details,
+                "email": self.email,
+            }),
+            content_type="application/json"
+        )
+        
+        self.assertEqual(len(mail.outbox), 2)
+        email_body = mail.outbox[0].body
+        self.assertNotIn("Price", email_body)

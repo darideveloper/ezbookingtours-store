@@ -78,11 +78,11 @@ class SalesView(View):
 
         name = json_body.get("name", "")
         last_name = json_body.get("last-name", "")
-        price = json_body.get("price")
+        price = json_body.get("price", 0)
         details = json_body.get("details", "")
         email = json_body.get("email", "")
 
-        if not (name and last_name and price is not None and details and email):
+        if not (name and last_name and details and email):
             return JsonResponse(
                 {
                     "status": "error",
