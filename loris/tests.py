@@ -170,3 +170,29 @@ class TestViewSales (TestCase):
         self.assertEqual(len(mail.outbox), 2)
         email_body = mail.outbox[0].body
         self.assertNotIn("Price", email_body)
+        
+    def test_email_preserves_time_in_details (self):
+        """ Details with time values containing colons should show full time """
+        
+        details_with_time = (
+            "Name: name, Last name: last, Email: test@test.com, "
+            "Passengers: 1, Hotel: Test Hotel, Arriving date: 2027-08-24, "
+            "Arriving time: 15:13, Airline: A1, Flight: F1, "
+            "Departing date: 2027-08-24, Departing time: 16:13, "
+            "Airline: A2, Flight: F2"
+        )
+        
+        self.client.post(
+            f"{API_BASE}/sale/",
+            json.dumps({
+                "name": "name",
+                "last-name": "last",
+                "details": details_with_time,
+                "email": "test@test.com",
+            }),
+            content_type="application/json"
+        )
+        
+        email_body = mail.outbox[0].body
+        self.assertIn("15:13", email_body)
+        self.assertIn("16:13", email_body)

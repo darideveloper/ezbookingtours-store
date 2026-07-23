@@ -105,11 +105,11 @@ class SalesView(View):
         details_lines = details.split(",")
         details_objs = []
         for line in details_lines:
-            line_split = line.split(":")
+            line_split = line.split(":", 1)
             details_objs.append(
                 {
-                    "name": line_split[0],
-                    "value": line_split[1],
+                    "name": line_split[0].strip(),
+                    "value": line_split[1].strip(),
                 }
             )
 
