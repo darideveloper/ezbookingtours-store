@@ -1,85 +1,83 @@
-<div><a href='https://github.com/darideveloper/ezbookingtours-store/blob/master/LICENSE' target='_blank'>
-                <img src='https://img.shields.io/github/license/darideveloper/ezbookingtours-store.svg?style=for-the-badge' alt='MIT License' height='30px'/>
-            </a><a href='https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=LinkedIn&color=0A66C2&logo=LinkedIn&logoColor=FFFFFF&label=' alt='Linkedin' height='30px'/>
-            </a><a href='https://t.me/darideveloper' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Telegram&color=26A5E4&logo=Telegram&logoColor=FFFFFF&label=' alt='Telegram' height='30px'/>
-            </a><a href='https://github.com/darideveloper' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=GitHub&color=181717&logo=GitHub&logoColor=FFFFFF&label=' alt='Github' height='30px'/>
-            </a><a href='https://www.fiverr.com/darideveloper' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Fiverr&color=222222&logo=Fiverr&logoColor=1DBF73&label=' alt='Fiverr' height='30px'/>
-            </a><a href='https://discord.com/users/992019836811083826' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=' alt='Discord' height='30px'/>
-            </a><a href='mailto:darideveloper@gmail.com?subject=Hello Dari Developer' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Gmail&color=EA4335&logo=Gmail&logoColor=FFFFFF&label=' alt='Gmail' height='30px'/>
-            </a><a href='https://www.twitch.tv/darideveloper' target='_blank'>
-                <img src='https://img.shields.io/static/v1?style=for-the-badge&message=Twitch&color=b9a3e3&logo=Twitch&logoColor=ffffff&label=' alt='Twitch' height='30px'/>
-            </a></div><div align='center'><br><br><img src='https://ezbookingtours.com/wp-content/uploads/2022/04/EZ-Booking-Tours-Logo.png' alt='Ezbookingtours Store' height='80px'/>
+# EzBookingTours Store — Booking & Admin Dashboard
 
+Django admin dashboard and booking API for the Cancun Concierge DMC ecosystem. It started as a checkout widget backend for the EZBookingTours WordPress store and evolved into the central system managing all booking modules: airport transfers, weddings, celebrations and tours.
 
+## Tech Stack
 
-# Ezbookingtours Store
+- **Django 4.2** — modular monolith (12 apps, one per client/event vertical)
+- **Django Unfold** — modern admin interface
+- **PostgreSQL** — database
+- **Stripe** — payments via external proxy service
+- **SMTP** — voucher and confirmation emails
 
-Visit at: **[ezbookingtours.com/tour/chichen-itza-tour-de-lujo-mexicanos-presentando-identificacion-oficial-vigente-con-fotografia](https://ezbookingtours.com/tour/chichen-itza-tour-de-lujo-mexicanos-presentando-identificacion-oficial-vigente-con-fotografia/)**
+## Features
 
-Django dashboard to create checkout widgets to be embedded in WordPress online store [EZBookingTours](https://ezbookingtours.com/)
+- 12 booking modules: store, riviera_maya, wedding, will_ryan, rohan_karisma, driven_mastermind, andrea_scott, tony_thoa, digitalrealty, seema_rohan, rhea_peeyush, loris
+- JSON API endpoints for hotels, transports and free dates consumed by landing pages
+- Sale/booking capture with payment state tracking (Stripe, cash or free)
+- Voucher and confirmation emails per event with branded HTML templates
+- VIP codes and free-date management
+- Embeddable checkout widget for WordPress (original store)
+- Django Unfold admin with per-app sections, search and filters
 
-Project type: **client**
+## Setup
 
-</div><br><details>
-            <summary>Table of Contents</summary>
-            <ol>
-<li><a href='#buildwith'>Build With</a></li>
-<li><a href='#relatedprojects'>Related Projects</a></li>
-<li><a href='#media'>Media</a></li>
-<li><a href='#details'>Details</a></li>
-<li><a href='#roadmap'>Roadmap</a></li></ol>
-        </details><br>
+```sh
+pip install -r requirements.txt
+cp .env.example .env   # configure DB, SMTP, Stripe proxy
+python manage.py migrate
+python manage.py runserver
+```
 
-# Build with
+---
 
-<div align='center'><a href='https://developer.mozilla.org/en-US/docs/Web/HTML' target='_blank'> <img src='https://i.imgur.com/OitgDfl.jpeg' alt='HTML + CSS' title='HTML + CSS' height='50px'/> </a><a href='https://www.python.org/' target='_blank'> <img src='https://cdn.svgporn.com/logos/python.svg' alt='Python' title='Python' height='50px'/> </a><a href='https://requests.readthedocs.io/en/latest/' target='_blank'> <img src='https://requests.readthedocs.io/en/latest/_static/requests-sidebar.png' alt='Requests' title='Requests' height='50px'/> </a><a href='https://stripe.com/' target='_blank'> <img src='https://cdn.svgporn.com/logos/stripe.svg' alt='Stripe' title='Stripe' height='50px'/> </a><a href='https://www.postgresql.org/' target='_blank'> <img src='https://cdn.svgporn.com/logos/postgresql.svg' alt='PostgreSQL' title='PostgreSQL' height='50px'/> </a><a href='https://getbootstrap.com/' target='_blank'> <img src='https://cdn.svgporn.com/logos/bootstrap.svg' alt='Bootstrap' title='Bootstrap' height='50px'/> </a><a href='https://docs.djangoproject.com/en/4.0/' target='_blank'> <img src='https://cdn.svgporn.com/logos/django.svg' alt='Django' title='Django' height='50px'/> </a><a href='https://www.w3schools.com/js/js_es6.asp' target='_blank'> <img src='https://cdn.svgporn.com/logos/javascript.svg' alt='JavaScript' title='JavaScript' height='50px'/> </a></div>
+## Contact
 
-# Related projects
+Developed by [Dari Developer](https://darideveloper.com)
 
-<div align='center'><a href='https://github.com/darideveloper/cancun-concierge' target='_blank'> <img src='https://github.com/darideveloper/cancun-concierge/raw/master/imgs/logo.png' alt='Cancun Concierge' title='Cancun Concierge' height='50px'/> </a><a href='https://github.com/darideveloper/rivieramayaairporttransfers' target='_blank'> <img src='https://rivieramayaairporttransfers.com/imgs/page-logo-trans.png' alt='Riviera Maya Airport Transfers' title='Riviera Maya Airport Transfers' height='50px'/> </a></div>
+- 🌐 [darideveloper.com](https://darideveloper.com)
+- 💬 [WhatsApp](https://api.whatsapp.com/send?phone=5214493402622)
+- 📂 [View project in portfolio](https://darideveloper.com/portafolio/cancunconcierge)
 
-# Media
+---
 
-![widget](https://github.com/darideveloper/ezbookingtours-store/blob/master/screenshots/widget.gif?raw=true)
+# EzBookingTours Store — Panel de administración y reservas
 
-![admin](https://github.com/darideveloper/ezbookingtours-store/blob/master/screenshots/admin.gif?raw=true)
+Dashboard de administración y API de reservas en Django para el ecosistema de Cancun Concierge DMC. Comenzó como backend de un widget de checkout para la tienda WordPress de EZBookingTours y evolucionó hasta convertirse en el sistema central que gestiona todos los módulos de reserva: traslados aeroportuarios, bodas, celebraciones y tours.
 
-# Details
+## Tech Stack
 
-This project have been created in order to have a more detailed and custom checkout in the online store, with dynamic options not allowed by WordPress.
-
-The models/tables created in the database are:
-
-* Hotels
-* Pick ups en hoteles
-* Tiempo de tours
-* Tours
-* Ventas
-
-When a buy page of the online store loads, the dynamic link of the widget its generated based in the page content, and immediately its embedded the iframe and hidden the old checkout.
-After the widget/iframe collected the sale data, the user its redirect to a stripe checkout.
+- **Django 4.2** — monolito modular (12 apps, una por cliente/vertical)
+- **Django Unfold** — interfaz de administración moderna
+- **PostgreSQL** — base de datos
+- **Stripe** — pagos mediante servicio proxy externo
+- **SMTP** — correos de confirmación y vouchers
 
-# Roadmap
+## Features
 
-* [x] Create models
-* [x] Custom admin
-* [x] 404 page
-* [x] Widget
-	* [x] Render with dynamic link
-	* [x] Get info from models
-	* [x] Embedded in WordPress
-	* [x] Dynamic price
-	* [x] Collect user data
-	* [x] Show error screens where not found tour or time
-* [x] Save sales in database
-* [x] Loading spinner
-* [x] Success page after payment
-* [x] Submit email to client after sale
-* [x] Connect to stripe checkout
+- 12 módulos de reserva: store, riviera_maya, wedding, will_ryan, rohan_karisma, driven_mastermind, andrea_scott, tony_thoa, digitalrealty, seema_rohan, rhea_peeyush, loris
+- Endpoints JSON para hoteles, transportes y fechas libres consumidos por las landing pages
+- Captura de ventas/reservas con estado de pago (Stripe, efectivo o gratis)
+- Correos de confirmación y vouchers por evento con plantillas HTML personalizadas
+- Gestión de códigos VIP y fechas de cortesía
+- Widget de checkout embebible para WordPress (tienda original)
+- Admin Django Unfold con secciones por app, búsqueda y filtros
 
+## Setup
+
+```sh
+pip install -r requirements.txt
+cp .env.example .env   # configurar DB, SMTP, proxy Stripe
+python manage.py migrate
+python manage.py runserver
+```
+
+---
+
+## Contacto
+
+Desarrollado por [Dari Developer](https://darideveloper.com)
+
+- 🌐 [darideveloper.com](https://darideveloper.com)
+- 💬 [WhatsApp](https://api.whatsapp.com/send?phone=5214493402622)
+- 📂 [Ver proyecto en el portafolio](https://darideveloper.com/portafolio/cancunconcierge)
