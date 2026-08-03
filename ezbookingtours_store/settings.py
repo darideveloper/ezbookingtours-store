@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rohan_karisma",
     "tony_thoa_airport_transfers",
     "rhea_peeyush_airport_transfers",
+    "seyis",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -316,6 +317,27 @@ UNFOLD = {
                         "title": _("Transportes"),
                         "icon": "directions_car",
                         "link": reverse_lazy("admin:loris_transport_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Seyis"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:seyis_sale_changelist"),
+                    },
+                    {
+                        "title": _("Hoteles"),
+                        "icon": "hotel",
+                        "link": reverse_lazy("admin:seyis_hotel_changelist"),
+                    },
+                    {
+                        "title": _("Transportes"),
+                        "icon": "directions_car",
+                        "link": reverse_lazy("admin:seyis_transport_changelist"),
                     },
                 ],
             },

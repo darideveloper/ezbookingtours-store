@@ -1,0 +1,1 @@
+# Seyis app initialization
