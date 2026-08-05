@@ -15,6 +15,7 @@ urlpatterns = [
     path("rhea-peeyush/", include("rhea_peeyush_airport_transfers.urls")),
     path("digitalrealty/", include("digitalrealty.urls")),
     path("seema-rohan/", include("seema_rohan.urls")),
+    path("seyis/", include("seyis.urls")),
 ]
 
 handler404 = "store.views.error_404"

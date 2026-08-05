@@ -6,6 +6,15 @@ from seyis import models
 API_BASE = "/seyis"
 
 
+class TestViewIndex(TestCase):
+
+    def test_get(self):
+        """Test response fields"""
+        response = self.client.get(f"{API_BASE}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "running"})
+
+
 class TestViewHotels(TestCase):
 
     def setUp(self):
