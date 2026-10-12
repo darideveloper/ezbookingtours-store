@@ -18,6 +18,7 @@ staticfiles
 */docs/
 
 .env.*
+!.env.example
 
 docs/*.md
 
