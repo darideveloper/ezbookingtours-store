@@ -284,6 +284,36 @@ class AshleyJonathanTests(TestCase):
             data.get("stripe_url"), "https://example.com/custom?done=true"
         )
 
+    def test_admin_copy_uses_email_client(self):
+        """Admin confirmation copy goes to EMAIL_CLIENT and client copy to guest."""
+        payload = json.loads(json.dumps(self.arrival_payload))
+        payload["from-host"] = "https://example.com/x/"
+        self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        recipients = [addr for m in mail.outbox for addr in m.to]
+        self.assertIn(views.EMAIL_ADMIN, recipients)
+        self.assertIn("jane@example.com", recipients)
+
+    @patch("ashley_jonathan.views.EmailMultiAlternatives")
+    def test_email_failure_does_not_break_free_booking(self, mock_cls):
+        """SMTP failure is logged but the free booking still confirms."""
+        mock_cls.return_value.send.side_effect = Exception("smtp down")
+        response = self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(self.arrival_payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data.get("free"))
+        self.assertIn("?done=true", data.get("stripe_url", ""))
+        sale = models.Sale.objects.filter(email="jane@example.com").first()
+        self.assertIsNotNone(sale)
+        self.assertTrue(sale.sale_done)
+
     @patch("ashley_jonathan.views.requests.post")
     def test_paid_booking_propagates_from_host(self, mock_post):
         """Paid booking sets url_success with encoded ?from= when valid."""

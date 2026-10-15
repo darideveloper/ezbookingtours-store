@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import requests
 from dotenv import load_dotenv
 from django.views import View
@@ -17,6 +18,9 @@ from django.conf import settings
 
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+
 STRIPE_FLASK_API = os.getenv("STRIPE_FLASK_API")
 HOST = os.getenv("HOST")
 ASHLEY_JONATHAN_PAGE = os.getenv(
@@ -24,6 +28,7 @@ ASHLEY_JONATHAN_PAGE = os.getenv(
     "https://cancunconcierge.net/ashley-jonathan-airport-transfers",
 )
 EMAIL_USER = settings.EMAIL_HOST_USER
+EMAIL_ADMIN = settings.EMAIL_CLIENT or EMAIL_USER
 
 
 def sanitize_return_url(value):
@@ -100,23 +105,34 @@ def send_confirmation_emails(sale, preview=False):
     plain_message = strip_tags(html_message)
 
     emails_subjects = {
-        EMAIL_USER: "New Sale in Ashley & Jonathan",
+        EMAIL_ADMIN: "New Sale in Ashley & Jonathan",
         sale.email: "Ashley & Jonathan Wedding - Transportation Confirmation",
     }
 
     if not preview:
+        if not EMAIL_USER:
+            logger.error(
+                "ashley-jonathan email not sent: EMAIL_HOST_USER is not configured"
+            )
         for to_email, subject in emails_subjects.items():
             if not to_email:
+                logger.warning(
+                    "ashley-jonathan email skipped: missing recipient for subject %r",
+                    subject,
+                )
                 continue
-            print(f"Sending ashley jonathan email to {to_email}")
+            logger.info("Sending ashley jonathan email to %s", to_email)
             message = EmailMultiAlternatives(
                 subject, plain_message, EMAIL_USER, [to_email]
             )
             message.attach_alternative(html_message, "text/html")
             try:
                 message.send()
-            except Exception as e:
-                print(f"Error sending email to {to_email}: {e}")
+            except Exception:
+                # Log with traceback; keep the booking successful for the client.
+                logger.exception(
+                    "Error sending ashley jonathan email to %s", to_email
+                )
 
     return html_message
 
