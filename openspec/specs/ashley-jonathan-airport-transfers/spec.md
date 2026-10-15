@@ -16,11 +16,12 @@ The system SHALL record an arrival airport transfer booking as complete and conf
 - **AND** the system SHALL send confirmation emails to the client and admin
 
 #### Scenario: Guest submits arrival request from a custom landing page
-- **WHEN** a client submits a valid free arrival booking request including a valid `from-host` URL
-- **THEN** the system SHALL return a redirect URL equal to the sanitized `from-host` base with `?done=true` appended
+- **WHEN** a client submits a valid free arrival booking request including a valid `from-host` URL or a valid legacy `url` value
+- **THEN** the system SHALL return a redirect URL equal to the sanitized frontend base with `?done=true` appended
+- **AND** the system SHALL prefer `from-host` over `url` when both are present
 
 #### Scenario: Guest submits arrival request without a return URL
-- **WHEN** a client submits a valid free arrival booking request without `from-host` or with an invalid value
+- **WHEN** a client submits a valid free arrival booking request where neither `from-host` nor `url` yields a valid URL
 - **THEN** the system SHALL return a redirect URL equal to the configured `ASHLEY_JONATHAN_PAGE` with `?done=true` appended
 
 ### Requirement: Paid Departure Transfer Checkout
@@ -70,14 +71,15 @@ The system SHALL register the Sale model in Django Admin with Unfold styling, li
 - **AND** the system SHALL allow searching by customer name, email, and transport fields
 
 ### Requirement: Frontend Return URL Handling
-The system SHALL accept, sanitize, validate, and propagate an optional frontend-supplied return URL for paid and free bookings.
+The system SHALL accept, sanitize, validate, and propagate an optional frontend-supplied return URL for paid and free bookings, reading the `from-host` field and, when that is absent, the legacy `url` field.
 
 #### Scenario: Paid booking propagates frontend return URL to Stripe callback
-- **WHEN** a client submits a paid departure or round-trip booking including a valid `from-host` URL
+- **WHEN** a client submits a paid departure or round-trip booking including a valid `from-host` URL or a valid legacy `url` value
 - **THEN** the system SHALL create a pending Sale with `sale_done` set to False
 - **AND** the system SHALL set the Stripe `url_success` to `{HOST}/ashley-jonathan/sale/<id>?from=<urlencoded sanitized base>`
+- **AND** the system SHALL prefer `from-host` over `url` when both are present
 
 #### Scenario: Invalid frontend return URL is rejected safely
-- **WHEN** a booking request includes a `from-host` value that is missing, non-http(s), has no host, or includes credentials
+- **WHEN** a booking request provides a `from-host` or `url` value that is missing, non-http(s), has no host, or includes credentials
 - **THEN** the system SHALL ignore the value and use the configured `ASHLEY_JONATHAN_PAGE` behavior
 - **AND** the system SHALL strip any query string or fragment before appending `?done=true`

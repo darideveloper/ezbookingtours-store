@@ -1,4 +1,10 @@
-## ADDED Requirements
+# hide-email-price Specification
+
+## Purpose
+
+Ensures the loris booking confirmation email omits any price information and that the `price` field is optional in the sale POST body, so bookings without a price are still saved and confirmed.
+
+## Requirements
 
 ### Requirement: Confirmation email omits price
 The loris booking confirmation email SHALL NOT display a price or any price-related information.

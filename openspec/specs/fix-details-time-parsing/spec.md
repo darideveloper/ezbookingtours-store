@@ -1,3 +1,11 @@
+# fix-details-time-parsing Specification
+
+## Purpose
+
+Ensures booking detail lines that contain colons in the value portion (such as times like `15:13`) are parsed without truncation, and that surrounding whitespace is removed from both the name and value parts.
+
+## Requirements
+
 ### Requirement: Detail values with colons are preserved
 When parsing booking detail lines that contain colons in the value portion (e.g., times like "15:13"), the system SHALL preserve the full value including all colons after the first.
 
