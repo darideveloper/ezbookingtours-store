@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "riviera_maya_airport_transfers",
     "wedding",
     "rohan_karisma",
+    "ashley_jonathan",
     "tony_thoa_airport_transfers",
     "rhea_peeyush_airport_transfers",
     "seyis",
@@ -443,6 +444,17 @@ UNFOLD = {
                         "title": _("Ventas"),
                         "icon": "payments",
                         "link": reverse_lazy("admin:rohan_karisma_sale_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Ashley Jonathan"),
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Ventas"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:ashley_jonathan_sale_changelist"),
                     },
                 ],
             },
