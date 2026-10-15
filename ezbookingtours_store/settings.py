@@ -182,6 +182,28 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Default email settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+# Surface app-level INFO logs (e.g. confirmation email attempts) on stdout.
+# Django's default config sends only WARNING+ to the console for non-Django loggers.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "ashley_jonathan": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "ezbookingtours_store": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _

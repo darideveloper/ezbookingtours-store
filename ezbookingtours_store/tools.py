@@ -3,7 +3,11 @@ from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from datetime import datetime
+import logging
 import os
+
+
+logger = logging.getLogger(__name__)
 
 
 def parse_dt(value, formats):
@@ -59,7 +63,7 @@ def send_sucess_mail(
         email (str): buyer email
     """
 
-    print(f"[DEBUG] TOOLS - Starting send_sucess_mail for ID: {id}, To: {email}")
+    logger.info("Starting send_sucess_mail for ID: %s, To: %s", id, email)
     # Use defaults from settings if not provided
     if not from_email:
         from_email = settings.EMAIL_HOST_USER
@@ -78,23 +82,21 @@ def send_sucess_mail(
     try:
         html_message = render_to_string(template_path, context)
         plain_message = strip_tags(html_message)
-        print(f"[DEBUG] TOOLS - Email rendered successfully using template: {template_path}")
-    except Exception as e:
-        print(f"[DEBUG] TOOLS - Error rendering email template: {str(e)}")
+        logger.info("Email rendered using template: %s", template_path)
+    except Exception:
+        logger.exception("Error rendering email template: %s", template_path)
         raise
 
-    # Create message, attach html message and submit
-    try:
-        connection = get_connection(
-            host=host,
-            port=settings.EMAIL_PORT,
-            username=from_email,
-            password=settings.EMAIL_HOST_PASSWORD,
-        )
-        print(f"[DEBUG] TOOLS - SMTP Connection established with: {host}:{settings.EMAIL_PORT}")
-    except Exception as e:
-        print(f"[DEBUG] TOOLS - Error connecting to SMTP: {str(e)}")
-        raise
+    # Create message, attach html message and submit.
+    # get_connection() is lazy: the socket opens on the first send, so failures
+    # surface there rather than here.
+    connection = get_connection(
+        host=host,
+        port=settings.EMAIL_PORT,
+        username=from_email,
+        password=settings.EMAIL_HOST_PASSWORD,
+    )
+    logger.info("Using SMTP host %s:%s", host, settings.EMAIL_PORT)
 
     # Send email to client
     try:
@@ -103,9 +105,9 @@ def send_sucess_mail(
         )
         message.attach_alternative(html_message, "text/html")
         message.send()
-        print(f"[DEBUG] TOOLS - Client email sent successfully to: {email}")
-    except Exception as e:
-        print(f"[DEBUG] TOOLS - Error sending client email: {str(e)}")
+        logger.info("Client email sent successfully to: %s", email)
+    except Exception:
+        logger.exception("Error sending client email to: %s", email)
         raise
 
     # Send email to admin
@@ -120,7 +122,7 @@ def send_sucess_mail(
         )
         message.attach_alternative(html_message, "text/html")
         message.send()
-        print(f"[DEBUG] TOOLS - Admin email sent successfully to: {admin_email}")
-    except Exception as e:
-        print(f"[DEBUG] TOOLS - Error sending admin email: {str(e)}")
+        logger.info("Admin email sent successfully to: %s", admin_email)
+    except Exception:
+        logger.exception("Error sending admin email to: %s", admin_email)
         raise
