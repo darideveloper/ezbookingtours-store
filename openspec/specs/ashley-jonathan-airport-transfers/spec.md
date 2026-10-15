@@ -15,6 +15,14 @@ The system SHALL record an arrival airport transfer booking as complete and conf
 - **AND** the system SHALL return a response with a redirect URL to the confirmation landing page
 - **AND** the system SHALL send confirmation emails to the client and admin
 
+#### Scenario: Guest submits arrival request from a custom landing page
+- **WHEN** a client submits a valid free arrival booking request including a valid `from-host` URL
+- **THEN** the system SHALL return a redirect URL equal to the sanitized `from-host` base with `?done=true` appended
+
+#### Scenario: Guest submits arrival request without a return URL
+- **WHEN** a client submits a valid free arrival booking request without `from-host` or with an invalid value
+- **THEN** the system SHALL return a redirect URL equal to the configured `ASHLEY_JONATHAN_PAGE` with `?done=true` appended
+
 ### Requirement: Paid Departure Transfer Checkout
 The system SHALL initiate a Stripe checkout session and record a pending sale when a client books a paid departure service.
 
@@ -41,6 +49,14 @@ The system SHALL mark a pending sale as completed, dispatch confirmation emails,
 - **AND** the system SHALL send confirmation emails to the client and admin
 - **AND** the system SHALL redirect to the configured landing page with `?done=true`
 
+#### Scenario: Payment callback carries a frontend return URL
+- **WHEN** a GET request is received at `/sale/<sale_id>/?from=<frontend_base>` with a valid `from` URL
+- **THEN** the system SHALL redirect to the sanitized `from` base with `?done=true` appended
+
+#### Scenario: Payment callback without a valid return URL
+- **WHEN** a GET request is received at `/sale/<sale_id>/` without `from` or with an invalid value
+- **THEN** the system SHALL redirect to the configured `ASHLEY_JONATHAN_PAGE` with `?done=true`
+
 #### Scenario: Payment confirmation callback for non-existent sale
 - **WHEN** a GET request is received at `/sale/<sale_id>/` with an invalid ID
 - **THEN** the system SHALL return a 404 response with an error message
@@ -52,3 +68,16 @@ The system SHALL register the Sale model in Django Admin with Unfold styling, li
 - **WHEN** an authenticated staff user navigates to the sales admin changelist
 - **THEN** the system SHALL display the sales with filters for transport type, vehicle, passengers, price, and completion status
 - **AND** the system SHALL allow searching by customer name, email, and transport fields
+
+### Requirement: Frontend Return URL Handling
+The system SHALL accept, sanitize, validate, and propagate an optional frontend-supplied return URL for paid and free bookings.
+
+#### Scenario: Paid booking propagates frontend return URL to Stripe callback
+- **WHEN** a client submits a paid departure or round-trip booking including a valid `from-host` URL
+- **THEN** the system SHALL create a pending Sale with `sale_done` set to False
+- **AND** the system SHALL set the Stripe `url_success` to `{HOST}/ashley-jonathan/sale/<id>?from=<urlencoded sanitized base>`
+
+#### Scenario: Invalid frontend return URL is rejected safely
+- **WHEN** a booking request includes a `from-host` value that is missing, non-http(s), has no host, or includes credentials
+- **THEN** the system SHALL ignore the value and use the configured `ASHLEY_JONATHAN_PAGE` behavior
+- **AND** the system SHALL strip any query string or fragment before appending `?done=true`

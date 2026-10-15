@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from datetime import datetime
+from urllib.parse import quote, urlsplit, urlunsplit
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
@@ -23,6 +24,39 @@ ASHLEY_JONATHAN_PAGE = os.getenv(
     "https://cancunconcierge.net/ashley-jonathan-airport-transfers",
 )
 EMAIL_USER = settings.EMAIL_HOST_USER
+
+
+def sanitize_return_url(value):
+    """Validate optional frontend return URL, strip to scheme://host[:port]/path."""
+    if not value or not isinstance(value, str):
+        return None
+    value = value.strip()
+    if not value:
+        return None
+    try:
+        parts = urlsplit(value)
+    except Exception:
+        return None
+    if parts.scheme not in ("http", "https"):
+        return None
+    if not parts.hostname:
+        return None
+    if parts.username or parts.password:
+        return None
+    netloc = parts.hostname
+    if parts.port:
+        netloc = f"{netloc}:{parts.port}"
+    path = parts.path or ""
+    if path == "/":
+        path = ""
+    else:
+        path = path.rstrip("/")
+    return urlunsplit((parts.scheme, netloc, path, "", ""))
+
+
+def resolve_return_base(value):
+    """Return sanitized frontend base or fallback to configured landing page."""
+    return sanitize_return_url(value) or ASHLEY_JONATHAN_PAGE
 
 
 def send_confirmation_emails(sale, preview=False):
@@ -144,7 +178,7 @@ class SaleView(View):
             # Send confirmation emails immediately
             send_confirmation_emails(sale)
 
-            redirect_url = f"{ASHLEY_JONATHAN_PAGE}?done=true"
+            redirect_url = f"{resolve_return_base(json_data.get('from-host', ''))}?done=true"
             return JsonResponse({"stripe_url": redirect_url, "url": redirect_url, "free": True})
 
         # Paid departure or round-trip service
@@ -162,6 +196,9 @@ class SaleView(View):
         )
 
         json_data["url_success"] = f"{HOST}/ashley-jonathan/sale/{sale.id}"
+        custom_base = sanitize_return_url(json_data.get("from-host", ""))
+        if custom_base:
+            json_data["url_success"] += f"?from={quote(custom_base, safe='')}"
         description_text = ""
         for description_key, description_value in description.items():
             description_text += f"{description_key}: {description_value} | "
@@ -203,4 +240,4 @@ class SaleDoneView(View):
         if preview:
             return HttpResponse(html_message)
         else:
-            return redirect(f"{ASHLEY_JONATHAN_PAGE}?done=true")
+            return redirect(f"{resolve_return_base(request.GET.get('from', ''))}?done=true")

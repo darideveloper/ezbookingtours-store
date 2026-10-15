@@ -5,6 +5,7 @@ from django.core import mail
 from django.contrib import admin
 from django.contrib.auth.models import User
 from ashley_jonathan import models
+from ashley_jonathan import views
 
 
 @override_settings(STATICFILES_STORAGE="django.contrib.staticfiles.storage.StaticFilesStorage")
@@ -198,6 +199,124 @@ class AshleyJonathanTests(TestCase):
         """Non-existent sale id returns 404."""
         response = self.client.get("/ashley-jonathan/sale/999999/")
         self.assertEqual(response.status_code, 404)
+
+    def test_resolve_return_base_helper(self):
+        """Helper trims, validates, strips query/fragment, falls back."""
+        self.assertEqual(
+            views.resolve_return_base("https://example.com/landing/"),
+            "https://example.com/landing",
+        )
+        self.assertEqual(
+            views.resolve_return_base("https://example.com/landing?x=1#y"),
+            "https://example.com/landing",
+        )
+        fallback = f"{views.ASHLEY_JONATHAN_PAGE}?done=true"
+        self.assertIsNone(views.sanitize_return_url(""))
+        self.assertIsNone(views.sanitize_return_url("ftp://example.com/x"))
+        self.assertIsNone(views.sanitize_return_url("https://"))
+        self.assertIsNone(views.sanitize_return_url("https://user:pass@example.com/"))
+        self.assertIsNone(views.sanitize_return_url("javascript:alert(1)"))
+        self.assertEqual(views.resolve_return_base(""), views.ASHLEY_JONATHAN_PAGE)
+        self.assertEqual(
+            views.resolve_return_base("not-a-url"), views.ASHLEY_JONATHAN_PAGE
+        )
+        self.assertTrue(fallback.endswith("?done=true"))
+
+    def test_free_arrival_with_from_host(self):
+        """Free booking returns custom base when valid from-host is supplied."""
+        payload = json.loads(json.dumps(self.arrival_payload))
+        payload["from-host"] = "https://example.com/custom-page/?utm=1#top"
+        response = self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(
+            data.get("stripe_url"), "https://example.com/custom-page?done=true"
+        )
+
+    def test_free_arrival_invalid_from_host_fallback(self):
+        """Free booking falls back to env page on invalid from-host."""
+        payload = json.loads(json.dumps(self.arrival_payload))
+        payload["from-host"] = "javascript:alert(1)"
+        response = self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(
+            data.get("stripe_url"), f"{views.ASHLEY_JONATHAN_PAGE}?done=true"
+        )
+
+    @patch("ashley_jonathan.views.requests.post")
+    def test_paid_booking_propagates_from_host(self, mock_post):
+        """Paid booking sets url_success with encoded ?from= when valid."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"stripe_url": "https://checkout.stripe.com/pay/x"}
+        mock_post.return_value = mock_response
+        payload = json.loads(json.dumps(self.departure_payload))
+        payload["from-host"] = "https://example.com/wedding/"
+        self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        sent = mock_post.call_args[1]["json"]
+        self.assertIn("?from=https%3A%2F%2Fexample.com%2Fwedding", sent["url_success"])
+
+    @patch("ashley_jonathan.views.requests.post")
+    def test_paid_booking_invalid_from_host_plain_callback(self, mock_post):
+        """Paid booking omits ?from= when from-host is invalid."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"stripe_url": "https://checkout.stripe.com/pay/x"}
+        mock_post.return_value = mock_response
+        payload = json.loads(json.dumps(self.departure_payload))
+        payload["from-host"] = "ftp://example.com/x"
+        self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        sent = mock_post.call_args[1]["json"]
+        self.assertNotIn("?from=", sent["url_success"])
+
+    def test_sale_done_view_with_from_param(self):
+        """Callback redirects to validated ?from= base."""
+        sale = models.Sale.objects.create(
+            transport_type="Hotel - Airport Transfer",
+            name="From",
+            last_name="Host",
+            email="from@example.com",
+            passengers=1,
+            price=10,
+            sale_done=False,
+        )
+        response = self.client.get(
+            f"/ashley-jonathan/sale/{sale.id}/?from=https://example.com/wedding/"
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "https://example.com/wedding?done=true")
+
+    def test_sale_done_view_invalid_from_fallback(self):
+        """Callback falls back to env page on invalid ?from=."""
+        sale = models.Sale.objects.create(
+            transport_type="Hotel - Airport Transfer",
+            name="Bad",
+            last_name="From",
+            email="bad@example.com",
+            passengers=1,
+            price=10,
+            sale_done=False,
+        )
+        response = self.client.get(
+            f"/ashley-jonathan/sale/{sale.id}/?from=javascript:alert(1)"
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f"{views.ASHLEY_JONATHAN_PAGE}?done=true")
 
     def test_admin_registration(self):
         """Sale model must be properly registered in admin."""
