@@ -178,7 +178,7 @@ class SaleView(View):
             # Send confirmation emails immediately
             send_confirmation_emails(sale)
 
-            redirect_url = f"{resolve_return_base(json_data.get('from-host', ''))}?done=true"
+            redirect_url = f"{resolve_return_base(json_data.get('from-host', '') or json_data.get('url', ''))}?done=true"
             return JsonResponse({"stripe_url": redirect_url, "url": redirect_url, "free": True})
 
         # Paid departure or round-trip service
@@ -196,7 +196,7 @@ class SaleView(View):
         )
 
         json_data["url_success"] = f"{HOST}/ashley-jonathan/sale/{sale.id}"
-        custom_base = sanitize_return_url(json_data.get("from-host", ""))
+        custom_base = sanitize_return_url(json_data.get("from-host", "") or json_data.get("url", ""))
         if custom_base:
             json_data["url_success"] += f"?from={quote(custom_base, safe='')}"
         description_text = ""

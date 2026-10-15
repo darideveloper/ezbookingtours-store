@@ -252,6 +252,38 @@ class AshleyJonathanTests(TestCase):
             data.get("stripe_url"), f"{views.ASHLEY_JONATHAN_PAGE}?done=true"
         )
 
+    def test_free_arrival_with_url_fallback(self):
+        """Free booking honors legacy url field when from-host is absent."""
+        payload = json.loads(json.dumps(self.arrival_payload))
+        payload["url"] = "https://cancunconciergedmc.com/ashley-jonathan-airport-transfers/"
+        response = self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(
+            data.get("stripe_url"),
+            "https://cancunconciergedmc.com/ashley-jonathan-airport-transfers?done=true",
+        )
+
+    def test_free_arrival_from_host_beats_url(self):
+        """from-host takes precedence over legacy url field."""
+        payload = json.loads(json.dumps(self.arrival_payload))
+        payload["from-host"] = "https://example.com/custom/"
+        payload["url"] = "https://cancunconciergedmc.com/ashley-jonathan-airport-transfers/"
+        response = self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(
+            data.get("stripe_url"), "https://example.com/custom?done=true"
+        )
+
     @patch("ashley_jonathan.views.requests.post")
     def test_paid_booking_propagates_from_host(self, mock_post):
         """Paid booking sets url_success with encoded ?from= when valid."""
@@ -267,6 +299,25 @@ class AshleyJonathanTests(TestCase):
         )
         sent = mock_post.call_args[1]["json"]
         self.assertIn("?from=https%3A%2F%2Fexample.com%2Fwedding", sent["url_success"])
+
+    @patch("ashley_jonathan.views.requests.post")
+    def test_paid_booking_propagates_url_fallback(self, mock_post):
+        """Paid booking sets url_success from legacy url when from-host absent."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"stripe_url": "https://checkout.stripe.com/pay/x"}
+        mock_post.return_value = mock_response
+        payload = json.loads(json.dumps(self.departure_payload))
+        payload["url"] = "https://cancunconciergedmc.com/ashley-jonathan-airport-transfers/"
+        self.client.post(
+            "/ashley-jonathan/sale/",
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        sent = mock_post.call_args[1]["json"]
+        self.assertIn(
+            "?from=https%3A%2F%2Fcancunconciergedmc.com%2Fashley-jonathan-airport-transfers",
+            sent["url_success"],
+        )
 
     @patch("ashley_jonathan.views.requests.post")
     def test_paid_booking_invalid_from_host_plain_callback(self, mock_post):
