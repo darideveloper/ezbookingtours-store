@@ -101,7 +101,12 @@ def send_sucess_mail(
     # Send email to client
     try:
         message = EmailMultiAlternatives(
-            subjects[0], plain_message, from_email, [email], connection=connection
+            subjects[0],
+            plain_message,
+            from_email,
+            [email],
+            connection=connection,
+            reply_to=[settings.EMAIL_CLIENT] if settings.EMAIL_CLIENT else [],
         )
         message.attach_alternative(html_message, "text/html")
         message.send()
@@ -119,6 +124,7 @@ def send_sucess_mail(
             from_email,
             [admin_email],
             connection=connection,
+            reply_to=[settings.EMAIL_CLIENT] if settings.EMAIL_CLIENT else [],
         )
         message.attach_alternative(html_message, "text/html")
         message.send()

@@ -113,6 +113,11 @@ class SaleDoneViewTestCase(TestCase):
         self.sale.refresh_from_db()
         self.assertTrue(self.sale.sale_done)
 
+        # Verify every message carries the admin inbox as Reply-To
+        from digitalrealty import views
+
+        self.assertEqual(mock_email.call_args.kwargs["reply_to"], views.EMAIL_REPLY_TO)
+
 
 class SaleModelTestCase(TestCase):
     """Test cases for Sale model"""

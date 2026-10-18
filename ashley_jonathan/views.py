@@ -123,7 +123,7 @@ def send_confirmation_emails(sale, preview=False):
                 continue
             logger.info("Sending ashley jonathan email to %s", to_email)
             message = EmailMultiAlternatives(
-                subject, plain_message, EMAIL_USER, [to_email]
+                subject, plain_message, EMAIL_USER, [to_email], reply_to=[EMAIL_ADMIN]
             )
             message.attach_alternative(html_message, "text/html")
             try:

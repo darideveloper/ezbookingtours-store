@@ -20,6 +20,7 @@ STRIPE_FLASK_API = os.getenv("STRIPE_FLASK_API")
 HOST = os.getenv("HOST")
 ROHAN_KARISMA_PAGE = os.getenv("ROHAN_KARISMA_PAGE")
 EMAIL_USER = settings.EMAIL_HOST_USER
+EMAIL_REPLY_TO = [settings.EMAIL_CLIENT] if settings.EMAIL_CLIENT else []
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -148,7 +149,7 @@ class SaleDoneView(View):
         for to_email, subject in emails_subjects.items():
             print(f"Sending rohan karisma email to {to_email}")
             message = EmailMultiAlternatives(
-                subject, plain_message, EMAIL_USER, [to_email]
+                subject, plain_message, EMAIL_USER, [to_email], reply_to=EMAIL_REPLY_TO
             )
             message.attach_alternative(html_message, "text/html")
 

@@ -8,7 +8,7 @@ Django admin dashboard and booking API for the Cancun Concierge DMC ecosystem. I
 - **Django Unfold** — modern admin interface
 - **PostgreSQL** — database
 - **Stripe** — payments via external proxy service
-- **SMTP** — voucher and confirmation emails
+- **SMTP** — voucher and confirmation emails (replies routed to `EMAIL_CLIENT`)
 
 ## Features
 
@@ -51,7 +51,7 @@ Dashboard de administración y API de reservas en Django para el ecosistema de C
 - **Django Unfold** — interfaz de administración moderna
 - **PostgreSQL** — base de datos
 - **Stripe** — pagos mediante servicio proxy externo
-- **SMTP** — correos de confirmación y vouchers
+- **SMTP** — correos de confirmación y vouchers (respuestas dirigidas a `EMAIL_CLIENT`)
 
 ## Features
 

@@ -25,6 +25,7 @@ def send_sucess_mail(context):
         plain_message,
         settings.EMAIL_HOST_USER,
         [settings.EMAIL_CLIENT],
+        reply_to=[settings.EMAIL_CLIENT] if settings.EMAIL_CLIENT else [],
     )
     message.attach_alternative(html_message, "text/html")
     message.send()

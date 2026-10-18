@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .tools import send_sucess_mail
 from django.conf import settings
-from django.core.mail import send_mail, get_connection
+from django.core.mail import EmailMessage, get_connection
 
 # Get enviroment variables
 load_dotenv()
@@ -286,13 +286,14 @@ def test_email(request):
 
     try:
         if send:
-            send_mail(
+            # EmailMessage supports reply_to; send_mail() does not.
+            EmailMessage(
                 "Test Email - EzBookingTours",
                 "This is a test email to verify that the SMTP credentials are working correctly.",
                 settings.EMAIL_HOST_USER,
                 [recipient],
-                fail_silently=False,
-            )
+                reply_to=[settings.EMAIL_CLIENT] if settings.EMAIL_CLIENT else [],
+            ).send(fail_silently=False)
             message = f"Email sent successfully to {recipient}"
         else:
             # Test connection and credentials only

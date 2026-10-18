@@ -296,6 +296,9 @@ class AshleyJonathanTests(TestCase):
         recipients = [addr for m in mail.outbox for addr in m.to]
         self.assertIn(views.EMAIL_ADMIN, recipients)
         self.assertIn("jane@example.com", recipients)
+        # Every outgoing email points replies at the admin inbox
+        for message in mail.outbox:
+            self.assertEqual(message.reply_to, [views.EMAIL_ADMIN])
 
     @patch("ashley_jonathan.views.EmailMultiAlternatives")
     def test_email_failure_does_not_break_free_booking(self, mock_cls):

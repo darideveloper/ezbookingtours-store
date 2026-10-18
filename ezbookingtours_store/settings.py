@@ -177,10 +177,16 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "True") == "True"
 EMAIL_CLIENT = os.getenv("EMAIL_CLIENT")
 
+# Reply-To source for outgoing emails. Reuses EMAIL_CLIENT (monitored admin
+# inbox) so buyer replies land there instead of the SMTP account inbox.
+# No new environment variable is introduced.
+EMAIL_REPLY_TO = os.getenv("EMAIL_CLIENT")
+
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Default email settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Default email settings. ReplyToEmailBackend injects the Reply-To header as a
+# safety net for any send site that does not set it explicitly.
+EMAIL_BACKEND = "ezbookingtours_store.email_backend.ReplyToEmailBackend"
 
 # Surface app-level INFO logs (e.g. confirmation email attempts) on stdout.
 # Django's default config sends only WARNING+ to the console for non-Django loggers.
