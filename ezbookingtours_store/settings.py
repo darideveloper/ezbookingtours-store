@@ -74,6 +74,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "ezbookingtours_store.urls"
 
+# Django defaults LOGIN_REDIRECT_URL to /accounts/profile/, which this
+# project does not define: a direct visit to /admin/login/ landed on a 404.
+LOGIN_REDIRECT_URL = "/admin/"
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
