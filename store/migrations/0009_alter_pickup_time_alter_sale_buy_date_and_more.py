@@ -2,7 +2,6 @@
 
 import datetime
 from django.db import migrations, models
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -20,12 +19,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sale',
             name='buy_date',
-            field=models.DateTimeField(default=datetime.datetime(2022, 12, 16, 6, 18, 4, 66272, tzinfo=utc), help_text='Fecha de inicio de la venta', verbose_name='Fecha de venta'),
+            field=models.DateTimeField(default=datetime.datetime(2022, 12, 16, 6, 18, 4, 66272, tzinfo=datetime.timezone.utc), help_text='Fecha de inicio de la venta', verbose_name='Fecha de venta'),
         ),
         migrations.AlterField(
             model_name='sale',
             name='tour_date',
-            field=models.DateTimeField(default=datetime.datetime(2022, 12, 16, 6, 18, 4, 66272, tzinfo=utc), help_text='Fecha del tour', verbose_name='Fecha'),
+            field=models.DateTimeField(default=datetime.datetime(2022, 12, 16, 6, 18, 4, 66272, tzinfo=datetime.timezone.utc), help_text='Fecha del tour', verbose_name='Fecha'),
         ),
         migrations.AlterField(
             model_name='tour',

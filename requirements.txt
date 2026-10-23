@@ -1,11 +1,10 @@
 certifi==2026.10.19  # retira roots emSign (GHSA-6q48-6c7w-9gw2)
-Django==4.2.7
+Django==5.2.18
 python-dotenv==0.21.0
-whitenoise==6.2.0
+whitenoise==6.11.0
 gunicorn==22.0.0
-psycopg2-binary==2.9.5
-django-heroku==0.3.1
+psycopg2-binary==2.9.10
 requests==2.28.1
-django-cors-headers==3.14.0
+django-cors-headers==4.9.0
 setuptools
 django-unfold==0.77.1

@@ -8,7 +8,12 @@ from ashley_jonathan import models
 from ashley_jonathan import views
 
 
-@override_settings(STATICFILES_STORAGE="django.contrib.staticfiles.storage.StaticFilesStorage")
+@override_settings(
+    STORAGES={
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
+)
 class AshleyJonathanTests(TestCase):
     def setUp(self):
         self.client = Client()
