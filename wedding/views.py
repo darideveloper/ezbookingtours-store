@@ -150,12 +150,18 @@ class BuyView(View):
                 "url_success": success_url,
                 "products": stripe_data,
             },
+            timeout=30,
         )
 
-        # Catch error if stripe link is not generated
+        # Catch error if stripe link is not generated. The API answers errors as
+        # valid JSON too, so checking only for a JSON parse failure was not
+        # enough: a JSON error body raised KeyError on res_data["stripe_url"]
+        # and returned a 500 instead of the graceful error below.
         try:
             res_data = res.json()
         except Exception:
+            res_data = {}
+        if not isinstance(res_data, dict) or not res_data.get("stripe_url"):
             return JsonResponse(
                 {
                     "status": "error",

@@ -577,3 +577,13 @@ UNFOLD = {
     },
 }
 
+
+# Test runs go through the Django test client over plain HTTP: the production
+# HTTPS redirect would turn every request into a 301, and secure-only cookies
+# cannot be set. Must live at the END of the file — SECURE_SSL_REDIRECT is
+# assigned earlier and would otherwise win.
+IS_TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
+if IS_TESTING:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
