@@ -132,6 +132,9 @@ class AshleyJonathanTests(TestCase):
         data = response.json()
         self.assertEqual(data.get("stripe_url"), "https://checkout.stripe.com/pay/cs_test_departure")
 
+        # Stripe account must be Ashley & Jonathan, whatever the client sent
+        self.assertEqual(mock_post.call_args[1]["json"]["user"], "ashley-jonathan")
+
         # Verify sale is pending (not done)
         sale = models.Sale.objects.filter(email="jane@example.com").first()
         self.assertIsNotNone(sale)

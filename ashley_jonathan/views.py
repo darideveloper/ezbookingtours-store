@@ -219,9 +219,8 @@ class SaleView(View):
         for description_key, description_value in description.items():
             description_text += f"{description_key}: {description_value} | "
         json_data["products"][transport_type]["description"] = description_text
-        # Temporarily use rohan-karisma if ashley-jonathan is passed
-        if json_data.get("user") == "ashley-jonathan":
-            json_data["user"] = "rohan-karisma"
+        # Always charge the Ashley & Jonathan Stripe account
+        json_data["user"] = "ashley-jonathan"
 
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         res = requests.post(STRIPE_FLASK_API, json=json_data, headers=headers)
