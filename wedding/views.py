@@ -92,7 +92,7 @@ class BuyView(View):
             email=email,
         )
         sale.save()
-        success_url = f"{HOST}/wedding/success/{sale.id}?from={from_host}"
+        success_url = f"{HOST}/wedding/success/{sale.id}/?from={from_host}"
 
         # Validate vip code
 

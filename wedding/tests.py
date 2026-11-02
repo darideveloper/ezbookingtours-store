@@ -369,11 +369,11 @@ class TestSuccessView (TestCase):
         
         # Check response
         self.assertEqual(response.status_code, 302)
-        
+
         # Validate model
         self.sale.refresh_from_db()
         self.assertEqual(self.sale.is_paid, False)
-        
+
     def test_valid_sale (self):
         """ Acreedit valid sale id """
         
@@ -383,7 +383,7 @@ class TestSuccessView (TestCase):
         
         # Check response
         self.assertEqual(response.status_code, 302)
-        
+
         # Validate model
         self.sale.refresh_from_db()
-        self.assertEqual(self.sale.is_paid, False)
+        self.assertEqual(self.sale.is_paid, True)

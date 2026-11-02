@@ -70,7 +70,7 @@ class SaleView(View):
         )
 
         # Create stripe link sending data to api
-        json_data["url_success"] = f"{HOST}/rohan-karisma/sale/{sale.id}"
+        json_data["url_success"] = f"{HOST}/rohan-karisma/sale/{sale.id}/"
         description_text = ""
         for description_key, description_value in description.items():
             description_text += f"{description_key}: {description_value} | "

@@ -4,7 +4,7 @@ import requests
 
 from dotenv import load_dotenv
 
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -97,7 +97,7 @@ class BuyView(View):
             email=email,
         )
         sale.save()
-        success_url = f"{HOST}/rhea-peeyush/success/{sale.id}?from={from_host}"
+        success_url = f"{HOST}/rhea-peeyush/success/{sale.id}/?from={from_host}"
 
         # Validate vip code
 
@@ -273,14 +273,15 @@ class SuccessView(View):
         from_host = request.GET.get("from", "")
 
         # Query sale from models
-        try:
-            sale = models.Sale.objects.get(id=sale_id)
-        except Exception:
-            return redirect(from_host)
+        sale = models.Sale.objects.filter(id=sale_id).first()
 
         # Complete sale
-        sale.is_paid = True
-        sale.save()
+        if sale:
+            sale.is_paid = True
+            sale.save()
 
-        # Return success page
+        # Send back to client page, with the thanks flag
+        if not sale or not from_host.startswith("http"):
+            raise Http404
+
         return redirect(f"{from_host}/?thanks=true")

@@ -195,7 +195,7 @@ def widget(request, location, tour):
 
         request_json = {
             "user": "cancun_concierge_consolidated_supply",
-            "url": f"{HOST}/success/{new_sale.id}",
+            "url": f"{HOST}/success/{new_sale.id}/",
             "products": products,
         }
 
@@ -262,7 +262,7 @@ def success(request, sale_id):
 
 
 def error_404(request, exception):
-    return render(request, "store/404.html")
+    return render(request, "store/404.html", status=404)
 
 
 def error_404_view(request):

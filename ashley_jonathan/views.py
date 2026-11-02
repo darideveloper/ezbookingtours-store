@@ -211,7 +211,7 @@ class SaleView(View):
             sale_done=False,
         )
 
-        json_data["url_success"] = f"{HOST}/ashley-jonathan/sale/{sale.id}"
+        json_data["url_success"] = f"{HOST}/ashley-jonathan/sale/{sale.id}/"
         custom_base = sanitize_return_url(json_data.get("from-host", "") or json_data.get("url", ""))
         if custom_base:
             json_data["url_success"] += f"?from={quote(custom_base, safe='')}"
