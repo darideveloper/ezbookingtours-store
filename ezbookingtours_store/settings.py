@@ -156,8 +156,15 @@ SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", str(not DEBUG)).lower() =
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", str(not DEBUG)).lower() == "true"
 CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", str(not DEBUG)).lower() == "true"
 
-# Allow all host headers
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS: lista explicita (2026-11-02). Antes era ["*"], que permite
+# Host header poisoning. Los dominios de cliente (cancunconciergedmc.com y sus
+# rutas) los sirve el landing; Django solo ve este host.
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv(
+        "ALLOWED_HOSTS",
+        "omar.apps.darideveloper.com,localhost,127.0.0.1",
+    ).split(",") if h.strip()
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
